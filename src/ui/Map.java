@@ -15,6 +15,8 @@ public class Map {
 
 	private Cell[][] cells;
 
+	private boolean isMapInit = false;
+
 	// TODO: Create door spaces from configuration
 	private Polygon[] doorsPaces = new Polygon[3];
 
@@ -45,14 +47,25 @@ public class Map {
 			}
 		}
 
+		this.isMapInit = true;
+
 	}
 
+	/**
+	 * Draws the map
+	 * 
+	 * @param g
+	 * @param paintLocation
+	 */
 	public void drawMap(Graphics g, Point paintLocation) {
+
+		if (!isMapInit) {
+			return;
+		}
 
 		for (int i = 0; i < cells.length; i++) {
 			for (int j = 0; j < cells[i].length; j++) {
 				this.cells[i][j].draw(g, paintLocation);
-
 			}
 
 		}
