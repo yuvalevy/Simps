@@ -1,9 +1,9 @@
 package interfaces;
 
-import objects.Player;
+import sims.module.objects.Player;
 
 public interface Command {
 
-	public void excute(Player currentActor);
+	public void excute(Player currentPlayer);
 
 }

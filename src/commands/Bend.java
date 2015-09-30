@@ -1,10 +1,10 @@
 /**
- * 
+ *
  */
 package commands;
 
 import interfaces.Action;
-import objects.Player;
+import sims.module.objects.Player;
 
 /**
  * @author Yuval
@@ -13,7 +13,7 @@ import objects.Player;
 public class Bend extends Action {
 
 	/**
-	 * 
+	 *
 	 */
 	public Bend() {
 
@@ -23,7 +23,7 @@ public class Bend extends Action {
 
 	@Override
 	public void excute(Player currentPlayer) {
-		currentPlayer.bending();
+		// currentPlayer.bending();
 	}
 
 }
