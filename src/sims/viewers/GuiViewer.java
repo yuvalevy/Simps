@@ -82,7 +82,7 @@ public class GuiViewer extends JPanel implements GameActions {
 		this.add(this.managmentPanel);
 		this.add(this.roomsPanel);
 
-		this.painter.setStartingPaintWidth(this.managmentPanel.getWidth());
+		this.painter.setStartingPaintWidth((int) this.managmentPanel.getMaximumSize().getWidth());
 		createFrame();
 
 	}
@@ -161,23 +161,10 @@ public class GuiViewer extends JPanel implements GameActions {
 	 */
 	private JPanel createRoomPanel() {
 		JPanel roomsPanel = new JPanel();
-		// {
-		// /**
-		// *
-		// */
-		// private static final long serialVersionUID = -8754711008308746538L;
-		//
-		// @Override
-		// public void paintComponent(Graphics g) {
-		// super.paintComponent(g);
-		// paintRoomPanel();
-		//
-		// }
-		// };
 
 		int maxWidth = (int) (this.screenSize.getWidth() * 0.7);
 		int maxHight = (int) (this.screenSize.getHeight());
-		Dimension maxDimension = new Dimension(maxWidth, maxHight - 100);
+		Dimension maxDimension = new Dimension(maxWidth, maxHight);
 		roomsPanel.setMaximumSize(maxDimension);
 
 		roomsPanel.setBorder(new LineBorder(new Color(255, 175, 175), 2, true));
@@ -242,6 +229,12 @@ public class GuiViewer extends JPanel implements GameActions {
 	public void setFocusedPlayer(String playerName) {
 
 		this.playerChoice.select(playerName);
+	}
+
+	@Override
+	public void startGame() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -1,4 +1,4 @@
-package sims.contolers;
+package sims.basics;
 
 import java.util.ArrayList;
 import java.util.Random;

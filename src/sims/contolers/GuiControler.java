@@ -12,6 +12,8 @@ import java.awt.event.ItemListener;
 import javax.swing.JButton;
 
 import sims.basics.GameActions;
+import sims.basics.Log;
+import sims.basics.Randomaizer;
 import sims.module.main.World;
 import sims.module.surface.GameLocation;
 import sims.viewers.GuiViewer;
@@ -20,7 +22,7 @@ public class GuiControler implements GameActions, Runnable {
 
 	private final World gameModule;
 	private final GuiViewer gameUi;
-	private MouseHandler handler;
+	private final MouseHandler handler;
 
 	private Choice playerChoice;
 	private JButton btnPauseGame;
@@ -31,6 +33,8 @@ public class GuiControler implements GameActions, Runnable {
 
 	public GuiControler() {
 
+		this.handler = new MouseHandler(this);
+
 		setGameDimention();
 		this.gameModule = new World((int) this.gameDimension.getWidth(), (int) this.gameDimension.getHeight());
 
@@ -38,7 +42,6 @@ public class GuiControler implements GameActions, Runnable {
 
 		buildGameControlers();
 		this.gameUi.buildViewer(this.playerChoice, this.btnPauseGame, this.btnAddPlayer, this.handler);
-
 	}
 
 	@Override
@@ -94,10 +97,14 @@ public class GuiControler implements GameActions, Runnable {
 	}
 
 	public void guiClick(Point pointClicked) {
+
 		int roomId = this.gameModule.getCurrentRoom();
 		GameLocation newLocation = new GameLocation(pointClicked, roomId);
 
 		movePlayer(newLocation);
+
+		Log.WriteLog("One click - room: " + roomId + " moving to " + pointClicked);
+
 	}
 
 	public void guiDoubleClick(Point pointClicked) {
@@ -107,6 +114,9 @@ public class GuiControler implements GameActions, Runnable {
 		if (currentPlayer != null) {
 			setFocusedPlayer(currentPlayer);
 		}
+
+		Log.WriteLog("Double click - current player is " + currentPlayer);
+
 	}
 
 	@Override
@@ -119,6 +129,8 @@ public class GuiControler implements GameActions, Runnable {
 
 	@Override
 	public void pauseGame() {
+
+		this.gameThread.interrupt();
 
 		this.gameModule.pauseGame();
 		this.gameUi.pauseGame();
@@ -167,7 +179,13 @@ public class GuiControler implements GameActions, Runnable {
 				((int) this.gameDimension.getHeight()) - taskBarSize);
 	}
 
+	@Override
 	public void startGame() {
+
+		this.gameUi.startGame();
+		this.gameModule.startGame();
+
 		this.gameThread.run();
+
 	}
 }

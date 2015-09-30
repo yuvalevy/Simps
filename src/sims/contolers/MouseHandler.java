@@ -18,12 +18,13 @@ public class MouseHandler implements MouseListener {
 
 		Point pointClicked = event.getPoint();
 
-		switch (event.getClickCount()) {
+		// switch (event.getClickCount()) {
+		switch (event.getButton()) {
 
 		case 1:
 			this.controler.guiClick(pointClicked);
 			break;
-		case 2:
+		case 3:
 			this.controler.guiDoubleClick(pointClicked);
 			break;
 

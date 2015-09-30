@@ -23,7 +23,6 @@ public class World implements GameActions {
 	public World(int gameWidth, int gameHight) {
 
 		this.players = new ArrayList<Player>();
-		setRunning(true);
 
 		// TODO: proportion for game width to cell count
 		this.worldMap = new Map(gameWidth, gameHight);
@@ -40,23 +39,6 @@ public class World implements GameActions {
 
 		this.players.add(new Player(playerName));
 		return true;
-	}
-
-	/**
-	 * Returns the player in the specific point. If there are no player found,
-	 * returns null.
-	 *
-	 * @param p
-	 *            Point to search player
-	 * @return Player at the point or null
-	 */
-	public String getPlayerByPoint(Point p) {
-		for (Player player : this.players) {
-			if (player.isOnObject(p)) {
-				return player.getPlayerName();
-			}
-		}
-		return null;
 	}
 
 	public int getCurrentRoom() {
@@ -83,6 +65,23 @@ public class World implements GameActions {
 		return null;
 	}
 
+	/**
+	 * Returns the player in the specific point. If there are no player found,
+	 * returns null.
+	 *
+	 * @param p
+	 *            Point to search player
+	 * @return Player at the point or null
+	 */
+	public String getPlayerByPoint(Point p) {
+		for (Player player : this.players) {
+			if (player.isOnObject(p)) {
+				return player.getPlayerName();
+			}
+		}
+		return null;
+	}
+
 	public ArrayList<Player> getPlayers() {
 		return this.players;
 	}
@@ -95,6 +94,7 @@ public class World implements GameActions {
 	public void movePlayer(GameLocation newLocation) {
 
 		if (this.focusedPlayer == null) {
+			Log.WriteLog("Cannot move - No player in focuse");
 			return;
 		}
 
@@ -104,7 +104,8 @@ public class World implements GameActions {
 
 	@Override
 	public void pauseGame() {
-		// TODO Auto-generated method stub
+
+		this.isRunning = false;
 
 	}
 
@@ -118,10 +119,6 @@ public class World implements GameActions {
 		}
 	}
 
-	private void setFocusedPlayer(Player focusedPlayer) {
-		this.focusedPlayer = focusedPlayer;
-	}
-
 	@Override
 	public void setFocusedPlayer(String playerName) {
 
@@ -131,14 +128,15 @@ public class World implements GameActions {
 			Log.WriteLog("Could not find player " + playerName, LogLevel.Error);
 		}
 
-		setFocusedPlayer(currentPlayer);
+		this.focusedPlayer = currentPlayer;
 
 		Log.WriteLog("Focused player is " + playerName, LogLevel.Debug);
 
 	}
 
-	private void setRunning(boolean isRunning) {
-		this.isRunning = isRunning;
+	@Override
+	public void startGame() {
+		this.isRunning = true;
 	}
 
 }

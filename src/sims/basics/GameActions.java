@@ -13,4 +13,6 @@ public interface GameActions {
 	public void removePlayer(String playerName);
 
 	public void setFocusedPlayer(String playerName);
+
+	public void startGame();
 }

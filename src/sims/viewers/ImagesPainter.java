@@ -43,13 +43,12 @@ public class ImagesPainter {
 			// return;
 		}
 
-		@SuppressWarnings("unused")
 		ImageIcon floor; // = this.roomsImages.get(roomId);
 
-		// TODO: To be deleted - delete @SuppressWarnings("unused")
+		// TODO: To be deleted
 		floor = new ImageIcon("images/room1.jpg");
 
-		// paintByPoint(floor, new Point(0, 0), c, g);
+		paintByPoint(floor, new Point(this.startingPaintWidth, 0), c, g);
 	}
 
 	private void paintFurnitures(Component c, Graphics g, int roomId) {
@@ -68,7 +67,6 @@ public class ImagesPainter {
 			ImageIcon playerIcon = this.playersImages.get(currentPlayer.getPlayerName());
 
 			paintByPoint(playerIcon, playerPoint, c, g);
-			Log.WriteLog("Painted player " + currentPlayer.getPlayerName());
 		}
 	}
 
@@ -87,6 +85,7 @@ public class ImagesPainter {
 
 	public void setStartingPaintWidth(int width) {
 
+		Log.WriteLog("startingPaintWidth: " + width);
 		this.startingPaintWidth = width;
 	}
 }
