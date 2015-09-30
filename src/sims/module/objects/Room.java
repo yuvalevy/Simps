@@ -12,15 +12,17 @@ public class Room {
 
 	private final Cell[][] cells;
 
-	// TODO: Create door spaces from configuration
-	private final Polygon[] doorsPaces;
+	// TODO: Create door spaces from configuration and remove
+	// @SuppressWarnings("unused")
+	@SuppressWarnings("unused")
+	private final Polygon[] doorsPlaces;
 
 	public Room(int doors, int width, int hight) {
 
 		roomCount++;
 		setRoomId(roomCount);
 
-		this.doorsPaces = new Polygon[doors];
+		this.doorsPlaces = new Polygon[doors];
 		// TODO: cell count is configurable for future flexibility
 		this.cells = new Cell[width][hight];
 	}

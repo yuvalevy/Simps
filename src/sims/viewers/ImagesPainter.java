@@ -54,8 +54,10 @@ public class ImagesPainter implements GameActions {
 			// return;
 		}
 
-		ImageIcon floor;// = this.roomsImages.get(roomId);
+		@SuppressWarnings("unused")
+		ImageIcon floor = this.roomsImages.get(roomId);
 
+		// TODO: To be deleted - delete @SuppressWarnings("unused")
 		floor = new ImageIcon("images/room1.jpg");
 
 		// paintByPoint(floor, new Point(0, 0), c, g);

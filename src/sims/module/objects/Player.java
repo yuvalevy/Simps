@@ -3,10 +3,9 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import interfaces.Drawable;
 import sims.module.surface.GameLocation;
 
-public class Player extends MovableObject implements Drawable {
+public class Player extends MovableObject {
 
 	// TODO: Add configuration for point location
 	private static final Point PLAYER_STARTING_POINT = new Point(500, 500);
