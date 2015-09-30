@@ -1,4 +1,4 @@
-package ui;
+package oldcode.ui;
 
 import java.awt.event.MouseEvent;
 

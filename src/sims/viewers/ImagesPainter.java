@@ -9,12 +9,10 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import sims.basics.GameActions;
 import sims.basics.Log;
 import sims.module.objects.Player;
-import sims.module.surface.GameLocation;
 
-public class ImagesPainter implements GameActions {
+public class ImagesPainter {
 
 	private final Map<String, ImageIcon> playersImages;
 	private final ArrayList<ImageIcon> roomsImages;
@@ -26,21 +24,12 @@ public class ImagesPainter implements GameActions {
 		this.roomsImages = new ArrayList<ImageIcon>();
 	}
 
-	@Override
-	public boolean addPlayer(String playerName) {
+	public void addPlayer(String playerName) {
 
 		int pIndex = this.playersImages.size();
 		ImageIcon newPlayer = new ImageIcon("images/players/" + pIndex + ".gif");
 
 		this.playersImages.put(playerName, newPlayer);
-
-		return true;
-	}
-
-	@Override
-	public void movePlayer(GameLocation newLocation) {
-		// TODO Auto-generated method stub
-
 	}
 
 	private void paintByPoint(ImageIcon ic, Point p, Component c, Graphics g) {
@@ -55,7 +44,7 @@ public class ImagesPainter implements GameActions {
 		}
 
 		@SuppressWarnings("unused")
-		ImageIcon floor = this.roomsImages.get(roomId);
+		ImageIcon floor; // = this.roomsImages.get(roomId);
 
 		// TODO: To be deleted - delete @SuppressWarnings("unused")
 		floor = new ImageIcon("images/room1.jpg");
@@ -91,19 +80,9 @@ public class ImagesPainter implements GameActions {
 
 	}
 
-	@Override
-	public void pauseGame() {
-	}
-
-	@Override
 	public void removePlayer(String playerName) {
+
 		this.playersImages.remove(playerName);
-
-	}
-
-	@Override
-	public void setFocusedPlayer(String playerName) {
-
 	}
 
 	public void setStartingPaintWidth(int width) {

@@ -1,4 +1,4 @@
-package interfaces;
+package oldcode.interfaces;
 
 import sims.module.objects.Player;
 

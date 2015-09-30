@@ -1,4 +1,4 @@
-package ui;
+package oldcode.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Choice;
@@ -16,8 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-import sims.module.main.Log;
-import sims.module.main.LogLevel;
+import sims.basics.Log;
+import sims.basics.LogLevel;
 import sims.module.main.World;
 
 public class UIPanel extends JPanel {
@@ -30,7 +30,7 @@ public class UIPanel extends JPanel {
 
 	public UIPanel() {
 
-		this.worldInstance = new World();
+		this.worldInstance = new World(1, 1);
 
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 

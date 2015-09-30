@@ -1,9 +1,9 @@
 /**
  *
  */
-package commands;
+package oldcode.commands;
 
-import interfaces.Action;
+import oldcode.interfaces.Action;
 import sims.module.objects.Player;
 
 /**

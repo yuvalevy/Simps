@@ -1,8 +1,8 @@
-package ui;
+package oldcode.ui;
 
 import javax.swing.ImageIcon;
 
-import interfaces.Drawable;
+import oldcode.interfaces.Drawable;
 
 public class Floor implements Drawable {
 

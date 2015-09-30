@@ -1,4 +1,4 @@
-package interfaces;
+package oldcode.interfaces;
 
 public interface Drawable {
 
