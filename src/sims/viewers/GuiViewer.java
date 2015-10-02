@@ -3,6 +3,7 @@ package sims.viewers;
 import java.awt.BorderLayout;
 import java.awt.Choice;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -27,8 +28,7 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	private Choice playerChoice;
 	private JButton btnPauseGame;
-
-	private final ArrayList<Player> gamePlayers;
+	private JButton btnAddPlayer;
 
 	private JPanel roomsPanel;
 	private JPanel managmentPanel;
@@ -37,13 +37,12 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	private final ImagesPainter painter;
 
-	private JButton btnAddPlayer;
-
 	public GuiViewer(Dimension gameDimention, ArrayList<Player> gamePlayers) {
+
 		// ArrayList<MovableObject> gamePlayers
 		this.screenSize = gameDimention;
-		this.gamePlayers = gamePlayers;
-		this.painter = new ImagesPainter();
+
+		this.painter = new ImagesPainter(gamePlayers);
 		Log.WriteLog("Created WorldViewer instance");
 
 	}
@@ -54,6 +53,13 @@ public class GuiViewer extends JPanel implements GameActions {
 		this.painter.addPlayer(playerName);
 		this.playerChoice.add(playerName);
 		return true;
+	}
+
+	@Override
+	public void addRoom(int roomId) {
+
+		this.painter.addRoom(roomId);
+
 	}
 
 	/**
@@ -83,7 +89,6 @@ public class GuiViewer extends JPanel implements GameActions {
 		this.add(this.roomsPanel);
 
 		this.painter.setStartingPaintWidth((int) this.managmentPanel.getMaximumSize().getWidth());
-		createFrame();
 
 	}
 
@@ -113,6 +118,8 @@ public class GuiViewer extends JPanel implements GameActions {
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		mainFrame.setVisible(true);
+
+		Log.WriteLog("Frame created. setVisible(true)");
 	}
 
 	/**
@@ -151,6 +158,9 @@ public class GuiViewer extends JPanel implements GameActions {
 		panel.add(this.btnAddPlayer);
 
 		managmentPanel.add(this.btnPauseGame, BorderLayout.SOUTH);
+
+		Log.WriteLog("Created managment panel");
+
 		return managmentPanel;
 	}
 
@@ -160,7 +170,24 @@ public class GuiViewer extends JPanel implements GameActions {
 	 * @return
 	 */
 	private JPanel createRoomPanel() {
-		JPanel roomsPanel = new JPanel();
+
+		JPanel roomsPanel = new JPanel() {
+
+			private static final long serialVersionUID = -5827637145228481113L;
+
+			@Override
+			protected void paintComponent(Graphics g) {
+
+				Log.WriteLog("Start roomsPanel paintComponent ");
+
+				super.paintComponent(g);
+
+				paintRoomPanel(this, g);
+
+				Log.WriteLog("End roomsPanel paintComponent ");
+
+			}
+		};
 
 		int maxWidth = (int) (this.screenSize.getWidth() * 0.7);
 		int maxHight = (int) (this.screenSize.getHeight());
@@ -169,6 +196,9 @@ public class GuiViewer extends JPanel implements GameActions {
 
 		roomsPanel.setBorder(new LineBorder(new Color(255, 175, 175), 2, true));
 		roomsPanel.setMinimumSize(new Dimension(1000, 1000));
+
+		Log.WriteLog("Created room panel");
+
 		return roomsPanel;
 	}
 
@@ -178,33 +208,28 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	}
 
-	public void paint() {
-
-		repaint();
-
-	}
-
 	@Override
 	public void paintComponent(Graphics g) {
 
+		Log.WriteLog("Start GuiViewer paintComponent ");
+
 		super.paintComponent(g);
 
-		paintRoomPanel();
+		paintManagmentPanel(this, g);
 
-		paintManagmentPanel();
+		Log.WriteLog("End GuiViewer paintComponent ");
 
 	}
 
-	public void paintManagmentPanel() {
+	public void paintManagmentPanel(Component c, Graphics g) {
 
 		// Log.WriteLog("Paint manage panel");
+
 	}
 
-	public void paintRoomPanel() {
+	public void paintRoomPanel(Component c, Graphics g) {
 
-		Graphics roomGraphics = this.roomsPanel.getGraphics();
-
-		this.painter.paintRoom(this.roomsPanel, roomGraphics, 1, this.gamePlayers);
+		this.painter.paintRoom(c, g);
 
 		// Log.WriteLog("Paint room panel");
 	}
@@ -232,9 +257,24 @@ public class GuiViewer extends JPanel implements GameActions {
 	}
 
 	@Override
-	public void startGame() {
-		// TODO Auto-generated method stub
+	public void setFocusedRoom(int roomId) {
 
+		this.painter.setFocusedRoom(roomId);
+
+	}
+
+	@Override
+	public void startGame() {
+
+		createFrame();
+
+	}
+
+	public void tick() {
+
+		Log.WriteLog("Start GUI tick");
+		repaint();
+		Log.WriteLog("End GUI tick");
 	}
 
 }

@@ -10,7 +10,7 @@ public class Log {
 
 	/**
 	 * Writes log in LogLevel.Debug mode
-	 * 
+	 *
 	 * @param message
 	 */
 	public static void WriteLog(String message) {
@@ -27,9 +27,13 @@ public class Log {
 	public static void WriteLog(String message, LogLevel level) {
 
 		if (level == LogLevel.Debug) {
+
 			System.out.println(message);
+
 		} else if (level == logLevel) {
+
 			System.err.println(message);
+
 		}
 
 	}

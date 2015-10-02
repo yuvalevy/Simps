@@ -8,6 +8,12 @@ public class GameLocation {
 
 	private int roomId;
 
+	public GameLocation(int roomId) {
+
+		this.roomId = roomId;
+
+	}
+
 	public GameLocation(Point location) {
 
 		this.location = location;

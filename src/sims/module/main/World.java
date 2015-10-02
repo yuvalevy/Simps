@@ -37,12 +37,31 @@ public class World implements GameActions {
 			return false;
 		}
 
-		this.players.add(new Player(playerName));
+		this.players.add(new Player(playerName, getCurrentRoom()));
+
 		return true;
 	}
 
+	@Override
+	public void addRoom(int roomId) {
+
+		this.worldMap.addRoom(roomId);
+
+	}
+
+	public void createDefalutMap() {
+
+		this.worldMap.createDefalutMap();
+
+	}
+
 	public int getCurrentRoom() {
+
+		if (this.worldMap.getFocusedRoom() == null) {
+			return 1;
+		}
 		return this.worldMap.getFocusedRoom().getRoomId();
+
 	}
 
 	public Player getFocusedPlayer() {
@@ -84,6 +103,12 @@ public class World implements GameActions {
 
 	public ArrayList<Player> getPlayers() {
 		return this.players;
+	}
+
+	public int getRoomCount() {
+
+		return this.worldMap.getRoomCount();
+
 	}
 
 	public boolean isRunning() {
@@ -130,8 +155,17 @@ public class World implements GameActions {
 
 		this.focusedPlayer = currentPlayer;
 
-		Log.WriteLog("Focused player is " + playerName, LogLevel.Debug);
+		Log.WriteLog("Focused player is " + playerName + " in room " + currentPlayer.getCurrentLocation().getRoomId(),
+				LogLevel.Debug);
 
+	}
+
+	@Override
+	public void setFocusedRoom(int roomId) {
+
+		this.worldMap.setFocusedRoom(roomId);
+
+		Log.WriteLog("Focused room is " + roomId);
 	}
 
 	@Override
@@ -139,4 +173,16 @@ public class World implements GameActions {
 		this.isRunning = true;
 	}
 
+	public void tick() {
+
+		Log.WriteLog("Start module tick");
+
+		for (Player player : this.players) {
+
+			player.tick();
+
+		}
+
+		Log.WriteLog("End module tick");
+	}
 }

@@ -28,11 +28,12 @@ public class GuiControler implements GameActions, Runnable {
 	private JButton btnPauseGame;
 	private JButton btnAddPlayer;
 
-	private final Thread gameThread = new Thread(this);
+	private final Thread gameThread;
 	private Dimension gameDimension;
 
 	public GuiControler() {
 
+		this.gameThread = new Thread(this);
 		this.handler = new MouseHandler(this);
 
 		setGameDimention();
@@ -41,7 +42,9 @@ public class GuiControler implements GameActions, Runnable {
 		this.gameUi = new GuiViewer(this.gameDimension, this.gameModule.getPlayers());
 
 		buildGameControlers();
+
 		this.gameUi.buildViewer(this.playerChoice, this.btnPauseGame, this.btnAddPlayer, this.handler);
+
 	}
 
 	@Override
@@ -57,6 +60,15 @@ public class GuiControler implements GameActions, Runnable {
 		removePlayer(playerName);
 		return false;
 
+	}
+
+	@Override
+	public void addRoom(int roomId) {
+
+		this.gameModule.addRoom(roomId);
+		this.gameUi.addRoom(roomId);
+
+		setFocusedRoom(roomId);
 	}
 
 	private void buildGameControlers() {
@@ -96,14 +108,18 @@ public class GuiControler implements GameActions, Runnable {
 
 	}
 
+	public void createDefalutMap() {
+
+		this.gameModule.createDefalutMap();
+
+	}
+
 	public void guiClick(Point pointClicked) {
 
 		int roomId = this.gameModule.getCurrentRoom();
 		GameLocation newLocation = new GameLocation(pointClicked, roomId);
 
 		movePlayer(newLocation);
-
-		Log.WriteLog("One click - room: " + roomId + " moving to " + pointClicked);
 
 	}
 
@@ -114,8 +130,6 @@ public class GuiControler implements GameActions, Runnable {
 		if (currentPlayer != null) {
 			setFocusedPlayer(currentPlayer);
 		}
-
-		Log.WriteLog("Double click - current player is " + currentPlayer);
 
 	}
 
@@ -148,10 +162,13 @@ public class GuiControler implements GameActions, Runnable {
 	public void run() {
 
 		while (this.gameModule.isRunning()) {
-			this.gameUi.paint();
+
+			tick();
 
 			try {
-				Thread.sleep(1);
+
+				Thread.sleep(20);
+
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -163,6 +180,14 @@ public class GuiControler implements GameActions, Runnable {
 
 		this.gameUi.setFocusedPlayer(playerName);
 		this.gameModule.setFocusedPlayer(playerName);
+
+	}
+
+	@Override
+	public void setFocusedRoom(int roomId) {
+
+		this.gameUi.setFocusedRoom(roomId);
+		this.gameModule.setFocusedRoom(roomId);
 
 	}
 
@@ -182,10 +207,31 @@ public class GuiControler implements GameActions, Runnable {
 	@Override
 	public void startGame() {
 
+		// Conditions before starting a game:
+
+		if (this.gameModule.getRoomCount() == 0) {
+
+			return;
+
+		}
+
 		this.gameUi.startGame();
 		this.gameModule.startGame();
 
-		this.gameThread.run();
+		this.gameThread.start();
 
+	}
+
+	/**
+	 *
+	 */
+	public void tick() {
+
+		Log.WriteLog("Start tick");
+
+		this.gameModule.tick();
+		this.gameUi.tick();
+
+		Log.WriteLog("End tick");
 	}
 }

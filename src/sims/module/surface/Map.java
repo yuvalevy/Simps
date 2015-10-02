@@ -5,6 +5,8 @@ package sims.module.surface;
 
 import java.util.ArrayList;
 
+import sims.basics.Log;
+import sims.basics.LogLevel;
 import sims.module.objects.Room;
 
 /**
@@ -18,6 +20,9 @@ public class Map {
 	private Room focusedRoom;
 	private boolean isMapInit = false;
 
+	private final int defaultWidth;
+	private final int defaultHight;
+
 	/**
 	 * Creates default map.
 	 */
@@ -25,17 +30,35 @@ public class Map {
 
 		this.mapRooms = new ArrayList<Room>();
 
-		this.mapRooms.add(new Room(1, width, hight));
+		this.defaultHight = hight;
+		this.defaultWidth = width;
 
-		setFocusedRoom(this.mapRooms.get(0));
+	}
 
-		createDefalutMap();
+	public void addRoom(int roomId) {
+
+		this.mapRooms.add(new Room(1, this.defaultWidth, this.defaultHight));
+
 	}
 
 	/**
 	 * Creates the clear map with door configuration
 	 */
-	private void createDefalutMap() {
+	public void createDefalutMap() {
+
+		if (this.mapRooms.size() == 0) {
+
+			Log.WriteLog("There are no rooms.", LogLevel.Error);
+
+			try {
+				throw new Exception("Cannot start game. There are no rooms.");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return;
+
+		}
 
 		for (Room room : this.mapRooms) {
 
@@ -46,15 +69,39 @@ public class Map {
 	}
 
 	public Room getFocusedRoom() {
+
 		return this.focusedRoom;
+
+	}
+
+	private Room getRoom(int roomId) {
+
+		for (Room room : this.mapRooms) {
+			if (room.getRoomId() == roomId) {
+				return room;
+			}
+		}
+
+		return null;
+
+	}
+
+	public int getRoomCount() {
+
+		return this.mapRooms.size();
+
 	}
 
 	public boolean isMapInit() {
+
 		return this.isMapInit;
+
 	}
 
-	public void setFocusedRoom(Room focusedRoom) {
-		this.focusedRoom = focusedRoom;
-	}
+	public void setFocusedRoom(int roomId) {
 
+		Room currentRoom = getRoom(roomId);
+
+		this.focusedRoom = currentRoom;
+	}
 }

@@ -6,6 +6,8 @@ public interface GameActions {
 
 	public boolean addPlayer(String playerName);
 
+	public void addRoom(int roomId);
+
 	public void movePlayer(GameLocation newLocation);
 
 	public void pauseGame();
@@ -13,6 +15,8 @@ public interface GameActions {
 	public void removePlayer(String playerName);
 
 	public void setFocusedPlayer(String playerName);
+
+	public void setFocusedRoom(int roomId);
 
 	public void startGame();
 }
