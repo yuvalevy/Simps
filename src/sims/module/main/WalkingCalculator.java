@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import sims.basics.Log;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
+import sims.module.surface.CellType;
 import sims.module.surface.GameLocation;
 
 class WalkingCalculator {
@@ -81,21 +82,24 @@ class WalkingCalculator {
 		Point dp = getStraightLineTrip(currentP, destP);
 		double pointDistance = Double.MAX_VALUE;
 		double secondPointDistance = 0.0;
-		boolean isEndOfLine = false;
 
 		int currentRoomId = currentLocation.getRoomId();
 
 		Room currentRoom = this.gameRooms.get(currentRoomId - 1);
 
-		boolean stepable = true;
+		boolean reasonToStop = false;
+		boolean newRoom = false;
 		// TODO: this is stupid
 		// also no need for 2 booleans
-		while (!isEndOfLine && stepable) {
+
+		while (!reasonToStop) {
 
 			int newx = newLocation.x + dp.x;
 			int newy = newLocation.y + dp.y;
 
 			newLocation = new Point(newx, newy);
+
+			Log.WriteLog("NEW step " + newLocation);
 
 			secondPointDistance = dotsDistance(destP, newLocation);
 
@@ -103,9 +107,14 @@ class WalkingCalculator {
 
 				Rectangle playerRect = player.getObjectRectangle(newLocation);
 
-				if (currentRoom.getAreaCellType(playerRect).isStepable()) {
+				CellType type = currentRoom.getAreaCellType(playerRect);
+				if (type.isStepable()) {
 
-					Log.WriteLog("Added step " + newx + "," + newy);
+					if (type.isDoor()) {
+						newRoom = true;
+					}
+
+					Log.WriteLog("Step Added");
 
 					player.addStep(new GameLocation(newLocation, currentRoomId));
 
@@ -113,17 +122,27 @@ class WalkingCalculator {
 
 				} else {
 
-					Log.WriteLog("not adding step " + newx + "," + newy);
+					Log.WriteLog("Step not stepable");
 
-					stepable = false;
+					reasonToStop = true;
 
 				}
 			} else {
 
-				isEndOfLine = true;
+				Log.WriteLog("End of line");
+
+				reasonToStop = true;
 
 			}
 
+			if (newRoom) {
+
+				GameLocation roomStartLocation = currentRoom.getNextRoom(newLocation);
+				player.addStep(roomStartLocation);
+				reasonToStop = true;
+
+				Log.WriteLog("New room it is, new room: " + roomStartLocation.getRoomId());
+			}
 		}
 	}
 

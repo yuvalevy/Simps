@@ -15,6 +15,7 @@ import sims.basics.Log;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
 import sims.module.surface.Cell;
+import sims.module.surface.CellType;
 
 public class ImagesPainter {
 
@@ -67,9 +68,15 @@ public class ImagesPainter {
 			for (Cell cell : cellsRow) {
 
 				Point coor = cell.getCoordinate();
+				CellType type = cell.getCellType();
+				if (type.isStepable()) {
 
-				if (cell.getCellType().isStepable()) {
-					g.setColor(Color.blue);
+					if (type.isDoor()) {
+						g.setColor(Color.green);
+					} else {
+						g.setColor(Color.blue);
+					}
+
 				} else {
 					g.setColor(Color.red);
 				}
@@ -78,12 +85,6 @@ public class ImagesPainter {
 
 			}
 		}
-
-		g.setColor(Color.CYAN);
-		g.drawRect(641, 281, 44, 44);
-
-		g.setColor(Color.MAGENTA);
-		g.drawRect(641 - this.startingPaintWidth, 281, 44, 44);
 
 		/**
 		 * end draw surface

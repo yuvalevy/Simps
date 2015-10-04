@@ -110,11 +110,12 @@ public class Map {
 
 	}
 
-	public boolean isOnDoor(GameLocation objectLocation) {
-
-		return this.mapRooms.get(objectLocation.getRoomId()).idOnDoor(objectLocation.getLocation());
-
-	}
+	// public boolean isOnDoor(GameLocation objectLocation) {
+	//
+	// return true;//
+	// this.mapRooms.get(objectLocation.getRoomId()).idOnDoor(objectLocation.getLocation());
+	//
+	// }
 
 	public void setFocusedRoom(int roomId) {
 

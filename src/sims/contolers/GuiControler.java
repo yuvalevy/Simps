@@ -170,6 +170,14 @@ public class GuiControler implements GameActions, Runnable {
 
 			tick();
 
+			int changing = this.gameModule.changingRoom();
+
+			if (changing != -1) {
+
+				setFocusedRoom(changing);
+
+			}
+
 			try {
 
 				Thread.sleep(20);
