@@ -1,12 +1,15 @@
 package sims.module.main;
 
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import sims.basics.GameActions;
 import sims.basics.Log;
 import sims.basics.LogLevel;
 import sims.module.objects.Player;
+import sims.module.objects.Room;
 import sims.module.surface.GameLocation;
 import sims.module.surface.Map;
 
@@ -16,16 +19,20 @@ public class World implements GameActions {
 
 	private final ArrayList<Player> players;
 
+	private final WalkingCalculator walkingCalculator;
+
 	private final Map worldMap;
 
 	private Player focusedPlayer;
 
-	public World(int gameWidth, int gameHight) {
+	public World(Dimension screenDimension, Rectangle cellDefaultSize) {
 
 		this.players = new ArrayList<Player>();
 
 		// TODO: proportion for game width to cell count
-		this.worldMap = new Map(gameWidth, gameHight);
+		this.worldMap = new Map(screenDimension, cellDefaultSize);
+
+		this.walkingCalculator = new WalkingCalculator(cellDefaultSize, getRooms());
 
 		Log.WriteLog("Created World instance");
 	}
@@ -111,6 +118,12 @@ public class World implements GameActions {
 
 	}
 
+	public ArrayList<Room> getRooms() {
+
+		return this.worldMap.getRooms();
+
+	}
+
 	public boolean isRunning() {
 		return this.isRunning;
 	}
@@ -123,7 +136,7 @@ public class World implements GameActions {
 			return;
 		}
 
-		WalkingCalculator.PlanTrip(this.focusedPlayer, newLocation);
+		this.walkingCalculator.planTrip(this.focusedPlayer, newLocation);
 
 	}
 
@@ -175,7 +188,7 @@ public class World implements GameActions {
 
 	public void tick() {
 
-		Log.WriteLog("Start module tick");
+		// Log.WriteLog("Start module tick");
 
 		for (Player player : this.players) {
 
@@ -183,6 +196,6 @@ public class World implements GameActions {
 
 		}
 
-		Log.WriteLog("End module tick");
+		// Log.WriteLog("End module tick");
 	}
 }

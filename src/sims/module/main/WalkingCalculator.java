@@ -1,16 +1,34 @@
 package sims.module.main;
 
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import sims.basics.Log;
 import sims.module.objects.Player;
+import sims.module.objects.Room;
 import sims.module.surface.GameLocation;
 
-public class WalkingCalculator {
+class WalkingCalculator {
 
-	static int pix = 20;
+	final int pix = 20;
 
-	private static double dotsDistance(Point end, Point walk) {
+	// אנכי אופקי אלכסון
+	private final int verticalMove, horizontalMove, diagonalMove;
+
+	private final ArrayList<Room> gameRooms;
+
+	public WalkingCalculator(Rectangle cellDefaultSize, ArrayList<Room> gameRooms) {
+		this.verticalMove = cellDefaultSize.height;
+		this.horizontalMove = cellDefaultSize.width;
+
+		this.diagonalMove = (int) Math
+				.sqrt((this.verticalMove * this.verticalMove) + (this.horizontalMove * this.horizontalMove));
+
+		this.gameRooms = gameRooms;
+	}
+
+	private double dotsDistance(Point end, Point walk) {
 
 		double distance;
 
@@ -20,7 +38,7 @@ public class WalkingCalculator {
 
 	}
 
-	public static Point getStraightLineTrip(Point start, Point end) {
+	private Point getStraightLineTrip(Point start, Point end) {
 
 		double endX = end.getX(), endY = end.getY(), startX = start.getX(), startY = start.getY();
 
@@ -30,8 +48,8 @@ public class WalkingCalculator {
 
 		double alfaR = Math.asin(dx / totalPathLength);
 
-		int dX = (int) Math.abs((Math.sin(alfaR) * pix));
-		int dY = (int) Math.abs((Math.cos(alfaR) * pix));
+		int dX = (int) Math.abs((Math.sin(alfaR) * this.pix));
+		int dY = (int) Math.abs((Math.cos(alfaR) * this.pix));
 
 		if (!toDown(startY, endY)) {
 			dY *= -1;
@@ -46,7 +64,70 @@ public class WalkingCalculator {
 		return dStep;
 	}
 
-	public static void PlanTrip(Player player, GameLocation finalLocation) {
+	/**
+	 * Plans the player's straight line trip
+	 *
+	 * @param player
+	 * @param currentLocation
+	 * @param finalLocation
+	 */
+	private void planStraightLineTrip(Player player, GameLocation currentLocation, GameLocation finalLocation) {
+
+		Point currentP = currentLocation.getLocation();
+		Point destP = finalLocation.getLocation();
+
+		Point newLocation = new Point(currentP);
+
+		Point dp = getStraightLineTrip(currentP, destP);
+		double pointDistance = Double.MAX_VALUE;
+		double secondPointDistance = 0.0;
+		boolean isEndOfLine = false;
+
+		int currentRoomId = currentLocation.getRoomId();
+
+		Room currentRoom = this.gameRooms.get(currentRoomId - 1);
+
+		boolean stepable = true;
+		// TODO: this is stupid
+		// also no need for 2 booleans
+		while (!isEndOfLine && stepable) {
+
+			int newx = newLocation.x + dp.x;
+			int newy = newLocation.y + dp.y;
+
+			newLocation = new Point(newx, newy);
+
+			secondPointDistance = dotsDistance(destP, newLocation);
+
+			if ((secondPointDistance < pointDistance)) {
+
+				Rectangle playerRect = player.getObjectRectangle(newLocation);
+
+				if (currentRoom.getAreaCellType(playerRect).isStepable()) {
+
+					Log.WriteLog("Added step " + newx + "," + newy);
+
+					player.addStep(new GameLocation(newLocation, currentRoomId));
+
+					pointDistance = secondPointDistance;
+
+				} else {
+
+					Log.WriteLog("not adding step " + newx + "," + newy);
+
+					stepable = false;
+
+				}
+			} else {
+
+				isEndOfLine = true;
+
+			}
+
+		}
+	}
+
+	public void planTrip(Player player, GameLocation finalLocation) {
 
 		// TODO: dijestra
 
@@ -55,42 +136,7 @@ public class WalkingCalculator {
 		if (currentLocation.getRoomId() == finalLocation.getRoomId()) {
 
 			// Same room movement
-			Point currentP = currentLocation.getLocation();
-			Point destP = finalLocation.getLocation();
-
-			Point newLocation = new Point(currentP);
-
-			Point dp = getStraightLineTrip(currentP, destP);
-			double pointDistance = Double.MAX_VALUE;
-			double secondPointDistance = 0.0;
-			boolean isEndOfLine = false;
-
-			int currentRoom = currentLocation.getRoomId();
-
-			while (!isEndOfLine) {
-
-				int newx = newLocation.x + dp.x;
-				int newy = newLocation.y + dp.y;
-
-				newLocation = new Point(newx, newy);
-
-				secondPointDistance = dotsDistance(destP, newLocation);
-
-				if (secondPointDistance < pointDistance) {
-
-					Log.WriteLog("Added step " + newx + "," + newy);
-
-					player.addStep(new GameLocation(newLocation, currentRoom));
-
-					pointDistance = secondPointDistance;
-
-				} else {
-
-					isEndOfLine = true;
-
-				}
-
-			}
+			planStraightLineTrip(player, currentLocation, finalLocation);
 
 		} else {
 
@@ -100,10 +146,10 @@ public class WalkingCalculator {
 
 		// player.addStep(finalLocation);
 
-		Log.WriteLog("Added all steps to + " + player.getPlayerName());
+		Log.WriteLog("Added all steps to " + player.getPlayerName());
 	}
 
-	private static boolean toDown(double y, double desty) {
+	private boolean toDown(double y, double desty) {
 
 		if (desty > y) {
 			return true;
@@ -113,7 +159,7 @@ public class WalkingCalculator {
 
 	}
 
-	private static boolean toRight(double x, double destx) {
+	private boolean toRight(double x, double destx) {
 
 		if (destx > x) {
 			return true;

@@ -4,12 +4,16 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import sims.basics.Log;
+
 public class MouseHandler implements MouseListener {
 
 	private final GuiControler controler;
+	private final int startingPaintWidth;
 
-	public MouseHandler(GuiControler controler) {
+	public MouseHandler(GuiControler controler, int width) {
 		this.controler = controler;
+		this.startingPaintWidth = width;
 
 	}
 
@@ -17,6 +21,9 @@ public class MouseHandler implements MouseListener {
 	public void mouseClicked(MouseEvent event) {
 
 		Point pointClicked = event.getPoint();
+
+		pointClicked.x = pointClicked.x - this.startingPaintWidth;
+		Log.WriteLog("Point clicked: " + pointClicked);
 
 		// switch (event.getClickCount()) {
 		switch (event.getButton()) {

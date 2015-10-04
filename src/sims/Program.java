@@ -8,10 +8,6 @@ public class Program {
 
 	public static void main(String[] args) {
 
-		// WalkingCalculator.getStrateLineTrip(new Point(0, 3), new Point(4,
-		// 0));
-
-		// Log.setLogLevel(LogLevel.Debug);
 		Log.WriteLog("Starting game!", LogLevel.Debug);
 
 		GuiControler controler = new GuiControler();

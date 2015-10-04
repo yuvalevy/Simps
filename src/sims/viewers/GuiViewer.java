@@ -8,7 +8,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -19,7 +18,7 @@ import javax.swing.border.LineBorder;
 
 import sims.basics.GameActions;
 import sims.basics.Log;
-import sims.module.objects.Player;
+import sims.module.main.World;
 import sims.module.surface.GameLocation;
 
 public class GuiViewer extends JPanel implements GameActions {
@@ -37,12 +36,12 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	private final ImagesPainter painter;
 
-	public GuiViewer(Dimension gameDimention, ArrayList<Player> gamePlayers) {
+	public GuiViewer(Dimension gameDimention, World gameModule) {
 
 		// ArrayList<MovableObject> gamePlayers
 		this.screenSize = gameDimention;
 
-		this.painter = new ImagesPainter(gamePlayers);
+		this.painter = new ImagesPainter(gameModule.getPlayers(), gameModule.getRooms());
 		Log.WriteLog("Created WorldViewer instance");
 
 	}
@@ -178,13 +177,13 @@ public class GuiViewer extends JPanel implements GameActions {
 			@Override
 			protected void paintComponent(Graphics g) {
 
-				Log.WriteLog("Start roomsPanel paintComponent ");
+				// Log.WriteLog("Start roomsPanel paintComponent ");
 
 				super.paintComponent(g);
 
 				paintRoomPanel(this, g);
 
-				Log.WriteLog("End roomsPanel paintComponent ");
+				// Log.WriteLog("End roomsPanel paintComponent ");
 
 			}
 		};
@@ -211,13 +210,13 @@ public class GuiViewer extends JPanel implements GameActions {
 	@Override
 	public void paintComponent(Graphics g) {
 
-		Log.WriteLog("Start GuiViewer paintComponent ");
+		// Log.WriteLog("Start GuiViewer paintComponent ");
 
 		super.paintComponent(g);
 
 		paintManagmentPanel(this, g);
 
-		Log.WriteLog("End GuiViewer paintComponent ");
+		// Log.WriteLog("End GuiViewer paintComponent ");
 
 	}
 
@@ -272,9 +271,9 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	public void tick() {
 
-		Log.WriteLog("Start GUI tick");
+		// Log.WriteLog("Start GUI tick");
 		repaint();
-		Log.WriteLog("End GUI tick");
+		// Log.WriteLog("End GUI tick");
 	}
 
 }

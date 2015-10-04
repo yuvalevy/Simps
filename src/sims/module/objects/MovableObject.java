@@ -44,6 +44,30 @@ public class MovableObject {
 	}
 
 	/**
+	 * Returns object current rectangle space
+	 *
+	 * @return
+	 */
+	public Rectangle getObjectRectangle() {
+
+		Point location = this.currentLocation.getLocation();
+
+		return getObjectRectangle(location);
+	}
+
+	/**
+	 * Returns object current rectangle space
+	 *
+	 * @return
+	 */
+	public Rectangle getObjectRectangle(Point p) {
+
+		Rectangle currentSpace = new Rectangle(p, this.objectSize.getSize());
+
+		return currentSpace;
+	}
+
+	/**
 	 *
 	 * @param p
 	 *            Point to be checked
@@ -51,15 +75,14 @@ public class MovableObject {
 	 */
 	public boolean isOnObject(Point p) {
 
-		Point location = this.currentLocation.getLocation();
-		Rectangle currentSpace = new Rectangle(location, this.objectSize.getSize());
+		Rectangle currentSpace = getObjectRectangle();
 
 		return currentSpace.contains(p);
 	}
 
 	/**
-	 * Sets the next step to currentLoction. If there are no more steps, nothing
-	 * is done
+	 * Sets the *next step to currentLoction. If there are no more steps,
+	 * nothing is done
 	 *
 	 */
 	protected void setNextStep() {

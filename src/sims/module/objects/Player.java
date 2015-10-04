@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 public class Player extends MovableObject {
 
 	// TODO: Add configuration for point location
-	private static final Point PLAYER_STARTING_POINT = new Point(500, 500);
+	private static final Point PLAYER_STARTING_POINT = new Point(200, 200);
 	private static final Rectangle PLAYER_RECT = new Rectangle(44, 44);
 
 	private final String playerName;

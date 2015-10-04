@@ -3,6 +3,8 @@
  */
 package sims.module.surface;
 
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import sims.basics.Log;
@@ -20,24 +22,29 @@ public class Map {
 	private Room focusedRoom;
 	private boolean isMapInit = false;
 
-	private final int defaultWidth;
-	private final int defaultHight;
+	private final int roomDefaultWidth;
+	private final int roomDefaultHeight;
 
 	/**
 	 * Creates default map.
 	 */
-	public Map(int width, int hight) {
+	public Map(Dimension screenDimension, Rectangle defaultCellSize) {
+
+		Cell.setCellSize(defaultCellSize);
 
 		this.mapRooms = new ArrayList<Room>();
 
-		this.defaultHight = hight;
-		this.defaultWidth = width;
+		// this.roomDefaultHight = ((int) (screenDimension.height * 0.7)) /
+		// defaultCellSize.height;
+		this.roomDefaultHeight = screenDimension.height / defaultCellSize.height;
+
+		this.roomDefaultWidth = screenDimension.width / defaultCellSize.width;
 
 	}
 
 	public void addRoom(int roomId) {
 
-		this.mapRooms.add(new Room(1, this.defaultWidth, this.defaultHight));
+		this.mapRooms.add(new Room(1, this.roomDefaultWidth, this.roomDefaultHeight));
 
 	}
 
@@ -92,9 +99,20 @@ public class Map {
 
 	}
 
+	public ArrayList<Room> getRooms() {
+
+		return this.mapRooms;
+	}
+
 	public boolean isMapInit() {
 
 		return this.isMapInit;
+
+	}
+
+	public boolean isOnDoor(GameLocation objectLocation) {
+
+		return this.mapRooms.get(objectLocation.getRoomId()).idOnDoor(objectLocation.getLocation());
 
 	}
 
@@ -104,4 +122,5 @@ public class Map {
 
 		this.focusedRoom = currentRoom;
 	}
+
 }

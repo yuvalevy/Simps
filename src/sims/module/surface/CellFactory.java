@@ -1,20 +1,31 @@
 package sims.module.surface;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 public class CellFactory {
 
-	private static final ArrayList<CellType> arr = new ArrayList<CellType>();
+	private static ArrayList<CellType> ALL_CELL_TYPES = new ArrayList<CellType>();
 
-	public static Cell getCell(boolean isStepable, boolean isDoor) {
+	public static Cell getCell(boolean isStepable, boolean isDoor, Point coordinate) {
+
+		CellType typ = getCellType(isStepable, isDoor);
+
+		return new Cell(typ, coordinate);
+	}
+
+	public static CellType getCellType(boolean isStepable, boolean isDoor) {
 
 		CellType type = new CellType(isStepable, isDoor);
 
-		if (!arr.contains(type)) {
-			arr.add(type);
+		if (!ALL_CELL_TYPES.contains(type)) {
+
+			ALL_CELL_TYPES.add(type);
+
 		}
 
-		return new Cell(arr.get(arr.indexOf(type)));
+		return ALL_CELL_TYPES.get(ALL_CELL_TYPES.indexOf(type));
+
 	}
 
 }

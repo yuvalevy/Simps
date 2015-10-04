@@ -3,6 +3,7 @@ package sims.contolers;
 import java.awt.Choice;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,7 +13,6 @@ import java.awt.event.ItemListener;
 import javax.swing.JButton;
 
 import sims.basics.GameActions;
-import sims.basics.Log;
 import sims.basics.Randomaizer;
 import sims.module.main.World;
 import sims.module.surface.GameLocation;
@@ -33,13 +33,18 @@ public class GuiControler implements GameActions, Runnable {
 
 	public GuiControler() {
 
+		// TODO: Configuration
+		final Rectangle cellDefaultSize = new Rectangle(10, 10);
+
 		this.gameThread = new Thread(this);
-		this.handler = new MouseHandler(this);
 
 		setGameDimention();
-		this.gameModule = new World((int) this.gameDimension.getWidth(), (int) this.gameDimension.getHeight());
 
-		this.gameUi = new GuiViewer(this.gameDimension, this.gameModule.getPlayers());
+		this.handler = new MouseHandler(this, (int) (this.gameDimension.width * 0.3));
+
+		this.gameModule = new World(this.gameDimension, cellDefaultSize);
+
+		this.gameUi = new GuiViewer(this.gameDimension, this.gameModule);
 
 		buildGameControlers();
 
@@ -223,15 +228,15 @@ public class GuiControler implements GameActions, Runnable {
 	}
 
 	/**
-	 *
+	 * ticks game module and viewer
 	 */
 	public void tick() {
 
-		Log.WriteLog("Start tick");
+		// Log.WriteLog("Start tick");
 
 		this.gameModule.tick();
 		this.gameUi.tick();
 
-		Log.WriteLog("End tick");
+		// Log.WriteLog("End tick");
 	}
 }

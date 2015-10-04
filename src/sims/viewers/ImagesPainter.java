@@ -1,15 +1,20 @@
 package sims.viewers;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
 
+import sims.basics.Log;
 import sims.module.objects.Player;
+import sims.module.objects.Room;
+import sims.module.surface.Cell;
 
 public class ImagesPainter {
 
@@ -18,15 +23,18 @@ public class ImagesPainter {
 
 	private int startingPaintWidth;
 	private final ArrayList<Player> gamePlayers;
+	private final ArrayList<Room> gameRooms;
 
 	private int currentRoom;
 
-	public ImagesPainter(final ArrayList<Player> gamePlayers) {
+	public ImagesPainter(final ArrayList<Player> gamePlayers, final ArrayList<Room> gameRooms) {
 
 		this.playersImages = new HashMap<String, ImageIcon>();
 		this.roomsImages = new ArrayList<ImageIcon>();
 
 		this.gamePlayers = gamePlayers;
+		this.gameRooms = gameRooms;
+
 	}
 
 	public void addPlayer(String playerName) {
@@ -44,6 +52,77 @@ public class ImagesPainter {
 		ImageIcon newRoom = new ImageIcon("images/rooms/room" + roomId + ".jpg");
 
 		this.roomsImages.add(newRoom);
+
+	}
+
+	private void drawDebug(Graphics g) {
+
+		/**
+		 * draw surface
+		 */
+
+		Rectangle recCell = Cell.getCellSize();
+
+		for (Cell[] cellsRow : this.gameRooms.get(this.currentRoom - 1).getCells()) {
+			for (Cell cell : cellsRow) {
+
+				Point coor = cell.getCoordinate();
+
+				if (cell.getCellType().isStepable()) {
+					g.setColor(Color.blue);
+				} else {
+					g.setColor(Color.red);
+				}
+
+				g.drawRect(coor.x, coor.y, recCell.width, recCell.height);
+
+			}
+		}
+
+		g.setColor(Color.CYAN);
+		g.drawRect(641, 281, 44, 44);
+
+		g.setColor(Color.MAGENTA);
+		g.drawRect(641 - this.startingPaintWidth, 281, 44, 44);
+
+		/**
+		 * end draw surface
+		 */
+
+		/**
+		 * draw poly
+		 */
+
+		// String[] sober = new String[]/** room2 */
+		// {
+		// "326#360#360#500#500#655#655#857#857#746#746#855#855#800#884#658#630#300#190#154#154#60#270",
+		// "128#128#565#565#276#276#128#128#280#280#737#737#826#826#931#931#826#826#673#673#128#20#20"
+		// };
+		// for (int i = 0; i < ((sober.length / 2) + 1); i += 2) {
+		//
+		// String[] xs = sober[i].split("#");
+		// String[] ys = sober[i + 1].split("#");
+		//
+		// Polygon area = new Polygon();
+		//
+		// for (int j = 0; j < (xs.length); j++) {
+		//
+		// int x = Integer.parseInt(xs[j]);
+		// int y = Integer.parseInt(ys[j]);
+		//
+		// g.setColor(Color.RED);
+		// g.drawString(x + "X" + y, x, y);
+		// area.addPoint(x, y);
+		// }
+		//
+		// g.setColor(Color.BLACK);
+		// g.drawPolygon(area);
+		//
+		// }
+
+		/**
+		 * end draw poly
+		 */
 
 	}
 
@@ -79,6 +158,10 @@ public class ImagesPainter {
 				ImageIcon playerIcon = this.playersImages.get(currentPlayer.getPlayerName());
 
 				paintByPoint(playerIcon, playerPoint, c, g);
+				Rectangle playerRect = currentPlayer.getObjectRectangle();
+
+				g.setColor(Color.pink);
+				g.drawRect(playerRect.x, playerRect.y, playerRect.width, playerRect.height);
 
 			}
 
@@ -88,27 +171,11 @@ public class ImagesPainter {
 
 	public void paintRoom(Component c, Graphics g) {
 
-		// String temp =
-		// "515,487@530,474@545,461@560,448@575,435@590,422@605,409@620,396@635,383@650,370@665,357@680,344@695,331@710,318@725,305";
-		//
-		// for (String point : temp.split("@")) {
-		// String[] splt = point.split(",");
-		//
-		// int x = Integer.parseInt(splt[0]) - this.startingPaintWidth, y =
-		// Integer.parseInt(splt[1]);
-		//
-		// g.drawString(splt[0] + "X" + splt[1], x, y);
-		//
-		// }
-		//
-		// g.drawString("--500X500--", 500 - this.startingPaintWidth, 500);
-		// g.drawString("--764X453--", 764 - this.startingPaintWidth, 453);
-		// g.drawLine(500, 500, 764, 453);
-
 		paintFloor(c, g);
 		paintFurnitures(c, g);
 		paintPlayers(c, g);
 
+		drawDebug(g);
 	}
 
 	public void removePlayer(String playerName) {
@@ -124,7 +191,8 @@ public class ImagesPainter {
 
 	public void setStartingPaintWidth(int width) {
 
-		this.startingPaintWidth = width;
+		this.startingPaintWidth = 0;
+		Log.WriteLog("ImagesPainter.setStartingPaintWidth = " + width);
 	}
 
 }
