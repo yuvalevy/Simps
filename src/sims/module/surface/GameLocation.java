@@ -47,4 +47,10 @@ public class GameLocation {
 		this.roomId = roomId;
 	}
 
+	@Override
+	public String toString() {
+
+		return super.toString() + "room-" + this.roomId + " " + this.location.toString();
+	}
+
 }

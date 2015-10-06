@@ -12,7 +12,6 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 
 import sims.basics.Log;
-import sims.basics.LogLevel;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
 import sims.module.surface.Cell;
@@ -84,7 +83,7 @@ public class ImagesPainter {
 					g.setColor(Color.red);
 				}
 
-				Point coor = cell.getCoordinate();
+				Point coor = cell.getCoordinate().getLocation();
 
 				g.drawRect(coor.x, coor.y, recCell.width, recCell.height);
 
@@ -123,6 +122,10 @@ public class ImagesPainter {
 		/**
 		 * end draw surface
 		 */
+
+		g.setColor(Color.CYAN);
+
+		g.drawString("here", 88, 88);
 
 		/**
 		 * draw poly
@@ -210,9 +213,9 @@ public class ImagesPainter {
 		paintFurnitures(c, g);
 		paintPlayers(c, g);
 
-		if (Log.getLogLevel() == LogLevel.Debug) {
-			drawDebug(g);
-		}
+		// if (Log.getLogLevel() == LogLevel.Debug) {
+		drawDebug(g);
+		// }
 	}
 
 	public void removePlayer(String playerName) {

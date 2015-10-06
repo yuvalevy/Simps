@@ -66,11 +66,14 @@ public class Room {
 			for (int j = 0; j < this.roomCells[i].length; j++) {
 
 				Point coordinate = new Point(i * cellsize.width, j * cellsize.height);
+
+				GameLocation location = new GameLocation(coordinate, this.roomId);
+
 				for (Door door : this.doors) {
 
 					if (door.getDoorSpace().contains(coordinate)) {
 
-						this.roomCells[i][j] = new Cell(coordinate, CellProperty.Stepable, CellProperty.Door);
+						this.roomCells[i][j] = new Cell(location, CellProperty.Stepable, CellProperty.Door);
 						break;
 
 					}
@@ -91,14 +94,15 @@ public class Room {
 				if (this.roomCells[i][j] == null) {
 
 					Point coordinate = new Point(i * cellSize.width, j * cellSize.height);
+					GameLocation location = new GameLocation(coordinate, this.roomId);
 
 					if (this.stepablePolygon.contains(coordinate)) {
 
-						this.roomCells[i][j] = new Cell(coordinate, CellProperty.Stepable);
+						this.roomCells[i][j] = new Cell(location, CellProperty.Stepable);
 
 					} else {
 
-						this.roomCells[i][j] = new Cell(coordinate, CellProperty.NoProperty);
+						this.roomCells[i][j] = new Cell(location, CellProperty.NoProperty);
 
 					}
 				}

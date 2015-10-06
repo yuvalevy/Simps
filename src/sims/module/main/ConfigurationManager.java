@@ -34,7 +34,7 @@ public class ConfigurationManager {
 			break;
 		case 2:
 			if (doorIndex == 0) {
-				$.setLocation(new Point(100, 100));
+				$.setLocation(new Point(150, 100));
 			} else {
 				$.setLocation(new Point(100, 500));
 			}
@@ -61,7 +61,7 @@ public class ConfigurationManager {
 			break;
 		case 2:
 			if (doorIndex == 0) {
-				$ = new GameLocation(new Point(100, 100), roomId - 1);
+				$ = new GameLocation(new Point(188, 188), roomId - 1);
 			} else {
 				$ = new GameLocation(new Point(100, 100), roomId + 1);
 			}
@@ -113,6 +113,11 @@ public class ConfigurationManager {
 		String[] $ = null;
 
 		switch (roomId) {
+		case 1:
+
+			$ = ROOM_2_POINTS;
+			break;
+
 		case 2:
 
 			$ = ROOM_2_POINTS;

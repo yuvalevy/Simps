@@ -1,6 +1,5 @@
 package sims.module.calculators;
 
-import java.awt.Point;
 import java.util.ArrayList;
 
 import sims.basics.Log;
@@ -19,7 +18,8 @@ public class Dijkstra implements Calculator {
 	private Cell startCell;
 	private Cell endCell;
 	// private GameLocation doorPotention;
-	private Cell nextDoor;
+
+	private Cell room1start, room1end, room2start, room2end;
 
 	public Dijkstra(Map worldMap) {
 
@@ -66,6 +66,8 @@ public class Dijkstra implements Calculator {
 		}
 
 		this.isActive = true;
+		this.startCell = null;
+		this.endCell = null;
 
 		initializeCells();
 
@@ -79,6 +81,9 @@ public class Dijkstra implements Calculator {
 			Log.WriteLog("Start == End");
 			return;
 		}
+		Log.WriteLog("Start single");
+		Log.WriteLog("start cell: " + this.startCell.getCoordinate());
+		Log.WriteLog("end cell: " + this.endCell.getCoordinate());
 
 		Cell[][] spaceCells = currentRoom.getCells();
 
@@ -111,7 +116,7 @@ public class Dijkstra implements Calculator {
 			helpPointer = getClosestCell(spaceCells);
 
 		}
-
+		Log.WriteLog("End single");
 	}
 
 	/**
@@ -153,33 +158,44 @@ public class Dijkstra implements Calculator {
 	@Override
 	public void implementSteps(Player p, GameLocation start, GameLocation end) {
 
+		ArrayList<GameLocation> allSteps = new ArrayList<>();
+
 		Log.WriteLog("Implementing");
-
-		ArrayList<GameLocation> doors = this.worldMap.getRoomsRoad(2, 1);
-
-		this.nextDoor = this.worldMap.getCell(doors.get(1));
 
 		convert(start, end);
 
-		this.endCell.setPreviousCell(this.nextDoor);
-		this.nextDoor.setPreviousCell(this.nextDoor);
+		Log.WriteLog("STARTCELL " + this.startCell.getCoordinate());
+		Log.WriteLog("ENDCELL " + this.endCell.getCoordinate());
 
+		Log.WriteLog(" ");
 		Cell nextCell = this.startCell;
-		Point nextLocation = this.startCell.getCoordinate();
+		GameLocation nextLocation = this.startCell.getCoordinate();
 
-		while (nextCell.getPreviousCell() != nextCell) {
+		// nextCell = this.room2end;
+		// nextLocation = this.room2end.getCoordinate();
 
-			// Log.WriteLog("Step++ " + nextLocation);
+		do {
+
+			Log.WriteLog("Step++ " + nextLocation);
+
+			allSteps.add(nextLocation);
+			p.addStep(nextLocation);
 
 			nextCell = nextCell.getPreviousCell();
 			nextLocation = nextCell.getCoordinate();
-			p.addStep(new GameLocation(nextLocation, start.getRoomId()));
-		}
+
+		} while (nextCell.getPreviousCell() != nextCell);
+
+		Log.WriteLog("Step++ " + nextLocation);
+
+		allSteps.add(nextLocation);
+		p.addStep(nextLocation);
 
 		// this.doorPotention =
 		// currentRoom.getNextRoom(helpPointer.getCoordinate());
 
 		this.isActive = false;
+		Log.WriteLog("");
 
 	}
 
@@ -207,45 +223,68 @@ public class Dijkstra implements Calculator {
 	 */
 	private void innerExcute(GameLocation start, GameLocation end) {
 
-		// if (start.getRoomId() == end.getRoomId()) {
-
-		// Same room movement
-
-		// convert(end, start);
-		//
-		// executeSingleRoom(this.worldMap.getFocusedRoom());
-		//
-		// } else {
-
-		// Check for linked room
+		Log.WriteLog("Starting dijkstra");
 
 		ArrayList<GameLocation> doors = this.worldMap.getRoomsRoad(start.getRoomId(), end.getRoomId());
 
-		// this.nextDoor = this.worldMap.getCell(doors.get(0));
-
-		doors = new ArrayList<>();
 		doors.add(0, start);
 		doors.add(end);
 
 		Cell temp = this.endCell;
 
-		for (int i = 0; i < doors.size(); i += 2) {
+		Log.WriteLog("---------");
+		for (int i = 0; i < doors.size(); i++) {
+
+			Log.WriteLog("STEP " + i + " " + doors.get(i));
+		}
+		Log.WriteLog("---------");
+
+		// for (int i = doors.size() - 1; i > 0; i--) {
+		//
+		// convert(doors.get(i - 1), doors.get(i));
+		//
+		// if (i == 1) {
+		// this.startCell.setPreviousCell(this.startCell);
+		// }
+		//
+		// this.endCell.setPreviousCell(this.startCell);
+
+		for (int i = 0; i < (doors.size() - 1); i += 2) {
 
 			convert(doors.get(i + 1), doors.get(i));
 
-			int roomIndex = doors.get(i).getRoomId();
+			// if (i == 2) {
+			// this.startCell.setPreviousCell(this.startCell);
+			// }
+
+			this.endCell.setPreviousCell(this.startCell);
+
+			// if (i == 0) {
+			// this.room1start = this.startCell;
+			// this.room1end = this.endCell;
+			// } else {
+			// this.room2start = this.startCell;
+			// this.room2end = this.endCell;
+
+			// int roomIndex = doors.get(i).getRoomId();
+
+			// executeSingleRoom(this.worldMap.getRoom(roomIndex));
 
 			if (temp != null) {
-				// temp.setPreviousCell(this.startCell);
+				// Log.WriteLog("startCell:" + this.startCell.getCoordinate() +
+				// " his prev IS " + temp.getCoordinate());
+				// Log.WriteLog("temp pre: " +
+				// temp.getPreviousCell().getCoordinate());
+
+				temp.setPreviousCell(this.endCell);
+				// this.startCell.setPreviousCell(this.startCell);
+
 			}
 
-			executeSingleRoom(this.worldMap.getRoom(roomIndex));
-			temp = this.endCell;
+			temp = this.startCell;
 		}
 
-		// }
-
-		Log.WriteLog("Starting dijkstra");
+		temp.setPreviousCell(temp);
 
 		Log.WriteLog("END DIJK");
 

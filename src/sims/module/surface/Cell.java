@@ -32,7 +32,7 @@ public class Cell {
 
 	private final ArrayList<NeighborRelationship> neighbors;
 
-	private final Point coordinate;
+	private final GameLocation location;
 
 	private Cell dijPreviousCell;
 	private double dijDistanceFromStart;
@@ -42,7 +42,7 @@ public class Cell {
 	 * @param coordinate
 	 * @param cellType
 	 */
-	public Cell(Point coordinate, CellProperty... properties) {
+	public Cell(GameLocation location, CellProperty... properties) {
 
 		if (CELL_RECT == null) {
 
@@ -59,7 +59,7 @@ public class Cell {
 			this.properties.add(property);
 		}
 
-		this.coordinate = coordinate;
+		this.location = location;
 
 	}
 
@@ -101,11 +101,11 @@ public class Cell {
 	}
 
 	/**
-	 * @return the coordinate
+	 * @return the gameLocation
 	 */
-	public Point getCoordinate() {
+	public GameLocation getCoordinate() {
 
-		return this.coordinate;
+		return this.location;
 
 	}
 
@@ -161,7 +161,8 @@ public class Cell {
 	 */
 	public boolean isOnCell(Point p) {
 
-		Rectangle currentSpace = new Rectangle(this.coordinate, Cell.CELL_RECT.getSize());
+		Point loc = this.location.getLocation();
+		Rectangle currentSpace = new Rectangle(loc, Cell.CELL_RECT.getSize());
 
 		return currentSpace.contains(p);
 	}

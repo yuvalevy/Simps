@@ -42,6 +42,9 @@ class WalkingCalculator {
 		if (this.calculator.isActive()) {
 			return;
 		}
+
+		finalLocation.setRoomId(1);
+
 		this.calculator.excute(player.getCurrentLocation(), finalLocation);
 		this.calculator.implementSteps(player, player.getCurrentLocation(), finalLocation);
 
