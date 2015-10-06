@@ -59,15 +59,13 @@ public class Dijkstra implements Calculator {
 	@Override
 	public void excute(GameLocation start, GameLocation end) {
 
-		if (this.isActive) {
+		if (!this.isActive) {
+			this.isActive = true;
+		} else {
 			return;
 		}
 
-		this.isActive = true;
-		this.startCell = null;
-		this.endCell = null;
-
-		initializeCells();
+		initClass();
 
 		innerExcute(start, end);
 
@@ -177,9 +175,21 @@ public class Dijkstra implements Calculator {
 
 		p.addStep(nextLocation);
 
-		this.isActive = false;
+		initClass();
 		Log.WriteLineLog("-Finish implementing");
+		this.isActive = false;
 
+	}
+
+	/**
+	 *
+	 */
+	private void initClass() {
+
+		this.startCell = null;
+		this.endCell = null;
+
+		initializeCells();
 	}
 
 	/**

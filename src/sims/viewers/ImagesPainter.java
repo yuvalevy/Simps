@@ -123,10 +123,6 @@ public class ImagesPainter {
 		 * end draw surface
 		 */
 
-		g.setColor(Color.CYAN);
-
-		g.drawString("here", 88, 88);
-
 		/**
 		 * draw poly
 		 */
@@ -196,10 +192,6 @@ public class ImagesPainter {
 				ImageIcon playerIcon = this.playersImages.get(currentPlayer.getPlayerName());
 
 				paintByPoint(playerIcon, playerPoint, c, g);
-				Rectangle playerRect = currentPlayer.getObjectRectangle();
-
-				g.setColor(Color.pink);
-				g.drawRect(playerRect.x, playerRect.y, playerRect.width, playerRect.height);
 
 			}
 
