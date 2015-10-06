@@ -2,6 +2,7 @@ package sims.module.main;
 
 import java.awt.Point;
 import java.awt.Polygon;
+import java.awt.Rectangle;
 
 import sims.module.surface.GameLocation;
 
@@ -12,6 +13,16 @@ public class ConfigurationManager {
 			"128#128#565#565#276#276#128#128#280#280#737#737#826#826#931#931#826#826#673#673#128#20#20" };
 
 	private static String[] ROOM_2_DOOR1 = new String[] { "60#270#326#154", "20#20#128#128" };
+
+	public static String getCalculatorName() {
+
+		// return "line";
+		return "dijkstra";
+	}
+
+	public static Rectangle getCellDefaultSize() {
+		return new Rectangle(22, 22);
+	}
 
 	/**
 	 *
@@ -99,6 +110,10 @@ public class ConfigurationManager {
 		return area;
 	}
 
+	public static int getSleepTime() {
+		return 50;
+	}
+
 	/**
 	 * @param points
 	 */
@@ -122,4 +137,5 @@ public class ConfigurationManager {
 
 		return $;
 	}
+
 }

@@ -4,6 +4,10 @@ public class Log {
 
 	private static LogLevel logLevel;
 
+	public static LogLevel getLogLevel() {
+		return logLevel;
+	}
+
 	public static void setLogLevel(LogLevel level) {
 		Log.logLevel = level;
 	}

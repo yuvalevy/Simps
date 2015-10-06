@@ -14,6 +14,7 @@ import javax.swing.JButton;
 
 import sims.basics.GameActions;
 import sims.basics.Randomaizer;
+import sims.module.main.ConfigurationManager;
 import sims.module.main.World;
 import sims.module.surface.GameLocation;
 import sims.viewers.GuiViewer;
@@ -34,7 +35,7 @@ public class GuiControler implements GameActions, Runnable {
 	public GuiControler() {
 
 		// TODO: Configuration
-		final Rectangle cellDefaultSize = new Rectangle(10, 10);
+		final Rectangle cellDefaultSize = ConfigurationManager.getCellDefaultSize();
 
 		this.gameThread = new Thread(this);
 
@@ -166,6 +167,8 @@ public class GuiControler implements GameActions, Runnable {
 	@Override
 	public void run() {
 
+		int sleepTime = ConfigurationManager.getSleepTime();
+
 		while (this.gameModule.isRunning()) {
 
 			tick();
@@ -180,7 +183,7 @@ public class GuiControler implements GameActions, Runnable {
 
 			try {
 
-				Thread.sleep(20);
+				Thread.sleep(sleepTime);
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();

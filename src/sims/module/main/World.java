@@ -32,7 +32,7 @@ public class World implements GameActions {
 		// TODO: proportion for game width to cell count
 		this.worldMap = new Map(screenDimension, cellDefaultSize);
 
-		this.walkingCalculator = new WalkingCalculator(cellDefaultSize, getRooms());
+		this.walkingCalculator = new WalkingCalculator(this.worldMap);
 
 		Log.WriteLog("Created World instance");
 	}

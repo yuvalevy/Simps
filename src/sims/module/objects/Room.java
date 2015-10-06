@@ -12,7 +12,7 @@ import sims.module.surface.GameLocation;
 public class Room {
 
 	private static int roomCount = 0;
-	private final Cell[][] cells;
+	private final Cell[][] roomCells;
 
 	private int roomId;
 	private final Door[] doors;
@@ -35,7 +35,7 @@ public class Room {
 		}
 
 		// TODO: cell count is configurable for future flexibility
-		this.cells = new Cell[width][hight];
+		this.roomCells = new Cell[width][hight];
 
 	}
 
@@ -49,6 +49,8 @@ public class Room {
 
 		createNonDoorSpace(cellSize);
 
+		makeNeighbors();
+
 	}
 
 	/**
@@ -58,14 +60,15 @@ public class Room {
 	 */
 	private void createDoors(Rectangle cellsize) {
 
-		for (int i = 0; i < this.cells.length; i++) {
-			for (int j = 0; j < this.cells[i].length; j++) {
+		for (int i = 0; i < this.roomCells.length; i++) {
+			for (int j = 0; j < this.roomCells[i].length; j++) {
+
 				Point coordinate = new Point(i * cellsize.width, j * cellsize.height);
 				for (Door door : this.doors) {
 
 					if (door.getDoorSpace().contains(coordinate)) {
 
-						this.cells[i][j] = new Cell(coordinate, CellProperty.Stepable, CellProperty.Door);
+						this.roomCells[i][j] = new Cell(coordinate, CellProperty.Stepable, CellProperty.Door);
 						break;
 
 					}
@@ -81,19 +84,19 @@ public class Room {
 	 */
 	private void createNonDoorSpace(Rectangle cellSize) {
 
-		for (int i = 0; i < this.cells.length; i++) {
-			for (int j = 0; j < this.cells[i].length; j++) {
-				if (this.cells[i][j] == null) {
+		for (int i = 0; i < this.roomCells.length; i++) {
+			for (int j = 0; j < this.roomCells[i].length; j++) {
+				if (this.roomCells[i][j] == null) {
 
 					Point coordinate = new Point(i * cellSize.width, j * cellSize.height);
 
 					if (this.stepablePolygon.contains(coordinate)) {
 
-						this.cells[i][j] = new Cell(coordinate, CellProperty.Stepable);
+						this.roomCells[i][j] = new Cell(coordinate, CellProperty.Stepable);
 
 					} else {
 
-						this.cells[i][j] = new Cell(coordinate, CellProperty.NoProperty);
+						this.roomCells[i][j] = new Cell(coordinate, CellProperty.NoProperty);
 
 					}
 				}
@@ -127,9 +130,21 @@ public class Room {
 		return CellProperty.NoProperty;
 	}
 
+	public Cell getCell(Point p) {
+
+		for (int i = 0; i < this.roomCells.length; i++) {
+			for (int j = 0; j < this.roomCells[i].length; j++) {
+				if (this.roomCells[i][j].isOnCell(p)) {
+					return this.roomCells[i][j];
+				}
+			}
+		}
+		return null;
+	}
+
 	public Cell[][] getCells() {
 
-		return this.cells;
+		return this.roomCells;
 
 	}
 
@@ -174,6 +189,51 @@ public class Room {
 	 */
 	public int getRoomId() {
 		return this.roomId;
+	}
+
+	private void makeNeighbors() {
+
+		final double verticalMove = 10, ofekiMove = 10,
+				diagonalMove = Math.sqrt((verticalMove * verticalMove) + (ofekiMove * ofekiMove));
+
+		for (int i = 1; i < (this.roomCells.length - 1); i++) {
+			for (int j = 1; j < (this.roomCells[i].length - 1); j++) {
+
+				// [i-1][j-1] [i-1][j] [i-1][j+1]
+				// [i][j-1] ****** [i][j+1]
+				// [i+1][j-1] [i+1][j] [i+1][j+1]
+
+				this.roomCells[i][j].addTupleNeighbors(this.roomCells[i - 1][j - 1], diagonalMove);
+				this.roomCells[i][j].addTupleNeighbors(this.roomCells[i - 1][j], ofekiMove);
+				this.roomCells[i][j].addTupleNeighbors(this.roomCells[i - 1][j + 1], diagonalMove);
+
+				this.roomCells[i][j].addTupleNeighbors(this.roomCells[i][j - 1], verticalMove);
+				this.roomCells[i][j].addTupleNeighbors(this.roomCells[i][j + 1], verticalMove);
+
+				this.roomCells[i][j].addTupleNeighbors(this.roomCells[i + 1][j - 1], diagonalMove);
+				this.roomCells[i][j].addTupleNeighbors(this.roomCells[i + 1][j], ofekiMove);
+				this.roomCells[i][j].addTupleNeighbors(this.roomCells[i + 1][j + 1], diagonalMove);
+
+			}
+		}
+
+		// Frame
+
+		for (int i = 0; i < (this.roomCells.length - 1); i++) {
+			int endJ = this.roomCells[i].length - 1;
+
+			this.roomCells[i][endJ].addTupleNeighbors(this.roomCells[i + 1][endJ], ofekiMove);
+			this.roomCells[i][0].addTupleNeighbors(this.roomCells[i + 1][0], ofekiMove);
+
+		}
+
+		for (int j = 0; j < (this.roomCells[0].length - 1); j++) {
+			int endI = this.roomCells.length - 1;
+
+			this.roomCells[0][j].addTupleNeighbors(this.roomCells[0][j + 1], 1);
+			this.roomCells[endI][j].addTupleNeighbors(this.roomCells[endI][j + 1], 1);
+		}
+
 	}
 
 	public void setRoomId(int roomId) {

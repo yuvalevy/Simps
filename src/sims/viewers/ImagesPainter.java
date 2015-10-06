@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 
 import sims.basics.Log;
+import sims.basics.LogLevel;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
 import sims.module.surface.Cell;
@@ -64,6 +65,10 @@ public class ImagesPainter {
 
 		Rectangle recCell = Cell.getCellSize();
 
+		// Color[] colors = new Color[] { Color.BLUE, Color.YELLOW,
+		// Color.MAGENTA, Color.ORANGE, Color.CYAN };
+		// int index = 0, colorIndex = 0;
+
 		for (Cell[] cellsRow : this.gameRooms.get(this.currentRoom - 1).getCells()) {
 			for (Cell cell : cellsRow) {
 
@@ -83,6 +88,35 @@ public class ImagesPainter {
 
 				g.drawRect(coor.x, coor.y, recCell.width, recCell.height);
 
+				/**
+				 * Draw relationships
+				 */
+				// g.setColor(colors[colorIndex]);
+				// index++;
+				// colorIndex++;
+				// if (colorIndex == colors.length) {
+				// colorIndex = 0;
+				// }
+				// // if ((coor.x == 0) && (coor.y == 0)) {
+				// if ((index % 17) == 0) {
+				//
+				// g.drawString("" + cell.getNeighbors().size(), coor.x + 10,
+				// coor.y + 10);
+				// for (NeighborRelationship rela : cell.getNeighbors()) {
+				//
+				// Point relaPoint = rela.getNighborCell().getCoordinate();
+				// g.drawLine(coor.x + (recCell.width / 2), coor.y +
+				// (recCell.height / 2),
+				// relaPoint.x + (recCell.width / 2), relaPoint.y +
+				// (recCell.height / 2));
+				//
+				// }
+				// // }
+				// }
+
+				/**
+				 * end Draw relationships
+				 */
 			}
 		}
 
@@ -176,7 +210,9 @@ public class ImagesPainter {
 		paintFurnitures(c, g);
 		paintPlayers(c, g);
 
-		drawDebug(g);
+		if (Log.getLogLevel() == LogLevel.Debug) {
+			drawDebug(g);
+		}
 	}
 
 	public void removePlayer(String playerName) {

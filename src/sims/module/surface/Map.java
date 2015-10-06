@@ -75,6 +75,13 @@ public class Map {
 		this.isMapInit = true;
 	}
 
+	public Cell getCell(GameLocation start) {
+
+		Room currentRoom = getRoom(start.getRoomId());
+
+		return currentRoom.getCell(start.getLocation());
+	}
+
 	public Room getFocusedRoom() {
 
 		return this.focusedRoom;
@@ -104,18 +111,18 @@ public class Map {
 		return this.mapRooms;
 	}
 
-	public boolean isMapInit() {
-
-		return this.isMapInit;
-
-	}
-
 	// public boolean isOnDoor(GameLocation objectLocation) {
 	//
 	// return true;//
 	// this.mapRooms.get(objectLocation.getRoomId()).idOnDoor(objectLocation.getLocation());
 	//
 	// }
+
+	public boolean isMapInit() {
+
+		return this.isMapInit;
+
+	}
 
 	public void setFocusedRoom(int roomId) {
 
