@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import sims.basics.Log;
 import sims.basics.LogLevel;
+import sims.module.objects.Door;
 import sims.module.objects.Room;
 
 /**
@@ -88,7 +89,7 @@ public class Map {
 
 	}
 
-	private Room getRoom(int roomId) {
+	public Room getRoom(int roomId) {
 
 		for (Room room : this.mapRooms) {
 			if (room.getRoomId() == roomId) {
@@ -117,6 +118,37 @@ public class Map {
 	// this.mapRooms.get(objectLocation.getRoomId()).idOnDoor(objectLocation.getLocation());
 	//
 	// }
+
+	public ArrayList<GameLocation> getRoomsRoad(int roomId, int roomId2) {
+
+		ArrayList<GameLocation> road = new ArrayList<>();
+
+		int adder = 0;
+		if (roomId == roomId2) {
+			return road;
+		}
+		if (roomId < roomId2) {
+			adder = 1;
+		} else {
+			adder = -1;
+		}
+
+		int nextRoomId = roomId;
+		Room startRoom = null;
+
+		do {
+			startRoom = getRoom(nextRoomId);
+			nextRoomId += adder;
+			Door nextDoor = startRoom.getDoor(nextRoomId);
+
+			road.add(nextDoor.getDoorLocation());
+			road.add(nextDoor.getNextRoomStartingLocation());
+
+		} while (nextRoomId != roomId2);
+
+		return road;
+
+	}
 
 	public boolean isMapInit() {
 

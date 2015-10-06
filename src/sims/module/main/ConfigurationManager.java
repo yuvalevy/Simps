@@ -24,6 +24,26 @@ public class ConfigurationManager {
 		return new Rectangle(22, 22);
 	}
 
+	public static GameLocation getDoorLocation(int roomId, int doorIndex) {
+
+		GameLocation $ = new GameLocation(roomId);
+
+		switch (roomId) {
+		case 1:
+			$.setLocation(new Point(100, 500));
+			break;
+		case 2:
+			if (doorIndex == 0) {
+				$.setLocation(new Point(100, 100));
+			} else {
+				$.setLocation(new Point(100, 500));
+			}
+			break;
+		}
+
+		return $;
+	}
+
 	/**
 	 *
 	 * @param doorIndex

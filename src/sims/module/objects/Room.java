@@ -30,7 +30,9 @@ public class Room {
 		for (int i = 0; i < doorsPolys.length; i++) {
 
 			GameLocation nextDoor = ConfigurationManager.getDoorNextRoomStartingLocation(this.roomId, i);
-			this.doors[i] = new Door(nextDoor, doorsPolys[i]);
+			GameLocation doorLocation = ConfigurationManager.getDoorLocation(this.roomId, i);
+
+			this.doors[i] = new Door(nextDoor, doorsPolys[i], doorLocation);
 
 		}
 
@@ -148,11 +150,11 @@ public class Room {
 
 	}
 
-	public Door getDoor(Point objectLocation) {
+	public Door getDoor(int nextRoomId) {
 
 		for (Door door : this.doors) {
 
-			if (door.getDoorSpace().contains(objectLocation)) {
+			if (door.getNextRoomStartingLocation().getRoomId() == nextRoomId) {
 
 				return door;
 
@@ -164,29 +166,28 @@ public class Room {
 
 	}
 
+	private Door getDoor(Point locationOnDoor) {
+
+		for (Door door : this.doors) {
+			if (door.getDoorSpace().contains(locationOnDoor)) {
+				return door;
+			}
+		}
+
+		return null;
+	}
+
 	public GameLocation getNextRoom(Point locationOnDoor) {
 
 		Door $ = getDoor(locationOnDoor);
 
+		if ($ == null) {
+			return null;
+		}
+
 		return $.getNextRoomStartingLocation();
 	}
 
-	/*
-	 * public CellType getCellType(Point cellLocation) {
-	 *
-	 * CellType type = null;
-	 *
-	 * int i = cellLocation.x / Cell.getCellSize().width; int j = cellLocation.y
-	 * / Cell.getCellSize().height;
-	 *
-	 * Cell chosen = this.cells[i][j];
-	 *
-	 * type = chosen.getCellType();
-	 *
-	 * return type;
-	 *
-	 * }
-	 */
 	public int getRoomId() {
 		return this.roomId;
 	}
