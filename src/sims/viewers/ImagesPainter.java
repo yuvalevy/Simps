@@ -232,7 +232,7 @@ public class ImagesPainter {
 	public void setStartingPaintWidth(int width) {
 
 		this.startingPaintWidth = 0;
-		Log.WriteLog("ImagesPainter.setStartingPaintWidth = " + width);
+		Log.WriteLineLog("ImagesPainter.setStartingPaintWidth = " + width);
 	}
 
 }

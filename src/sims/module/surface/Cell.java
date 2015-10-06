@@ -46,7 +46,7 @@ public class Cell {
 
 		if (CELL_RECT == null) {
 
-			Log.WriteLog("Cell size was not init. Initilizing to (10,10)", LogLevel.Error);
+			Log.WriteLineLog("Cell size was not init. Initilizing to (10,10)", LogLevel.Error);
 
 			// CELL_RECT = new Rectangle(10, 10);
 

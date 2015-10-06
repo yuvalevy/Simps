@@ -42,7 +42,7 @@ public class GuiViewer extends JPanel implements GameActions {
 		this.screenSize = gameDimention;
 
 		this.painter = new ImagesPainter(gameModule.getPlayers(), gameModule.getRooms());
-		Log.WriteLog("Created WorldViewer instance");
+		Log.WriteLineLog("Created WorldViewer instance");
 
 	}
 
@@ -118,7 +118,7 @@ public class GuiViewer extends JPanel implements GameActions {
 
 		mainFrame.setVisible(true);
 
-		Log.WriteLog("Frame created. setVisible(true)");
+		Log.WriteLineLog("Frame created. setVisible(true)");
 	}
 
 	/**
@@ -158,7 +158,7 @@ public class GuiViewer extends JPanel implements GameActions {
 
 		managmentPanel.add(this.btnPauseGame, BorderLayout.SOUTH);
 
-		Log.WriteLog("Created managment panel");
+		Log.WriteLineLog("Created managment panel");
 
 		return managmentPanel;
 	}
@@ -196,7 +196,7 @@ public class GuiViewer extends JPanel implements GameActions {
 		roomsPanel.setBorder(new LineBorder(new Color(255, 175, 175), 2, true));
 		roomsPanel.setMinimumSize(new Dimension(1000, 1000));
 
-		Log.WriteLog("Created room panel");
+		Log.WriteLineLog("Created room panel");
 
 		return roomsPanel;
 	}

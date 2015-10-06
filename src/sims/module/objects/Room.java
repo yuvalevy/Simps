@@ -170,7 +170,7 @@ public class Room {
 
 	}
 
-	private Door getDoor(Point locationOnDoor) {
+	public Door getDoor(Point locationOnDoor) {
 
 		for (Door door : this.doors) {
 			if (door.getDoorSpace().contains(locationOnDoor)) {

@@ -34,7 +34,7 @@ public class World implements GameActions {
 
 		this.walkingCalculator = new WalkingCalculator(this.worldMap);
 
-		Log.WriteLog("Created World instance");
+		Log.WriteLineLog("Created World instance");
 	}
 
 	@Override
@@ -154,7 +154,7 @@ public class World implements GameActions {
 	public void movePlayer(GameLocation newLocation) {
 
 		if (this.focusedPlayer == null) {
-			Log.WriteLog("Cannot move - No player in focuse");
+			Log.WriteLineLog("Cannot move - No player in focuse");
 			return;
 		}
 
@@ -185,12 +185,12 @@ public class World implements GameActions {
 		Player currentPlayer = getPlayer(playerName);
 		if (currentPlayer == null) {
 			// TODO: Handle error here
-			Log.WriteLog("Could not find player " + playerName, LogLevel.Error);
+			Log.WriteLineLog("Could not find player " + playerName, LogLevel.Error);
 		}
 
 		this.focusedPlayer = currentPlayer;
 
-		Log.WriteLog("Focused player is " + playerName, LogLevel.Debug);
+		Log.WriteLineLog("Focused player is " + playerName, LogLevel.Debug);
 
 	}
 
@@ -199,7 +199,7 @@ public class World implements GameActions {
 
 		this.worldMap.setFocusedRoom(roomId);
 
-		Log.WriteLog("Focused room is " + roomId);
+		Log.WriteLineLog("Focused room is " + roomId);
 	}
 
 	@Override

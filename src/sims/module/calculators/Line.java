@@ -96,11 +96,11 @@ public class Line implements Calculator {
 
 				p.addStep(last);
 
-				Log.WriteLog("Step Added");
+				Log.WriteLineLog("Step Added");
 
 			} else {
 
-				Log.WriteLog("Step not stepable");
+				Log.WriteLineLog("Step not stepable");
 
 				break;
 			}
@@ -111,7 +111,7 @@ public class Line implements Calculator {
 			GameLocation roomStartLocation = this.worldMap.getFocusedRoom().getNextRoom(last.getLocation());
 			p.addStep(roomStartLocation);
 
-			Log.WriteLog("New room it is, new room: " + roomStartLocation.getRoomId());
+			Log.WriteLineLog("New room it is, new room: " + roomStartLocation.getRoomId());
 		}
 
 	}
@@ -148,7 +148,7 @@ public class Line implements Calculator {
 
 			newLocation = new Point(newx, newy);
 
-			Log.WriteLog("NEW step " + newLocation);
+			Log.WriteLineLog("NEW step " + newLocation);
 
 			secondPointDistance = dotsDistance(destP, newLocation);
 
@@ -159,7 +159,7 @@ public class Line implements Calculator {
 
 			} else {
 
-				Log.WriteLog("End of line");
+				Log.WriteLineLog("End of line");
 
 				reasonToStop = true;
 

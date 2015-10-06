@@ -43,12 +43,10 @@ class WalkingCalculator {
 			return;
 		}
 
-		finalLocation.setRoomId(1);
-
 		this.calculator.excute(player.getCurrentLocation(), finalLocation);
 		this.calculator.implementSteps(player, player.getCurrentLocation(), finalLocation);
 
-		Log.WriteLog("Added all steps to " + player.getPlayerName());
+		Log.WriteLineLog("Added all steps to " + player.getPlayerName());
 	}
 
 }

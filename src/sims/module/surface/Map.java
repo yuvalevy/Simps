@@ -56,7 +56,7 @@ public class Map {
 
 		if (this.mapRooms.size() == 0) {
 
-			Log.WriteLog("There are no rooms.", LogLevel.Error);
+			Log.WriteLineLog("There are no rooms.", LogLevel.Error);
 
 			try {
 				throw new Exception("Cannot start game. There are no rooms.");
@@ -81,6 +81,12 @@ public class Map {
 		Room currentRoom = getRoom(start.getRoomId());
 
 		return currentRoom.getCell(start.getLocation());
+	}
+
+	public Door getDoor(GameLocation objectLocation) {
+
+		return getRoom(objectLocation.getRoomId()).getDoor(objectLocation.getLocation());
+
 	}
 
 	public Room getFocusedRoom() {
@@ -111,13 +117,6 @@ public class Map {
 
 		return this.mapRooms;
 	}
-
-	// public boolean isOnDoor(GameLocation objectLocation) {
-	//
-	// return true;//
-	// this.mapRooms.get(objectLocation.getRoomId()).idOnDoor(objectLocation.getLocation());
-	//
-	// }
 
 	public ArrayList<GameLocation> getRoomsRoad(int roomId, int roomId2) {
 

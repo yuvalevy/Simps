@@ -8,7 +8,7 @@ public class Program {
 
 	public static void main(String[] args) {
 
-		Log.WriteLog("Starting game!", LogLevel.Debug);
+		Log.WriteLineLog("Starting game!", LogLevel.Debug);
 
 		GuiControler controler = new GuiControler();
 

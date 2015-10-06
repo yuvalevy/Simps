@@ -3,6 +3,7 @@ package sims.module.calculators;
 import java.util.ArrayList;
 
 import sims.basics.Log;
+import sims.module.objects.Door;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
 import sims.module.surface.Cell;
@@ -17,9 +18,6 @@ public class Dijkstra implements Calculator {
 
 	private Cell startCell;
 	private Cell endCell;
-	// private GameLocation doorPotention;
-
-	private Cell room1start, room1end, room2start, room2end;
 
 	public Dijkstra(Map worldMap) {
 
@@ -41,7 +39,7 @@ public class Dijkstra implements Calculator {
 	private void convert(GameLocation start, GameLocation end) {
 
 		if (start.getRoomId() != end.getRoomId()) {
-			Log.WriteLog("Dijkstra.convert - not same room");
+			Log.WriteLineLog("Dijkstra.convert - not same room");
 			// return;
 		}
 
@@ -78,12 +76,10 @@ public class Dijkstra implements Calculator {
 	private void executeSingleRoom(Room currentRoom) {
 
 		if (this.startCell == this.endCell) {
-			Log.WriteLog("Start == End");
+			Log.WriteLineLog("executeSingleRoom: Start == End");
 			return;
 		}
-		Log.WriteLog("Start single");
-		Log.WriteLog("start cell: " + this.startCell.getCoordinate());
-		Log.WriteLog("end cell: " + this.endCell.getCoordinate());
+		Log.WriteLog("-Start single room dikjstra-");
 
 		Cell[][] spaceCells = currentRoom.getCells();
 
@@ -92,11 +88,6 @@ public class Dijkstra implements Calculator {
 		helpPointer.setDistanceFromStart(0);
 
 		while (helpPointer != this.endCell) {
-
-			// Log.WriteLog("helpPointer = " +
-			// helpPointer.getDistanceFromStart() + " " +
-			// helpPointer.getCoordinate() + " --Neighbors " +
-			// helpPointer.getNeighbors().size());
 
 			helpPointer.setVisited(true);
 			for (NeighborRelationship relationship : helpPointer.getNeighbors()) {
@@ -112,11 +103,11 @@ public class Dijkstra implements Calculator {
 				}
 			}
 
-			// Log.WriteLog("Trying to find the closest");
 			helpPointer = getClosestCell(spaceCells);
 
 		}
-		Log.WriteLog("End single");
+		Log.WriteLog("-End single room dikjstra   ");
+
 	}
 
 	/**
@@ -158,27 +149,17 @@ public class Dijkstra implements Calculator {
 	@Override
 	public void implementSteps(Player p, GameLocation start, GameLocation end) {
 
-		ArrayList<GameLocation> allSteps = new ArrayList<>();
-
-		Log.WriteLog("Implementing");
+		Log.WriteLog("-Implementing");
 
 		convert(start, end);
 
-		Log.WriteLog("STARTCELL " + this.startCell.getCoordinate());
-		Log.WriteLog("ENDCELL " + this.endCell.getCoordinate());
-
-		Log.WriteLog(" ");
 		Cell nextCell = this.startCell;
 		GameLocation nextLocation = this.startCell.getCoordinate();
 
-		// nextCell = this.room2end;
-		// nextLocation = this.room2end.getCoordinate();
-
 		do {
 
-			Log.WriteLog("Step++ " + nextLocation);
+			// Log.WriteLog("Step++ " + nextLocation);
 
-			allSteps.add(nextLocation);
 			p.addStep(nextLocation);
 
 			nextCell = nextCell.getPreviousCell();
@@ -186,16 +167,18 @@ public class Dijkstra implements Calculator {
 
 		} while (nextCell.getPreviousCell() != nextCell);
 
-		Log.WriteLog("Step++ " + nextLocation);
+		// Log.WriteLog("Step++ " + nextLocation);
 
-		allSteps.add(nextLocation);
+		Door nextDoor = this.worldMap.getDoor(nextLocation);
+		if (nextDoor != null) {
+
+			nextLocation = nextDoor.getNextRoomStartingLocation();
+		}
+
 		p.addStep(nextLocation);
 
-		// this.doorPotention =
-		// currentRoom.getNextRoom(helpPointer.getCoordinate());
-
 		this.isActive = false;
-		Log.WriteLog("");
+		Log.WriteLineLog("-Finish implementing");
 
 	}
 
@@ -214,7 +197,7 @@ public class Dijkstra implements Calculator {
 			}
 		}
 
-		Log.WriteLog("Finished init");
+		Log.WriteLineLog("Finished init");
 
 	}
 
@@ -223,7 +206,7 @@ public class Dijkstra implements Calculator {
 	 */
 	private void innerExcute(GameLocation start, GameLocation end) {
 
-		Log.WriteLog("Starting dijkstra");
+		Log.WriteLog("START all dijkstra");
 
 		ArrayList<GameLocation> doors = this.worldMap.getRoomsRoad(start.getRoomId(), end.getRoomId());
 
@@ -232,12 +215,12 @@ public class Dijkstra implements Calculator {
 
 		Cell temp = this.endCell;
 
-		Log.WriteLog("---------");
-		for (int i = 0; i < doors.size(); i++) {
-
-			Log.WriteLog("STEP " + i + " " + doors.get(i));
-		}
-		Log.WriteLog("---------");
+		// Log.WriteLog("---------");
+		// for (int i = 0; i < doors.size(); i++) {
+		//
+		// Log.WriteLog("STEP " + i + " " + doors.get(i));
+		// }
+		// Log.WriteLog("---------");
 
 		// for (int i = doors.size() - 1; i > 0; i--) {
 		//
@@ -253,31 +236,13 @@ public class Dijkstra implements Calculator {
 
 			convert(doors.get(i + 1), doors.get(i));
 
-			// if (i == 2) {
-			// this.startCell.setPreviousCell(this.startCell);
-			// }
+			int roomIndex = doors.get(i).getRoomId();
 
-			this.endCell.setPreviousCell(this.startCell);
-
-			// if (i == 0) {
-			// this.room1start = this.startCell;
-			// this.room1end = this.endCell;
-			// } else {
-			// this.room2start = this.startCell;
-			// this.room2end = this.endCell;
-
-			// int roomIndex = doors.get(i).getRoomId();
-
-			// executeSingleRoom(this.worldMap.getRoom(roomIndex));
+			executeSingleRoom(this.worldMap.getRoom(roomIndex));
 
 			if (temp != null) {
-				// Log.WriteLog("startCell:" + this.startCell.getCoordinate() +
-				// " his prev IS " + temp.getCoordinate());
-				// Log.WriteLog("temp pre: " +
-				// temp.getPreviousCell().getCoordinate());
 
 				temp.setPreviousCell(this.endCell);
-				// this.startCell.setPreviousCell(this.startCell);
 
 			}
 
@@ -286,7 +251,7 @@ public class Dijkstra implements Calculator {
 
 		temp.setPreviousCell(temp);
 
-		Log.WriteLog("END DIJK");
+		Log.WriteLineLog("END all dijkstra");
 
 	}
 

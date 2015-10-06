@@ -23,7 +23,7 @@ public class MouseHandler implements MouseListener {
 		Point pointClicked = event.getPoint();
 
 		pointClicked.x = pointClicked.x - this.startingPaintWidth;
-		Log.WriteLog("Point clicked: " + pointClicked);
+		Log.WriteLineLog("Point clicked: " + pointClicked);
 
 		// switch (event.getClickCount()) {
 		switch (event.getButton()) {
