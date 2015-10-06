@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import sims.basics.Log;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
-import sims.module.surface.CellType;
+import sims.module.surface.CellProperty;
 import sims.module.surface.GameLocation;
 
 class WalkingCalculator {
@@ -107,10 +107,10 @@ class WalkingCalculator {
 
 				Rectangle playerRect = player.getObjectRectangle(newLocation);
 
-				CellType type = currentRoom.getAreaCellType(playerRect);
-				if (type.isStepable()) {
+				CellProperty prop = currentRoom.getAreaCellType(playerRect);
+				if ((prop == CellProperty.Stepable) || (prop == CellProperty.Door)) {
 
-					if (type.isDoor()) {
+					if (prop == CellProperty.Door) {
 						newRoom = true;
 					}
 
@@ -127,6 +127,7 @@ class WalkingCalculator {
 					reasonToStop = true;
 
 				}
+
 			} else {
 
 				Log.WriteLog("End of line");
@@ -187,5 +188,4 @@ class WalkingCalculator {
 		return false;
 
 	}
-
 }

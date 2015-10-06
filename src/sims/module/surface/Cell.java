@@ -5,6 +5,7 @@ package sims.module.surface;
 
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import sims.basics.Log;
 import sims.basics.LogLevel;
@@ -27,7 +28,7 @@ public class Cell {
 		Cell.CELL_RECT = cellsize;
 	}
 
-	private final CellType cellType;
+	private final ArrayList<CellProperty> properties;
 
 	private final Point coordinate;
 
@@ -35,7 +36,7 @@ public class Cell {
 	 * @param coordinate
 	 * @param cellType
 	 */
-	public Cell(CellType cellType, Point coordinate) {
+	public Cell(Point coordinate, CellProperty... properties) {
 
 		if (CELL_RECT == null) {
 
@@ -45,17 +46,19 @@ public class Cell {
 
 		}
 
-		this.cellType = cellType;
+		this.properties = new ArrayList<CellProperty>();
+
+		for (CellProperty property : properties) {
+			this.properties.add(property);
+		}
+
 		this.coordinate = coordinate;
 
 	}
 
-	/**
-	 * @return the cellType
-	 */
-	public CellType getCellType() {
+	public boolean containsProperty(CellProperty prop) {
 
-		return this.cellType;
+		return this.properties.contains(prop);
 
 	}
 
@@ -65,15 +68,6 @@ public class Cell {
 	public Point getCoordinate() {
 
 		return this.coordinate;
-
-	}
-
-	/**
-	 * @return the isDoor
-	 */
-	public boolean isDoor() {
-
-		return this.cellType.isDoor();
 
 	}
 
@@ -88,15 +82,6 @@ public class Cell {
 		Rectangle currentSpace = new Rectangle(this.coordinate, Cell.CELL_RECT.getSize());
 
 		return currentSpace.contains(p);
-	}
-
-	/**
-	 * @return the isStepable
-	 */
-	public boolean isStepable() {
-
-		return this.cellType.isStepable();
-
 	}
 
 }

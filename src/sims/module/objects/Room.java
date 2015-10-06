@@ -6,8 +6,7 @@ import java.awt.Rectangle;
 
 import sims.module.main.ConfigurationManager;
 import sims.module.surface.Cell;
-import sims.module.surface.CellFactory;
-import sims.module.surface.CellType;
+import sims.module.surface.CellProperty;
 import sims.module.surface.GameLocation;
 
 public class Room {
@@ -42,74 +41,90 @@ public class Room {
 
 	public void createDefalutMap() {
 
-		Rectangle cellsize = Cell.getCellSize();
+		Rectangle cellSize = Cell.getCellSize();
+
+		createDoors(cellSize);
+
+		this.stepablePolygon = ConfigurationManager.getRoomPolygonStepable(this.roomId);
+
+		createNonDoorSpace(cellSize);
+
+	}
+
+	/**
+	 * Creates all room's door area
+	 *
+	 * @param cellsize
+	 */
+	private void createDoors(Rectangle cellsize) {
 
 		for (int i = 0; i < this.cells.length; i++) {
-
 			for (int j = 0; j < this.cells[i].length; j++) {
-
 				Point coordinate = new Point(i * cellsize.width, j * cellsize.height);
-
 				for (Door door : this.doors) {
 
 					if (door.getDoorSpace().contains(coordinate)) {
 
-						this.cells[i][j] = CellFactory.getCell(true, true, coordinate);
+						this.cells[i][j] = new Cell(coordinate, CellProperty.Stepable, CellProperty.Door);
 						break;
+
 					}
 				}
 			}
 		}
+	}
 
-		this.stepablePolygon = ConfigurationManager.getRoomPolygonStepable(this.roomId);
+	/**
+	 * Creates all room's non-door area
+	 *
+	 * @param cellSize
+	 */
+	private void createNonDoorSpace(Rectangle cellSize) {
 
-		for (int i = 0; i < this.cells.length; i++)
-
-		{
-
+		for (int i = 0; i < this.cells.length; i++) {
 			for (int j = 0; j < this.cells[i].length; j++) {
-
 				if (this.cells[i][j] == null) {
 
-					Point coordinate = new Point(i * cellsize.width, j * cellsize.height);
+					Point coordinate = new Point(i * cellSize.width, j * cellSize.height);
 
 					if (this.stepablePolygon.contains(coordinate)) {
 
-						this.cells[i][j] = CellFactory.getCell(true, false, coordinate);
+						this.cells[i][j] = new Cell(coordinate, CellProperty.Stepable);
 
 					} else {
 
-						this.cells[i][j] = CellFactory.getCell(false, false, coordinate);
+						this.cells[i][j] = new Cell(coordinate, CellProperty.NoProperty);
 
 					}
 				}
-
 			}
 		}
-
 	}
 
-	public CellType getAreaCellType(Rectangle playerRect) {
+	/**
+	 * Returns area main cell property.
+	 *
+	 * @param playerRect
+	 * @return If playerRect is intersects with doorSpace, returns
+	 *         CellProperty.Door. If playerRext is fully contained in
+	 *         stepablePolygon, returns CellProperty.Stepable. Otherwise,
+	 *         returns CellProperty.NoProperty.
+	 */
+	public CellProperty getAreaCellType(Rectangle playerRect) {
 
 		// Only intersects... means only touching it
 		for (Door door : this.doors) {
-
 			if (door.getDoorSpace().intersects(playerRect)) {
-
-				return CellFactory.getCellType(true, true);
-
+				return CellProperty.Door;
 			}
-
 		}
 
 		// Contains it all
 		if (this.stepablePolygon.contains(playerRect)) {
-
-			return CellFactory.getCellType(true, false);
-
+			return CellProperty.Stepable;
 		}
 
-		return CellFactory.getCellType(false, false);
+		return CellProperty.NoProperty;
 	}
 
 	public Cell[][] getCells() {
