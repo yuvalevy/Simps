@@ -1,22 +1,19 @@
 package sims.module.objects;
 
 import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.LinkedList;
 
 import sims.module.surface.GameLocation;
 
-public class MovableObject {
+public abstract class MovableObject extends GameObject {
 
-	protected GameLocation currentLocation;
-	protected Rectangle objectSize;
 	protected LinkedList<GameLocation> steps;
 
-	protected MovableObject(Point startingPoint, int staringRoom, Rectangle objRect) {
+	protected MovableObject(Point startingPoint, int staringRoom, Shape objShape) {
 
+		super(objShape, new GameLocation(startingPoint, staringRoom));
 		this.steps = new LinkedList<GameLocation>();
-		this.objectSize = objRect;
-		this.currentLocation = new GameLocation(startingPoint, staringRoom);
 
 	}
 
@@ -33,56 +30,8 @@ public class MovableObject {
 	}
 
 	/**
-	 * Returns object current location
-	 *
-	 * @return current location
-	 */
-	public GameLocation getCurrentLocation() {
-
-		return this.currentLocation;
-
-	}
-
-	/**
-	 * Returns object current rectangle space
-	 *
-	 * @return
-	 */
-	public Rectangle getObjectRectangle() {
-
-		Point location = this.currentLocation.getLocation();
-
-		return getObjectRectangle(location);
-	}
-
-	/**
-	 * Returns object current rectangle space
-	 *
-	 * @return
-	 */
-	public Rectangle getObjectRectangle(Point p) {
-
-		Rectangle currentSpace = new Rectangle(p, this.objectSize.getSize());
-
-		return currentSpace;
-	}
-
-	/**
-	 *
-	 * @param p
-	 *            Point to be checked
-	 * @return true if object on point. false otherwise
-	 */
-	public boolean isOnObject(Point p) {
-
-		Rectangle currentSpace = getObjectRectangle();
-
-		return currentSpace.contains(p);
-	}
-
-	/**
-	 * Sets the *next step to currentLoction. If there are no more steps,
-	 * nothing is done
+	 * Sets the next step to currentLoction. If there are no more steps, nothing
+	 * is done
 	 *
 	 */
 	protected void setNextStep() {
