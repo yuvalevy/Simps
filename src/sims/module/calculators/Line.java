@@ -82,7 +82,7 @@ public class Line implements Calculator {
 		GameLocation last = null;
 		for (Point point : this.playerSteps) {
 
-			Rectangle playerRect = p.getObjectRectangle(point);
+			Rectangle playerRect = p.getObjectShape(point);
 
 			CellProperty prop = this.worldMap.getFocusedRoom().getAreaCellType(playerRect);
 

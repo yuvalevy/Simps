@@ -1,32 +1,33 @@
 package sims.module.objects;
 
+import java.awt.Point;
 import java.awt.Polygon;
 
 import sims.module.surface.GameLocation;
 
-public class Door {
+public class Door extends GameObject {
 
 	private final GameLocation nextRoomStartingLocation;
-	private final Polygon doorSpace;
-	private final GameLocation doorLocation;
 
 	public Door(GameLocation nextRoomStartingLocation, Polygon doorSpace, GameLocation doorLocation) {
 
+		super(doorSpace, doorLocation);
 		this.nextRoomStartingLocation = nextRoomStartingLocation;
-		this.doorSpace = doorSpace;
-		this.doorLocation = doorLocation;
-	}
-
-	public GameLocation getDoorLocation() {
-		return this.doorLocation;
-	}
-
-	public Polygon getDoorSpace() {
-		return this.doorSpace;
 	}
 
 	public GameLocation getNextRoomStartingLocation() {
 
 		return this.nextRoomStartingLocation;
 	}
+
+	@Override
+	public Polygon getObjectShape() {
+		return (Polygon) this.objectSize;
+	}
+
+	@Override
+	public Polygon getObjectShape(Point p) {
+		return getObjectShape();
+	}
+
 }

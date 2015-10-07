@@ -123,7 +123,7 @@ public class World implements GameActions {
 	 */
 	public String getPlayerByPoint(Point p) {
 		for (Player player : this.players) {
-			if (player.isOnObject(p)) {
+			if (player.contains(p)) {
 				return player.getPlayerName();
 			}
 		}

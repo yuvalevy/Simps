@@ -71,7 +71,7 @@ public class Room {
 
 				for (Door door : this.doors) {
 
-					if (door.getDoorSpace().contains(coordinate)) {
+					if (door.contains(coordinate)) {
 
 						this.roomCells[i][j] = new Cell(location, CellProperty.Stepable, CellProperty.Door);
 						break;
@@ -123,7 +123,7 @@ public class Room {
 
 		// Only intersects... means only touching it
 		for (Door door : this.doors) {
-			if (door.getDoorSpace().intersects(playerRect)) {
+			if (door.intersects(playerRect)) {
 				return CellProperty.Door;
 			}
 		}
@@ -173,7 +173,7 @@ public class Room {
 	public Door getDoor(Point locationOnDoor) {
 
 		for (Door door : this.doors) {
-			if (door.getDoorSpace().contains(locationOnDoor)) {
+			if (door.contains(locationOnDoor)) {
 				return door;
 			}
 		}

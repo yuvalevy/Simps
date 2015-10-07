@@ -65,6 +65,10 @@ public class Dijkstra implements Calculator {
 			return;
 		}
 
+		if (!this.worldMap.isMapInit()) {
+			return;
+		}
+
 		initClass();
 
 		innerExcute(start, end);
@@ -77,6 +81,7 @@ public class Dijkstra implements Calculator {
 			Log.WriteLineLog("executeSingleRoom: Start == End");
 			return;
 		}
+
 		Log.WriteLog("-Start single room dikjstra-");
 
 		Cell[][] spaceCells = currentRoom.getCells();

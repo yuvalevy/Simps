@@ -140,7 +140,7 @@ public class Map {
 			nextRoomId += adder;
 			Door nextDoor = startRoom.getDoor(nextRoomId);
 
-			road.add(nextDoor.getDoorLocation());
+			road.add(nextDoor.getCurrentLocation());
 			road.add(nextDoor.getNextRoomStartingLocation());
 
 		} while (nextRoomId != roomId2);
