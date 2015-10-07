@@ -10,6 +10,7 @@ public abstract class GameObject {
 
 	protected GameLocation currentLocation;
 	protected Shape objectSize;
+
 	protected int objectId;
 
 	protected GameObject(int objectId, Shape objShape, GameLocation startingLocation) {
@@ -32,6 +33,18 @@ public abstract class GameObject {
 	}
 
 	/**
+	 *
+	 * @param r
+	 *            Rectanle to be checked
+	 * @return true if object on rectangle. false otherwise
+	 */
+	public boolean contains(Rectangle r) {
+
+		return this.objectSize.contains(r);
+
+	}
+
+	/**
 	 * Returns object current location
 	 *
 	 * @return current location
@@ -42,19 +55,22 @@ public abstract class GameObject {
 
 	}
 
+	public int getObjectId() {
+		return this.objectId;
+	}
+
 	/**
 	 * Returns object current shape space
 	 *
 	 * @return
 	 */
-	public abstract Shape getObjectShape();
-
-	public abstract Shape getObjectShape(Point p);
+	public Shape getObjectShape() {
+		return this.objectSize;
+	}
 
 	public boolean intersects(Rectangle r) {
 
 		return this.objectSize.intersects(r);
 
 	}
-
 }

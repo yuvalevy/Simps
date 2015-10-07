@@ -1,6 +1,5 @@
 package sims.module.objects;
 
-import java.awt.Point;
 import java.awt.Polygon;
 
 import sims.module.surface.GameLocation;
@@ -26,11 +25,6 @@ public class Door extends GameObject {
 	@Override
 	public Polygon getObjectShape() {
 		return (Polygon) this.objectSize;
-	}
-
-	@Override
-	public Polygon getObjectShape(Point p) {
-		return getObjectShape();
 	}
 
 }

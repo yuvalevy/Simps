@@ -71,6 +71,15 @@ public class ConfigurationManager {
 		return $;
 	}
 
+	/**
+	 * Depends on how much images in the folder
+	 *
+	 * @return
+	 */
+	public static int getPlayersLimit() {
+		return 7;
+	}
+
 	public static Polygon[] getRoomDoorsPolygons(int roomId, int doorCount) {
 
 		Polygon[] $ = new Polygon[doorCount];
@@ -135,12 +144,31 @@ public class ConfigurationManager {
 		return area;
 	}
 
+	/**
+	 * Depends on how much images in the folder
+	 *
+	 * @return
+	 */
+	public static int getRoomsLimit() {
+
+		return 3;
+	}
+
 	public static int getSleepTime() {
 		return 50;
 	}
 
 	public static int getToysDefaultNumberPerRoom() {
 		return 5;
+	}
+
+	/**
+	 * Depends on how much images in the folder
+	 *
+	 * @return
+	 */
+	public static int getToysLimit() {
+		return 10;
 	}
 
 	/**

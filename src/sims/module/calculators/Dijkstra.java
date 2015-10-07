@@ -7,6 +7,7 @@ import sims.module.objects.Door;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
 import sims.module.surface.Cell;
+import sims.module.surface.CellProperty;
 import sims.module.surface.GameLocation;
 import sims.module.surface.Map;
 import sims.module.surface.NeighborRelationship;
@@ -82,7 +83,7 @@ public class Dijkstra implements Calculator {
 			return;
 		}
 
-		Log.WriteLog("-Start single room dikjstra-");
+		// Log.WriteLog("-Start single room dikjstra-");
 
 		Cell[][] spaceCells = currentRoom.getCells();
 
@@ -107,9 +108,12 @@ public class Dijkstra implements Calculator {
 			}
 
 			helpPointer = getClosestCell(spaceCells);
-
+			if (helpPointer == null) {
+				helpPointer = this.endCell;
+				Log.WriteLineLog("Problem");
+			}
 		}
-		Log.WriteLog("-End single room dikjstra   ");
+		// Log.WriteLog("-End single room dikjstra ");
 
 	}
 
@@ -131,7 +135,8 @@ public class Dijkstra implements Calculator {
 		for (Cell[] line : spaceCells) {
 			for (Cell currentCell : line) {
 
-				if (!currentCell.isVisited() && (currentCell.getDistanceFromStart() < min)) {
+				if (!currentCell.isVisited() && (currentCell.getDistanceFromStart() < min)
+						&& currentCell.containsProperty(CellProperty.Stepable)) {
 					cellPointer = currentCell;
 					min = currentCell.getDistanceFromStart();
 				}
@@ -221,7 +226,7 @@ public class Dijkstra implements Calculator {
 	 */
 	private void innerExcute(GameLocation start, GameLocation end) {
 
-		Log.WriteLog("START all dijkstra");
+		// .WriteLog("START all dijkstra");
 
 		ArrayList<GameLocation> doors = this.worldMap.getRoomsRoad(start.getRoomId(), end.getRoomId());
 
@@ -266,7 +271,7 @@ public class Dijkstra implements Calculator {
 
 		temp.setPreviousCell(temp);
 
-		Log.WriteLineLog("END all dijkstra");
+		// Log.WriteLineLog("END all dijkstra");
 
 	}
 

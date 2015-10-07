@@ -55,9 +55,9 @@ public class GuiViewer extends JPanel implements GameActions {
 	}
 
 	@Override
-	public void addRoom(int roomId) {
+	public void addRoom(int roomId, int toysCount) {
 
-		this.painter.addRoom(roomId);
+		this.painter.addRoom(roomId, toysCount);
 
 	}
 

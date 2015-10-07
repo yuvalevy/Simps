@@ -11,19 +11,24 @@ import java.util.HashMap;
 import javax.swing.ImageIcon;
 
 import sims.basics.Log;
+import sims.module.main.ConfigurationManager;
 import sims.module.objects.Player;
+import sims.module.objects.Toy;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
 import sims.module.surface.Map;
 
 public class ImagesPainter {
 
+	private final int toysLimit, playersLimit, roomsLimit;
+
 	private final HashMap<String, ImageIcon> playersImages;
 	private final ArrayList<ImageIcon> roomsImages;
+	private final ArrayList<ImageIcon> toysImages;
 
 	private int startingPaintWidth;
 	private final ArrayList<Player> gamePlayers;
-	private final Map gameRooms;
+	private final Map gameMap;
 
 	private int currentRoom;
 
@@ -31,15 +36,25 @@ public class ImagesPainter {
 
 		this.playersImages = new HashMap<String, ImageIcon>();
 		this.roomsImages = new ArrayList<ImageIcon>();
+		this.toysImages = new ArrayList<ImageIcon>();
 
 		this.gamePlayers = gamePlayers;
-		this.gameRooms = gameMap;
+		this.gameMap = gameMap;
+
+		this.toysLimit = ConfigurationManager.getToysLimit();
+		this.playersLimit = ConfigurationManager.getPlayersLimit();
+		this.roomsLimit = ConfigurationManager.getRoomsLimit();
 
 	}
 
 	public void addPlayer(String playerName) {
 
 		int playerIndex = this.playersImages.size();
+
+		if (playerIndex > this.playersLimit) {
+			playerIndex %= this.playersLimit;
+		}
+
 		ImageIcon newPlayer = new ImageIcon("images/players/" + playerIndex + ".gif");
 
 		this.playersImages.put(playerName, newPlayer);
@@ -47,9 +62,25 @@ public class ImagesPainter {
 
 	// TODO I dont think i need room id
 	// I can use - roomsImages.size()... need more trust here
-	public void addRoom(int roomId) {
+	public void addRoom(int roomIndex, int toysCount) {
 
-		ImageIcon newRoom = new ImageIcon("images/rooms/room" + roomId + ".jpg");
+		if (roomIndex > this.roomsLimit) {
+			roomIndex %= this.roomsLimit;
+		}
+
+		ImageIcon newRoom = new ImageIcon("images/rooms/room" + roomIndex + ".jpg");
+
+		int start = this.toysImages.size();
+
+		if (start > this.toysLimit) {
+			start %= this.toysLimit;
+		}
+
+		for (int i = start; i < (toysCount + start); i++) {
+
+			ImageIcon newToy = new ImageIcon("images/toys/" + i + ".png");
+			this.toysImages.add(newToy);
+		}
 
 		this.roomsImages.add(newRoom);
 
@@ -67,7 +98,7 @@ public class ImagesPainter {
 		// Color.MAGENTA, Color.ORANGE, Color.CYAN };
 		// int index = 0, colorIndex = 0;
 
-		for (Cell[] cellsRow : this.gameRooms.getFocusedRoom().getCells()) {
+		for (Cell[] cellsRow : this.gameMap.getFocusedRoom().getCells()) {
 			for (Cell cell : cellsRow) {
 
 				if (cell.containsProperty(CellProperty.Stepable)) {
@@ -202,11 +233,29 @@ public class ImagesPainter {
 
 		paintFloor(c, g);
 		paintFurnitures(c, g);
+		paintToys(c, g);
 		paintPlayers(c, g);
 
 		// if (Log.getLogLevel() == LogLevel.Debug) {
 		drawDebug(g);
 		// }
+	}
+
+	private void paintToys(Component c, Graphics g) {
+
+		// TODO: Should be getFoundToys()
+		for (Toy toy : this.gameMap.getFocusedRoom().getToys()) {
+
+			int toyid = toy.getObjectId();
+			ImageIcon ic = this.toysImages.get(toyid);
+
+			Point p = toy.getCurrentLocation().getLocation();
+
+			paintByPoint(ic, p, c, g);
+			// Log.WriteLineLog("Draw toy" + toy.getObjectId() + " - " + p);
+
+		}
+
 	}
 
 	public void removePlayer(String playerName) {

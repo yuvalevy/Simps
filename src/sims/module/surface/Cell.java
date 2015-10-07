@@ -75,11 +75,12 @@ public class Cell {
 
 	public void addTupleNeighbors(Cell neighborCell, double distance) {
 
-		if (neighborCell.containsProperty(CellProperty.Stepable) && containsProperty(CellProperty.Stepable)) {
+		// if (neighborCell.containsProperty(CellProperty.Stepable) &&
+		// containsProperty(CellProperty.Stepable)) {
 
-			addNeighbor(new NeighborRelationship(neighborCell, distance));
-			neighborCell.addNeighbor(new NeighborRelationship(this, distance));
-		}
+		addNeighbor(new NeighborRelationship(neighborCell, distance));
+		neighborCell.addNeighbor(new NeighborRelationship(this, distance));
+		// }
 	}
 
 	private boolean containsNieghbors(Cell c) {

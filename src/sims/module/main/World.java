@@ -51,9 +51,8 @@ public class World implements GameActions {
 	}
 
 	@Override
-	public void addRoom(int roomId) {
+	public void addRoom(int roomId, int toysCount) {
 
-		int toysCount = ConfigurationManager.getToysDefaultNumberPerRoom();
 		this.worldMap.addRoom(roomId, toysCount);
 
 	}
@@ -99,7 +98,7 @@ public class World implements GameActions {
 		return this.focusedPlayer;
 	}
 
-	public ArrayList<Toy> getFoundToys() {
+	private ArrayList<Toy> getFoundToys() {
 
 		return this.worldMap.getFoundToys();
 

@@ -6,7 +6,7 @@ public interface GameActions {
 
 	public boolean addPlayer(String playerName);
 
-	public void addRoom(int roomId);
+	public void addRoom(int roomId, int toyCount);
 
 	public void movePlayer(GameLocation newLocation);
 

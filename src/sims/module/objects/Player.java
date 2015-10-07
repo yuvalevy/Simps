@@ -10,6 +10,12 @@ public class Player extends MovableObject {
 	private static final Point PLAYER_STARTING_POINT = new Point(200, 200);
 	private static final Rectangle PLAYER_RECT = new Rectangle(44, 44);
 
+	public static Rectangle getObjectShape(Point p) {
+
+		Rectangle currentSpace = new Rectangle(p, PLAYER_RECT.getSize());
+		return currentSpace;
+	}
+
 	private final String playerName;
 
 	public Player(String playerName, int inRoom) {
@@ -25,13 +31,6 @@ public class Player extends MovableObject {
 
 		Point p = this.currentLocation.getLocation();
 		return getObjectShape(p);
-	}
-
-	@Override
-	public Rectangle getObjectShape(Point p) {
-
-		Rectangle currentSpace = new Rectangle(p, this.objectSize.getBounds().getSize());
-		return currentSpace;
 	}
 
 	public String getPlayerName() {

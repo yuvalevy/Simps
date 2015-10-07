@@ -127,23 +127,23 @@ public class Room {
 	/**
 	 * Returns area main cell property.
 	 *
-	 * @param playerRect
-	 * @return If playerRect is intersects with doorSpace, returns
-	 *         CellProperty.Door. If playerRext is fully contained in
+	 * @param objRect
+	 * @return If objRect is intersects with doorSpace, returns
+	 *         CellProperty.Door. If objRect is fully contained in
 	 *         stepablePolygon, returns CellProperty.Stepable. Otherwise,
 	 *         returns CellProperty.NoProperty.
 	 */
-	public CellProperty getAreaCellType(Rectangle playerRect) {
+	public CellProperty getAreaCellType(Rectangle objRect) {
 
 		// Only intersects... means only touching it
 		for (Door door : this.doors) {
-			if (door.intersects(playerRect)) {
+			if (door.intersects(objRect)) {
 				return CellProperty.Door;
 			}
 		}
 
 		// Contains it all
-		if (this.stepablePolygon.contains(playerRect)) {
+		if (isFullyOnPropery(objRect, CellProperty.Stepable)) {
 			return CellProperty.Stepable;
 		}
 
@@ -235,6 +235,28 @@ public class Room {
 		return this.toys;
 	}
 
+	public boolean isFullyOnPropery(Rectangle objRect, CellProperty property) {
+
+		boolean step = this.stepablePolygon.contains(objRect);
+
+		switch (property) {
+		case Door:
+
+			for (Door door : this.doors) {
+				if (door.contains(objRect)) {
+					return true;
+				}
+			}
+
+			break;
+		case Stepable:
+			return step;
+		case NoProperty:
+			return (!step);
+		}
+		return false;
+	}
+
 	private void makeNeighbors() {
 
 		final double verticalMove = 10, ofekiMove = 10,
@@ -284,7 +306,7 @@ public class Room {
 
 		for (int i = 0; i < this.toys.length; i++) {
 
-			GameLocation randomLocation = Randomaizer.getRandomPlace(this.roomCells, CellProperty.NoProperty);
+			GameLocation randomLocation = Randomaizer.getRandomPlace(this, CellProperty.NoProperty);
 
 			Log.WriteLineLog("Adding toy[" + i + "] in room " + this.roomId + " Location: " + randomLocation);
 			this.toys[i] = new Toy(randomLocation);

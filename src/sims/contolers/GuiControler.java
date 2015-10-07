@@ -69,10 +69,10 @@ public class GuiControler implements GameActions, Runnable {
 	}
 
 	@Override
-	public void addRoom(int roomId) {
+	public void addRoom(int roomId, int toysCount) {
 
-		this.gameModule.addRoom(roomId);
-		this.gameUi.addRoom(roomId);
+		this.gameModule.addRoom(roomId, toysCount);
+		this.gameUi.addRoom(roomId, toysCount);
 
 		setFocusedRoom(roomId);
 	}

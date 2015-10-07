@@ -3,6 +3,8 @@ package sims.basics;
 import java.util.ArrayList;
 import java.util.Random;
 
+import sims.module.objects.Room;
+import sims.module.objects.Toy;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
 import sims.module.surface.GameLocation;
@@ -29,8 +31,9 @@ public class Randomaizer {
 		return num;
 	}
 
-	public static GameLocation getRandomPlace(Cell[][] cells, CellProperty property) {
+	public static GameLocation getRandomPlace(Room room, CellProperty property) {
 
+		Cell[][] cells = room.getCells();
 		int w = cells.length, h = cells[0].length;
 
 		int randI = rand.nextInt(w);
@@ -48,8 +51,9 @@ public class Randomaizer {
 
 			$ = chosen.getCoordinate();
 
-		} while (chosen.containsProperty(property) && !locations.contains($));
+		} while (!room.isFullyOnPropery(Toy.getObjectShape($.getLocation()), property) && locations.contains($));
 
 		return $;
 	}
+
 }
