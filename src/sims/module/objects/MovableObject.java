@@ -2,18 +2,22 @@ package sims.module.objects;
 
 import java.awt.Point;
 import java.awt.Shape;
-import java.util.LinkedList;
 
+import actions.Walk;
+import sims.basics.Action;
+import sims.basics.ActionsFactory;
 import sims.module.surface.GameLocation;
 
 public abstract class MovableObject extends GameObject {
 
-	protected LinkedList<GameLocation> steps;
+	private final Walk walker;
 
-	protected MovableObject(int objectId, Shape objShape, Point startingPoint, int staringRoom) {
-		super(objectId, objShape, new GameLocation(startingPoint, staringRoom));
+	protected MovableObject(int objectId, Shape objShape, Point startingPoint, int staringRoom,
+			Action... objectAction) {
+		super(objectId, objShape, new GameLocation(startingPoint, staringRoom), objectAction);
 
-		this.steps = new LinkedList<GameLocation>();
+		this.walker = ActionsFactory.getWalk(getObjectId());
+		super.addAction(this.walker);
 
 	}
 
@@ -25,24 +29,7 @@ public abstract class MovableObject extends GameObject {
 	 */
 	public void addStep(GameLocation step) {
 
-		this.steps.add(step);
-
-	}
-
-	/**
-	 * Sets the next step to currentLoction. If there are no more steps, nothing
-	 * is done
-	 *
-	 */
-	protected void setNextStep() {
-
-		if (this.steps.size() == 0) {
-			return;
-		}
-
-		GameLocation newStep = this.steps.removeFirst();
-
-		this.currentLocation = newStep;
+		this.walker.addStep(step);
 
 	}
 

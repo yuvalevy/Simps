@@ -3,21 +3,42 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+import javax.swing.ImageIcon;
+
+import actions.Nothing;
+import sims.basics.Action;
 import sims.module.surface.GameLocation;
 
 public abstract class GameObject {
 
+	protected ArrayList<Action> objectActions;
+	protected int currentAction;
+	private final int defaultAction;
 	protected GameLocation currentLocation;
 	protected Shape objectSize;
 
 	protected int objectId;
 
-	protected GameObject(int objectId, Shape objShape, GameLocation startingLocation) {
+	protected GameObject(int objectId, Shape objShape, GameLocation startingLocation, Action... objectActions) {
 
 		this.objectId = objectId;
 		this.objectSize = objShape;
 		this.currentLocation = startingLocation;
+
+		this.objectActions = new ArrayList<>();
+
+		this.objectActions.addAll(Arrays.asList(objectActions));
+		this.defaultAction = objectActions.length;
+		addAction(new Nothing());
+
+	}
+
+	protected void addAction(Action action) {
+
+		this.objectActions.add(action);
 	}
 
 	/**
@@ -44,6 +65,24 @@ public abstract class GameObject {
 
 	}
 
+	public void executeAction() {
+
+		Action action = this.objectActions.get(this.currentAction);
+		GameLocation actionLocation = action.execute();
+
+		if (actionLocation != null) {
+			this.currentLocation = actionLocation;
+		}
+
+		if (action.isOver()) {
+			setDefaultAction();
+		}
+	}
+
+	private Action getCurrentAction() {
+		return this.objectActions.get(this.currentAction);
+	}
+
 	/**
 	 * Returns object current location
 	 *
@@ -53,6 +92,10 @@ public abstract class GameObject {
 
 		return this.currentLocation;
 
+	}
+
+	public ImageIcon getNextImage() {
+		return this.objectActions.get(this.currentAction).getNextImage();
 	}
 
 	public int getObjectId() {
@@ -73,4 +116,13 @@ public abstract class GameObject {
 		return this.objectSize.intersects(r);
 
 	}
+
+	public boolean interuptAction() {
+		return this.objectActions.get(this.currentAction).interupt();
+	}
+
+	private void setDefaultAction() {
+		this.currentAction = this.defaultAction;
+	}
+
 }

@@ -39,10 +39,13 @@ public class Player extends MovableObject {
 
 	}
 
+	public boolean interput() {
+		return interput();
+	}
+
 	public void tick() {
 
-		setNextStep();
-
+		executeAction();
 	}
 
 }

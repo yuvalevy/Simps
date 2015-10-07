@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import sims.basics.GameActions;
 import sims.basics.Log;
 import sims.basics.LogLevel;
+import sims.module.objects.GameObject;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
-import sims.module.objects.Toy;
 import sims.module.surface.GameLocation;
 import sims.module.surface.Map;
 
@@ -98,10 +98,13 @@ public class World implements GameActions {
 		return this.focusedPlayer;
 	}
 
-	private ArrayList<Toy> getFoundToys() {
+	public ArrayList<GameObject> getGameObjects() {
+		ArrayList<GameObject> $ = new ArrayList<>();
 
-		return this.worldMap.getFoundToys();
+		$.addAll(this.players);
+		$.addAll(this.worldMap.getToys());
 
+		return $;
 	}
 
 	public Map getMap() {
@@ -161,11 +164,6 @@ public class World implements GameActions {
 
 		return this.worldMap.getRooms();
 
-	}
-
-	private ArrayList<Toy> getToys() {
-
-		return this.worldMap.getToys();
 	}
 
 	public boolean isRunning() {
@@ -241,4 +239,5 @@ public class World implements GameActions {
 
 		// Log.WriteLog("End module tick");
 	}
+
 }
