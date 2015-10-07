@@ -41,7 +41,7 @@ public class GuiViewer extends JPanel implements GameActions {
 		// ArrayList<MovableObject> gamePlayers
 		this.screenSize = gameDimention;
 
-		this.painter = new ImagesPainter(gameModule.getPlayers(), gameModule.getRooms());
+		this.painter = new ImagesPainter(gameModule.getPlayers(), gameModule.getMap());
 		Log.WriteLineLog("Created WorldViewer instance");
 
 	}

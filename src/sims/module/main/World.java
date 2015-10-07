@@ -10,6 +10,7 @@ import sims.basics.Log;
 import sims.basics.LogLevel;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
+import sims.module.objects.Toy;
 import sims.module.surface.GameLocation;
 import sims.module.surface.Map;
 
@@ -52,7 +53,8 @@ public class World implements GameActions {
 	@Override
 	public void addRoom(int roomId) {
 
-		this.worldMap.addRoom(roomId);
+		int toysCount = ConfigurationManager.getToysDefaultNumberPerRoom();
+		this.worldMap.addRoom(roomId, toysCount);
 
 	}
 
@@ -97,6 +99,16 @@ public class World implements GameActions {
 		return this.focusedPlayer;
 	}
 
+	public ArrayList<Toy> getFoundToys() {
+
+		return this.worldMap.getFoundToys();
+
+	}
+
+	public Map getMap() {
+		return this.worldMap;
+	}
+
 	/**
 	 * Returns the player object by his name
 	 *
@@ -134,6 +146,12 @@ public class World implements GameActions {
 		return this.players;
 	}
 
+	public void getRoom(int roomId) {
+
+		this.worldMap.getRoom(roomId);
+
+	}
+
 	public int getRoomCount() {
 
 		return this.worldMap.getRoomCount();
@@ -144,6 +162,11 @@ public class World implements GameActions {
 
 		return this.worldMap.getRooms();
 
+	}
+
+	private ArrayList<Toy> getToys() {
+
+		return this.worldMap.getToys();
 	}
 
 	public boolean isRunning() {

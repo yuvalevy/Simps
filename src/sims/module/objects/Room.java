@@ -3,7 +3,10 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
+import sims.basics.Log;
+import sims.basics.Randomaizer;
 import sims.module.main.ConfigurationManager;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
@@ -15,13 +18,42 @@ public class Room {
 	private final Cell[][] roomCells;
 
 	private int roomId;
-	private final Door[] doors;
+	private Door[] doors;
 	private Polygon stepablePolygon;
+	private final Toy[] toys;
 
-	public Room(int doorsCount, int width, int hight) {
+	public Room(int doorsCount, int toyCount, int width, int hight) {
 
 		roomCount++;
 		setRoomId(roomCount);
+
+		createDoors(doorsCount);
+
+		// TODO: cell count is configurable for future flexibility
+		this.roomCells = new Cell[width][hight];
+		this.toys = new Toy[toyCount];
+	}
+
+	public void createDefalutMap() {
+
+		Rectangle cellSize = Cell.getCellSize();
+
+		createDoorsCells(cellSize);
+
+		this.stepablePolygon = ConfigurationManager.getRoomPolygonStepable(this.roomId);
+
+		createNonDoorCells(cellSize);
+
+		makeNeighbors();
+
+		putToy();
+
+	}
+
+	/**
+	 * @param doorsCount
+	 */
+	private void createDoors(int doorsCount) {
 
 		this.doors = new Door[doorsCount];
 
@@ -35,24 +67,6 @@ public class Room {
 			this.doors[i] = new Door(nextDoor, doorsPolys[i], doorLocation);
 
 		}
-
-		// TODO: cell count is configurable for future flexibility
-		this.roomCells = new Cell[width][hight];
-
-	}
-
-	public void createDefalutMap() {
-
-		Rectangle cellSize = Cell.getCellSize();
-
-		createDoors(cellSize);
-
-		this.stepablePolygon = ConfigurationManager.getRoomPolygonStepable(this.roomId);
-
-		createNonDoorSpace(cellSize);
-
-		makeNeighbors();
-
 	}
 
 	/**
@@ -60,7 +74,7 @@ public class Room {
 	 *
 	 * @param cellsize
 	 */
-	private void createDoors(Rectangle cellsize) {
+	private void createDoorsCells(Rectangle cellsize) {
 
 		for (int i = 0; i < this.roomCells.length; i++) {
 			for (int j = 0; j < this.roomCells[i].length; j++) {
@@ -87,7 +101,7 @@ public class Room {
 	 *
 	 * @param cellSize
 	 */
-	private void createNonDoorSpace(Rectangle cellSize) {
+	private void createNonDoorCells(Rectangle cellSize) {
 
 		for (int i = 0; i < this.roomCells.length; i++) {
 			for (int j = 0; j < this.roomCells[i].length; j++) {
@@ -157,13 +171,9 @@ public class Room {
 	public Door getDoor(int nextRoomId) {
 
 		for (Door door : this.doors) {
-
 			if (door.getNextRoomStartingLocation().getRoomId() == nextRoomId) {
-
 				return door;
-
 			}
-
 		}
 
 		return null;
@@ -181,6 +191,25 @@ public class Room {
 		return null;
 	}
 
+	/**
+	 * Gets all toys that are found in this room
+	 *
+	 * @return
+	 */
+	public ArrayList<Toy> getFoundToys() {
+
+		ArrayList<Toy> $ = new ArrayList<>();
+
+		for (Toy toy : this.toys) {
+
+			if (toy.isFound()) {
+				$.add(toy);
+			}
+		}
+
+		return $;
+	}
+
 	public GameLocation getNextRoom(Point locationOnDoor) {
 
 		Door $ = getDoor(locationOnDoor);
@@ -194,6 +223,16 @@ public class Room {
 
 	public int getRoomId() {
 		return this.roomId;
+	}
+
+	/**
+	 * Gets all toys in this room
+	 *
+	 * @return
+	 */
+	public Toy[] getToys() {
+
+		return this.toys;
 	}
 
 	private void makeNeighbors() {
@@ -241,9 +280,22 @@ public class Room {
 
 	}
 
+	private void putToy() {
+
+		for (int i = 0; i < this.toys.length; i++) {
+
+			GameLocation randomLocation = Randomaizer.getRandomPlace(this.roomCells, CellProperty.NoProperty);
+
+			Log.WriteLineLog("Adding toy[" + i + "] in room " + this.roomId + " Location: " + randomLocation);
+			this.toys[i] = new Toy(randomLocation);
+		}
+
+	}
+
 	public void setRoomId(int roomId) {
 
 		this.roomId = roomId;
 
 	}
+
 }

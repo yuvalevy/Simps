@@ -139,6 +139,10 @@ public class ConfigurationManager {
 		return 50;
 	}
 
+	public static int getToysDefaultNumberPerRoom() {
+		return 5;
+	}
+
 	/**
 	 * @param points
 	 */

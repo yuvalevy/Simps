@@ -10,9 +10,11 @@ public abstract class GameObject {
 
 	protected GameLocation currentLocation;
 	protected Shape objectSize;
+	protected int objectId;
 
-	protected GameObject(Shape objShape, GameLocation startingLocation) {
+	protected GameObject(int objectId, Shape objShape, GameLocation startingLocation) {
 
+		this.objectId = objectId;
 		this.objectSize = objShape;
 		this.currentLocation = startingLocation;
 	}

@@ -6,11 +6,13 @@ package sims.module.surface;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import sims.basics.Log;
 import sims.basics.LogLevel;
 import sims.module.objects.Door;
 import sims.module.objects.Room;
+import sims.module.objects.Toy;
 
 /**
  * @author Yuval
@@ -43,9 +45,9 @@ public class Map {
 
 	}
 
-	public void addRoom(int roomId) {
+	public void addRoom(int roomId, int toysCount) {
 
-		this.mapRooms.add(new Room(1, this.roomDefaultWidth, this.roomDefaultHeight));
+		this.mapRooms.add(new Room(1, toysCount, this.roomDefaultWidth, this.roomDefaultHeight));
 
 	}
 
@@ -95,6 +97,18 @@ public class Map {
 
 	}
 
+	public ArrayList<Toy> getFoundToys() {
+
+		ArrayList<Toy> $ = new ArrayList<>();
+
+		for (Room room : this.mapRooms) {
+
+			$.addAll(room.getFoundToys());
+		}
+
+		return $;
+	}
+
 	public Room getRoom(int roomId) {
 
 		for (Room room : this.mapRooms) {
@@ -120,11 +134,11 @@ public class Map {
 
 	public ArrayList<GameLocation> getRoomsRoad(int roomId, int roomId2) {
 
-		ArrayList<GameLocation> road = new ArrayList<>();
+		ArrayList<GameLocation> $ = new ArrayList<>();
 
 		int adder = 0;
 		if (roomId == roomId2) {
-			return road;
+			return $;
 		}
 		if (roomId < roomId2) {
 			adder = 1;
@@ -140,13 +154,25 @@ public class Map {
 			nextRoomId += adder;
 			Door nextDoor = startRoom.getDoor(nextRoomId);
 
-			road.add(nextDoor.getCurrentLocation());
-			road.add(nextDoor.getNextRoomStartingLocation());
+			$.add(nextDoor.getCurrentLocation());
+			$.add(nextDoor.getNextRoomStartingLocation());
 
 		} while (nextRoomId != roomId2);
 
-		return road;
+		return $;
 
+	}
+
+	public ArrayList<Toy> getToys() {
+
+		ArrayList<Toy> $ = new ArrayList<>();
+
+		for (Room room : this.mapRooms) {
+
+			$.addAll(Arrays.asList(room.getToys()));
+		}
+
+		return $;
 	}
 
 	public boolean isMapInit() {

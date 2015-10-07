@@ -7,11 +7,14 @@ import sims.module.surface.GameLocation;
 
 public class Door extends GameObject {
 
+	private static int DOORS_COUNT = 1;
+
 	private final GameLocation nextRoomStartingLocation;
 
 	public Door(GameLocation nextRoomStartingLocation, Polygon doorSpace, GameLocation doorLocation) {
+		super(DOORS_COUNT, doorSpace, doorLocation);
 
-		super(doorSpace, doorLocation);
+		DOORS_COUNT++;
 		this.nextRoomStartingLocation = nextRoomStartingLocation;
 	}
 

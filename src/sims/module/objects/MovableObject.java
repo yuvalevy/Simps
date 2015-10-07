@@ -10,9 +10,9 @@ public abstract class MovableObject extends GameObject {
 
 	protected LinkedList<GameLocation> steps;
 
-	protected MovableObject(Point startingPoint, int staringRoom, Shape objShape) {
+	protected MovableObject(int objectId, Shape objShape, Point startingPoint, int staringRoom) {
+		super(objectId, objShape, new GameLocation(startingPoint, staringRoom));
 
-		super(objShape, new GameLocation(startingPoint, staringRoom));
 		this.steps = new LinkedList<GameLocation>();
 
 	}

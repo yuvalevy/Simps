@@ -7,34 +7,33 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.ImageIcon;
 
 import sims.basics.Log;
 import sims.module.objects.Player;
-import sims.module.objects.Room;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
+import sims.module.surface.Map;
 
 public class ImagesPainter {
 
-	private final Map<String, ImageIcon> playersImages;
+	private final HashMap<String, ImageIcon> playersImages;
 	private final ArrayList<ImageIcon> roomsImages;
 
 	private int startingPaintWidth;
 	private final ArrayList<Player> gamePlayers;
-	private final ArrayList<Room> gameRooms;
+	private final Map gameRooms;
 
 	private int currentRoom;
 
-	public ImagesPainter(final ArrayList<Player> gamePlayers, final ArrayList<Room> gameRooms) {
+	public ImagesPainter(final ArrayList<Player> gamePlayers, final Map gameMap) {
 
 		this.playersImages = new HashMap<String, ImageIcon>();
 		this.roomsImages = new ArrayList<ImageIcon>();
 
 		this.gamePlayers = gamePlayers;
-		this.gameRooms = gameRooms;
+		this.gameRooms = gameMap;
 
 	}
 
@@ -68,7 +67,7 @@ public class ImagesPainter {
 		// Color.MAGENTA, Color.ORANGE, Color.CYAN };
 		// int index = 0, colorIndex = 0;
 
-		for (Cell[] cellsRow : this.gameRooms.get(this.currentRoom - 1).getCells()) {
+		for (Cell[] cellsRow : this.gameRooms.getFocusedRoom().getCells()) {
 			for (Cell cell : cellsRow) {
 
 				if (cell.containsProperty(CellProperty.Stepable)) {
