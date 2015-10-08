@@ -11,6 +11,8 @@ import javax.swing.ImageIcon;
 import sims.basics.Action;
 import sims.basics.Log;
 import sims.module.actions.ActionIdentifier;
+import sims.module.actions.ActionsFactory;
+import sims.module.actions.Nothing;
 import sims.module.surface.GameLocation;
 
 public abstract class GameObject {
@@ -24,7 +26,7 @@ public abstract class GameObject {
 
 	protected int objectId;
 
-	protected GameObject(int objectId, Shape objShape, GameLocation startingLocation, Action defaultAction,
+	protected GameObject(int objectId, Shape objShape, GameLocation startingLocation, String className,
 			Action... objectActions) {
 
 		this.objectId = objectId;
@@ -33,6 +35,7 @@ public abstract class GameObject {
 
 		this.objectActions = new ArrayList<>();
 
+		Nothing defaultAction = ActionsFactory.getNothing(className);
 		this.objectActions.add(defaultAction);
 		this.objectActions.addAll(Arrays.asList(objectActions));
 

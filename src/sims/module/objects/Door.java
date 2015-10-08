@@ -2,7 +2,6 @@ package sims.module.objects;
 
 import java.awt.Polygon;
 
-import sims.module.actions.ActionsFactory;
 import sims.module.surface.GameLocation;
 
 public class Door extends GameObject {
@@ -12,7 +11,7 @@ public class Door extends GameObject {
 	private final GameLocation nextRoomStartingLocation;
 
 	public Door(GameLocation nextRoomStartingLocation, Polygon doorSpace, GameLocation doorLocation) {
-		super(DOORS_COUNT, doorSpace, doorLocation, ActionsFactory.getNothing("Door"));
+		super(DOORS_COUNT, doorSpace, doorLocation, "Door");
 
 		DOORS_COUNT++;
 		this.nextRoomStartingLocation = nextRoomStartingLocation;

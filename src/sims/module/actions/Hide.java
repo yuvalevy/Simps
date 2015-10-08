@@ -14,6 +14,11 @@ public class Hide implements Action {
 	}
 
 	@Override
+	public boolean canInterrupt() {
+		return true;
+	}
+
+	@Override
 	public ActionIdentifier getIdentifier() {
 
 		return identifier;
@@ -22,11 +27,6 @@ public class Hide implements Action {
 	@Override
 	public ImageIcon getNextImage() {
 		return null;
-	}
-
-	@Override
-	public boolean canInterrupt() {
-		return true;
 	}
 
 	@Override

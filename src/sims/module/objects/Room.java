@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 
 import sims.basics.Randomaizer;
 import sims.basics.config.ConfigurationManager;
+import sims.module.actions.ActionIdentifier;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
 import sims.module.surface.GameLocation;
@@ -298,6 +299,17 @@ public class Room {
 
 		this.roomId = roomId;
 
+	}
+
+	public boolean tryFindToy(Point p) {
+
+		for (Toy toy : this.toys) {
+			if (toy.contains(p)) {
+				toy.trySetAction(ActionIdentifier.Nothing);
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

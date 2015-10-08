@@ -3,8 +3,6 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import sims.module.actions.ActionsFactory;
-
 public class Player extends MovableObject {
 
 	public static int PLAYERS_COUNT = 1;
@@ -21,10 +19,18 @@ public class Player extends MovableObject {
 	private final String playerName;
 
 	public Player(String playerName, int inRoom) {
-		super(PLAYERS_COUNT, PLAYER_RECT, PLAYER_STARTING_POINT, inRoom, ActionsFactory.getNothing("Player"));
+		super(PLAYERS_COUNT, PLAYER_RECT, PLAYER_STARTING_POINT, inRoom, "Player");
 
 		PLAYERS_COUNT++;
 		this.playerName = playerName;
+
+	}
+
+	@Override
+	public boolean contains(Point p) {
+
+		Rectangle objRect = new Rectangle(p, PLAYER_RECT.getSize());
+		return objRect.contains(p);
 
 	}
 

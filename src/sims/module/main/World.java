@@ -207,10 +207,17 @@ public class World implements GameActions {
 		if (this.focusedPlayer == null) {
 			return;
 		}
+
 		GameLocation start = this.focusedPlayer.getCurrentLocation();
 		this.focusedPlayer.addAction(ActionsFactory.getSearch(start));
-		this.focusedPlayer.trySetAction(ActionIdentifier.Search);
-		// this.focusedPlayer.setStandByAction(ActionsFactory.getSearch(start));
+
+		if (this.focusedPlayer.trySetAction(ActionIdentifier.Search)) {
+
+			if (this.worldMap.getFocusedRoom().tryFindToy(pointClicked)) {
+				Log.WriteLineLog("FOUND-------------");
+			}
+		}
+
 	}
 
 	@Override

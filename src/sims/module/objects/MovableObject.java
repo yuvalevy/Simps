@@ -12,9 +12,9 @@ public abstract class MovableObject extends GameObject {
 
 	private final Walk walker;
 
-	protected MovableObject(int objectId, Shape objShape, Point startingPoint, int staringRoom, Action defalutAction,
+	protected MovableObject(int objectId, Shape objShape, Point startingPoint, int staringRoom, String className,
 			Action... objectActions) {
-		super(objectId, objShape, new GameLocation(startingPoint, staringRoom), defalutAction, objectActions);
+		super(objectId, objShape, new GameLocation(startingPoint, staringRoom), className, objectActions);
 		this.walker = ActionsFactory.getWalk(getObjectId());
 		super.addAction(this.walker);
 
