@@ -19,13 +19,10 @@ public class Toy extends GameObject {
 
 	}
 
-	private boolean isFound;
-
 	public Toy(GameLocation toyLocation) {
 		super(TOYS_COUNT, TOY_RECT, toyLocation, ActionsFactory.getNothing("Toy"), ActionsFactory.getHide());
 
 		TOYS_COUNT++;
-		this.isFound = false;
 		trySetAction(ActionIdentifier.Hide);
 	}
 
@@ -34,16 +31,6 @@ public class Toy extends GameObject {
 
 		Point p = this.currentLocation.getLocation();
 		return getObjectShape(p);
-	}
-
-	public boolean isFound() {
-		return this.isFound;
-	}
-
-	void toyFound() {
-
-		this.isFound = true;
-
 	}
 
 }

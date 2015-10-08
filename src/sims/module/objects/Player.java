@@ -41,14 +41,4 @@ public class Player extends MovableObject {
 
 	}
 
-	public boolean interput() {
-		return interput();
-	}
-
-	@Override
-	public void tick() {
-
-		super.tick();
-	}
-
 }

@@ -97,18 +97,6 @@ public class Map {
 
 	}
 
-	public ArrayList<Toy> getFoundToys() {
-
-		ArrayList<Toy> $ = new ArrayList<>();
-
-		for (Room room : this.mapRooms) {
-
-			$.addAll(room.getFoundToys());
-		}
-
-		return $;
-	}
-
 	public Room getRoom(int roomId) {
 
 		for (Room room : this.mapRooms) {

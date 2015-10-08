@@ -3,7 +3,6 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.util.ArrayList;
 
 import sims.basics.Randomaizer;
 import sims.basics.config.ConfigurationManager;
@@ -188,25 +187,6 @@ public class Room {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Gets all toys that are found in this room
-	 *
-	 * @return
-	 */
-	public ArrayList<Toy> getFoundToys() {
-
-		ArrayList<Toy> $ = new ArrayList<>();
-
-		for (Toy toy : this.toys) {
-
-			if (toy.isFound()) {
-				$.add(toy);
-			}
-		}
-
-		return $;
 	}
 
 	public GameLocation getNextRoom(Point locationOnDoor) {
