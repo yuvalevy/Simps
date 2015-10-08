@@ -3,11 +3,12 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import sims.module.actions.ActionsFactory;
 import sims.module.surface.GameLocation;
 
 public class Toy extends GameObject {
 
-	private static int TOYS_COUNT = 0;
+	public static int TOYS_COUNT = 0;
 	private static final Rectangle TOY_RECT = new Rectangle(128, 128);
 
 	public static Rectangle getObjectShape(Point p) {
@@ -20,7 +21,7 @@ public class Toy extends GameObject {
 	private boolean isFound;
 
 	public Toy(GameLocation toyLocation) {
-		super(TOYS_COUNT, TOY_RECT, toyLocation);
+		super(TOYS_COUNT, TOY_RECT, toyLocation, ActionsFactory.getNothing("Toy"));
 
 		TOYS_COUNT++;
 		this.isFound = false;

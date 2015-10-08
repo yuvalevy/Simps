@@ -6,26 +6,22 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import javax.swing.ImageIcon;
 
 import sims.basics.Log;
-import sims.module.main.ConfigurationManager;
+import sims.basics.config.ConfigurationManager;
 import sims.module.main.World;
 import sims.module.objects.GameObject;
-import sims.module.objects.Toy;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
 import sims.module.surface.Map;
 
 public class ImagesPainter {
 
-	private final int toysLimit, playersLimit, roomsLimit;
+	private final int roomsLimit;
 
-	private final HashMap<String, ImageIcon> playersImages;
 	private final ArrayList<ImageIcon> roomsImages;
-	private final ArrayList<ImageIcon> toysImages;
 
 	private int startingPaintWidth;
 	// private final ArrayList<Player> gamePlayers;
@@ -36,36 +32,17 @@ public class ImagesPainter {
 
 	public ImagesPainter(World game) {
 
-		this.playersImages = new HashMap<String, ImageIcon>();
-		this.roomsImages = new ArrayList<ImageIcon>();
-		this.toysImages = new ArrayList<ImageIcon>();
-
 		this.game = game;
-		// this.gamePlayers = new ArrayList<>();// TODO: delete
 		this.gameMap = game.getMap();
 
-		this.toysLimit = ConfigurationManager.getToysLimit();
-		this.playersLimit = ConfigurationManager.getPlayersLimit();
+		this.roomsImages = new ArrayList<ImageIcon>();
 		this.roomsLimit = ConfigurationManager.getRoomsLimit();
 
 	}
 
-	public void addPlayer(String playerName) {
-
-		int playerIndex = this.playersImages.size();
-
-		if (playerIndex > this.playersLimit) {
-			playerIndex %= this.playersLimit;
-		}
-
-		ImageIcon newPlayer = new ImageIcon("images/players/" + playerIndex + ".gif");
-
-		this.playersImages.put(playerName, newPlayer);
-	}
-
 	// TODO I dont think i need room id
 	// I can use - roomsImages.size()... need more trust here
-	public void addRoom(int roomIndex, int toysCount) {
+	public void addRoom(int roomIndex) {
 
 		if (roomIndex > this.roomsLimit) {
 			roomIndex %= this.roomsLimit;
@@ -73,27 +50,8 @@ public class ImagesPainter {
 
 		ImageIcon newRoom = new ImageIcon("images/rooms/room" + roomIndex + ".jpg");
 
-		addToys(toysCount);
-
 		this.roomsImages.add(newRoom);
 
-	}
-
-	/**
-	 * @param toysCount
-	 */
-	private void addToys(int toysCount) {
-		int start = this.toysImages.size();
-
-		if (start > this.toysLimit) {
-			start %= this.toysLimit;
-		}
-
-		for (int i = start; i < (toysCount + start); i++) {
-
-			ImageIcon newToy = new ImageIcon("images/toys/" + i + ".png");
-			this.toysImages.add(newToy);
-		}
 	}
 
 	private void drawDebug(Graphics g) {
@@ -200,6 +158,15 @@ public class ImagesPainter {
 
 	}
 
+	/**
+	 * @param gameObject
+	 * @return
+	 */
+	private boolean isCurrentRoom(GameObject gameObject) {
+
+		return gameObject.getCurrentLocation().getRoomId() == this.currentRoom;
+	}
+
 	private void paintByPoint(ImageIcon ic, Point p, Component c, Graphics g) {
 
 		ic.paintIcon(c, g, p.x - this.startingPaintWidth, p.y);
@@ -220,76 +187,31 @@ public class ImagesPainter {
 
 		for (GameObject gameObject : this.game.getGameObjects()) {
 
-			if (gameObject.getCurrentLocation().getRoomId() == this.currentRoom) {
+			if (isCurrentRoom(gameObject)) {
 
 				Point playerPoint = gameObject.getCurrentLocation().getLocation();
 				ImageIcon playerIcon = gameObject.getNextImage();
 
-				paintByPoint(playerIcon, playerPoint, c, g);
-
+				if (playerIcon != null) {
+					paintByPoint(playerIcon, playerPoint, c, g);
+				}
 			}
 
 		}
 
 	}
 
-	// private void paintPlayers(Component c, Graphics g) {
-	//
-	// if (this.playersImages.size() == 0) {
-	// return;
-	// }
-	//
-	// for (int i = 0; i < this.playersImages.size(); i++) {
-	//
-	// Player currentPlayer = this.gamePlayers.get(i);
-	//
-	// if (currentPlayer.getCurrentLocation().getRoomId() == this.currentRoom) {
-	//
-	// Point playerPoint = currentPlayer.getCurrentLocation().getLocation();
-	// ImageIcon playerIcon =
-	// this.playersImages.get(currentPlayer.getPlayerName());
-	//
-	// paintByPoint(playerIcon, playerPoint, c, g);
-	//
-	// }
-	//
-	// }
-	//
-	// }
-
 	public void paintRoom(Component c, Graphics g) {
 
 		paintFloor(c, g);
 		paintFurnitures(c, g);
-		paintToys(c, g);
+		// paintToys(c, g);
 		// paintPlayers(c, g);
 
 		paintGameObject(c, g);
 		// if (Log.getLogLevel() == LogLevel.Debug) {
 		drawDebug(g);
 		// }
-	}
-
-	private void paintToys(Component c, Graphics g) {
-
-		// TODO: Should be getFoundToys()
-		for (Toy toy : this.gameMap.getFocusedRoom().getToys()) {
-
-			int toyid = toy.getObjectId();
-			ImageIcon ic = this.toysImages.get(toyid);
-
-			Point p = toy.getCurrentLocation().getLocation();
-
-			paintByPoint(ic, p, c, g);
-			// Log.WriteLineLog("Draw toy" + toy.getObjectId() + " - " + p);
-
-		}
-
-	}
-
-	public void removePlayer(String playerName) {
-
-		this.playersImages.remove(playerName);
 	}
 
 	public void setFocusedRoom(int roomId) {

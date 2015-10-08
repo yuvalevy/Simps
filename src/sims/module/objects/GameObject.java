@@ -8,21 +8,23 @@ import java.util.Arrays;
 
 import javax.swing.ImageIcon;
 
-import actions.Nothing;
 import sims.basics.Action;
+import sims.basics.Log;
+import sims.module.actions.ActionIdentifier;
 import sims.module.surface.GameLocation;
 
 public abstract class GameObject {
 
 	protected ArrayList<Action> objectActions;
-	protected int currentAction;
-	private final int defaultAction;
+	protected Action currentAction;
+	private final ActionIdentifier defaultActionIdentifier;
 	protected GameLocation currentLocation;
 	protected Shape objectSize;
 
 	protected int objectId;
 
-	protected GameObject(int objectId, Shape objShape, GameLocation startingLocation, Action... objectActions) {
+	protected GameObject(int objectId, Shape objShape, GameLocation startingLocation, Action defaultAction,
+			Action... objectActions) {
 
 		this.objectId = objectId;
 		this.objectSize = objShape;
@@ -30,15 +32,36 @@ public abstract class GameObject {
 
 		this.objectActions = new ArrayList<>();
 
+		this.objectActions.add(defaultAction);
 		this.objectActions.addAll(Arrays.asList(objectActions));
-		this.defaultAction = objectActions.length;
-		addAction(new Nothing());
+
+		this.defaultActionIdentifier = defaultAction.getIdentifier();
+
+		this.currentAction = defaultAction;
 
 	}
 
 	protected void addAction(Action action) {
 
 		this.objectActions.add(action);
+	}
+
+	/**
+	 * If the action is not over and it's not interruptible, action cannot be
+	 * changed
+	 *
+	 * @return true if it is allow to change action. false otherwise
+	 */
+	private boolean canChangeAction() {
+		if (this.currentAction.isOver()) {
+			return true;
+		}
+
+		if (this.currentAction.interupt()) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -65,24 +88,6 @@ public abstract class GameObject {
 
 	}
 
-	public void executeAction() {
-
-		Action action = this.objectActions.get(this.currentAction);
-		GameLocation actionLocation = action.execute();
-
-		if (actionLocation != null) {
-			this.currentLocation = actionLocation;
-		}
-
-		if (action.isOver()) {
-			setDefaultAction();
-		}
-	}
-
-	private Action getCurrentAction() {
-		return this.objectActions.get(this.currentAction);
-	}
-
 	/**
 	 * Returns object current location
 	 *
@@ -95,7 +100,7 @@ public abstract class GameObject {
 	}
 
 	public ImageIcon getNextImage() {
-		return this.objectActions.get(this.currentAction).getNextImage();
+		return this.currentAction.getNextImage();
 	}
 
 	public int getObjectId() {
@@ -118,11 +123,50 @@ public abstract class GameObject {
 	}
 
 	public boolean interuptAction() {
-		return this.objectActions.get(this.currentAction).interupt();
+		return this.currentAction.interupt();
 	}
 
 	private void setDefaultAction() {
-		this.currentAction = this.defaultAction;
+
+		trySetAction(this.defaultActionIdentifier);
+	}
+
+	public void tick() {
+
+		GameLocation actionLocation = this.currentAction.tick();
+
+		if (actionLocation != null) {
+			this.currentLocation = actionLocation;
+		}
+
+		if (this.currentAction.isOver()) {
+			setDefaultAction();
+		}
+	}
+
+	/**
+	 * Trying to change the current action. If it is not allowed nothing happen.
+	 *
+	 * @param identifier
+	 * @return true is changing was successful. false otherwise
+	 */
+	public boolean trySetAction(ActionIdentifier identifier) {
+
+		if (!canChangeAction()) {
+			return false;
+		}
+
+		for (Action action : this.objectActions) {
+			if (action.isAction(identifier)) {
+
+				this.currentAction = action;
+				Log.WriteLineLog("Yuval" + this.objectId + "CurrentAction = " + identifier);
+				return true;
+			}
+		}
+
+		Log.WriteLineLog("Cannot find action " + identifier);
+		return false;
 	}
 
 }

@@ -14,7 +14,7 @@ import javax.swing.JButton;
 
 import sims.basics.GameActions;
 import sims.basics.Randomaizer;
-import sims.module.main.ConfigurationManager;
+import sims.basics.config.ConfigurationManager;
 import sims.module.main.World;
 import sims.module.surface.GameLocation;
 import sims.viewers.GuiViewer;

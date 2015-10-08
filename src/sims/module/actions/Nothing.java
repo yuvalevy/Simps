@@ -1,4 +1,4 @@
-package actions;
+package sims.module.actions;
 
 import javax.swing.ImageIcon;
 
@@ -7,23 +7,17 @@ import sims.module.surface.GameLocation;
 
 public class Nothing implements Action {
 
+	private static ActionIdentifier identifier = ActionIdentifier.Nothing;
 	private boolean isActive;
 	private final ImageIcon defaultPic;
 
-	public Nothing() {
-		this.defaultPic = null;
-	}
-
-	public Nothing(ImageIcon defaultObjectPic) {
+	Nothing(ImageIcon defaultObjectPic) {
 		this.defaultPic = defaultObjectPic;
 	}
 
 	@Override
-	public GameLocation execute() {
-
-		start();
-
-		return null;
+	public ActionIdentifier getIdentifier() {
+		return Nothing.identifier;
 	}
 
 	@Override
@@ -38,13 +32,18 @@ public class Nothing implements Action {
 	}
 
 	@Override
+	public boolean isAction(ActionIdentifier identifier) {
+		return Nothing.identifier == identifier;
+	}
+
+	@Override
 	public boolean isActive() {
 		return this.isActive;
 	}
 
 	@Override
 	public boolean isOver() {
-		return this.isActive;
+		return false;
 	}
 
 	private void start() {
@@ -53,6 +52,14 @@ public class Nothing implements Action {
 
 	private void stop() {
 		this.isActive = false;
+	}
+
+	@Override
+	public GameLocation tick() {
+
+		start();
+
+		return null;
 	}
 
 }

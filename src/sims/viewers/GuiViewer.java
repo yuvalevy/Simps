@@ -49,7 +49,6 @@ public class GuiViewer extends JPanel implements GameActions {
 	@Override
 	public boolean addPlayer(String playerName) {
 
-		this.painter.addPlayer(playerName);
 		this.playerChoice.add(playerName);
 		return true;
 	}
@@ -57,7 +56,7 @@ public class GuiViewer extends JPanel implements GameActions {
 	@Override
 	public void addRoom(int roomId, int toysCount) {
 
-		this.painter.addRoom(roomId, toysCount);
+		this.painter.addRoom(roomId);
 
 	}
 

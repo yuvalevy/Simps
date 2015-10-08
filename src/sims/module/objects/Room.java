@@ -5,9 +5,8 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 
-import sims.basics.Log;
 import sims.basics.Randomaizer;
-import sims.module.main.ConfigurationManager;
+import sims.basics.config.ConfigurationManager;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
 import sims.module.surface.GameLocation;
@@ -308,7 +307,8 @@ public class Room {
 
 			GameLocation randomLocation = Randomaizer.getRandomPlace(this, CellProperty.NoProperty);
 
-			Log.WriteLineLog("Adding toy[" + i + "] in room " + this.roomId + " Location: " + randomLocation);
+			// Log.WriteLineLog("Adding toy[" + i + "] in room " + this.roomId +
+			// " Location: " + randomLocation);
 			this.toys[i] = new Toy(randomLocation);
 		}
 

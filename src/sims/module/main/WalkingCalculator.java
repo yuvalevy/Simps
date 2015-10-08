@@ -1,6 +1,7 @@
 package sims.module.main;
 
 import sims.basics.Log;
+import sims.basics.config.ConfigurationManager;
 import sims.module.calculators.Calculator;
 import sims.module.calculators.Dijkstra;
 import sims.module.calculators.Line;
@@ -39,7 +40,7 @@ class WalkingCalculator {
 
 		// TODO: dijestra
 
-		if (this.calculator.isActive()) {
+		if (!this.calculator.canMulti() && this.calculator.isActive()) {
 			return;
 		}
 

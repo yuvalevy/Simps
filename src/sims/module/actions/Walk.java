@@ -1,4 +1,4 @@
-package actions;
+package sims.module.actions;
 
 import java.util.LinkedList;
 
@@ -9,6 +9,8 @@ import sims.module.surface.GameLocation;
 
 public class Walk implements Action {
 
+	private static ActionIdentifier identifier = ActionIdentifier.Walk;
+
 	private final LinkedList<GameLocation> steps;
 
 	private boolean isActive;
@@ -16,13 +18,13 @@ public class Walk implements Action {
 	private ImageIcon[] icons;
 	private int currentPic;
 
-	public Walk() {
+	private Walk() {
 
 		this.steps = new LinkedList<GameLocation>();
 		this.currentPic = 0;
 	}
 
-	public Walk(ImageIcon... icons) {
+	Walk(ImageIcon... icons) {
 		this();
 		this.icons = icons;
 	}
@@ -32,24 +34,9 @@ public class Walk implements Action {
 		this.steps.add(step);
 	}
 
-	/**
-	 * Sets the next step to currentLoction. If there are no more steps, nothing
-	 * is done
-	 *
-	 */
 	@Override
-	public GameLocation execute() {
-
-		start();
-
-		if (this.steps.size() == 0) {
-			return null;
-		}
-
-		GameLocation newStep = this.steps.removeFirst();
-
-		return newStep;
-
+	public ActionIdentifier getIdentifier() {
+		return Walk.identifier;
 	}
 
 	@Override
@@ -66,8 +53,13 @@ public class Walk implements Action {
 
 	@Override
 	public boolean interupt() {
-		stop();
-		return true;
+		// stop();
+		return false;
+	}
+
+	@Override
+	public boolean isAction(ActionIdentifier identifier) {
+		return Walk.identifier == identifier;
 	}
 
 	@Override
@@ -77,7 +69,7 @@ public class Walk implements Action {
 
 	@Override
 	public boolean isOver() {
-		return this.steps.size() == 0;
+		return this.steps.isEmpty();
 	}
 
 	private void start() {
@@ -86,7 +78,30 @@ public class Walk implements Action {
 	}
 
 	private void stop() {
+
+		this.steps.clear();
 		this.isActive = false;
+	}
+
+	/**
+	 * Sets the next step to currentLoction. If there are no more steps, nothing
+	 * is done
+	 *
+	 */
+	@Override
+	public GameLocation tick() {
+
+		start();
+
+		if (isOver()) {
+			stop();
+			return null;
+		}
+
+		GameLocation newStep = this.steps.removeFirst();
+
+		return newStep;
+
 	}
 
 }

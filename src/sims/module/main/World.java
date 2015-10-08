@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import sims.basics.GameActions;
 import sims.basics.Log;
 import sims.basics.LogLevel;
+import sims.module.actions.ActionIdentifier;
 import sims.module.objects.GameObject;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
@@ -178,8 +179,11 @@ public class World implements GameActions {
 			return;
 		}
 
-		this.walkingCalculator.planTrip(this.focusedPlayer, newLocation);
-
+		if (!this.focusedPlayer.trySetAction(ActionIdentifier.Walk)) {
+			Log.WriteLineLog("Cant start walking, other action is not over.");
+		} else {
+			this.walkingCalculator.planTrip(this.focusedPlayer, newLocation);
+		}
 	}
 
 	@Override

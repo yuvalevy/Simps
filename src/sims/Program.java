@@ -2,8 +2,8 @@ package sims;
 
 import sims.basics.Log;
 import sims.basics.LogLevel;
+import sims.basics.config.ConfigurationManager;
 import sims.contolers.GuiControler;
-import sims.module.main.ConfigurationManager;
 
 public class Program {
 
