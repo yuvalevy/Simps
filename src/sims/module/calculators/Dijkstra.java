@@ -157,36 +157,38 @@ public class Dijkstra implements Calculator {
 	@Override
 	public void implementSteps(Player p, GameLocation start, GameLocation end) {
 
-		Log.WriteLog("-Implementing");
+		// Log.WriteLog("-Implementing");
 
 		convert(start, end);
 
 		Cell nextCell = this.startCell;
 		GameLocation nextLocation = this.startCell.getCoordinate();
 
-		do {
+		if (nextCell.getPreviousCell() != null) {
+
+			do {
+
+				// Log.WriteLog("Step++ " + nextLocation);
+
+				p.addStep(nextLocation);
+
+				nextCell = nextCell.getPreviousCell();
+				nextLocation = nextCell.getCoordinate();
+
+			} while (nextCell.getPreviousCell() != nextCell);
 
 			// Log.WriteLog("Step++ " + nextLocation);
 
+			Door nextDoor = this.worldMap.getDoor(nextLocation);
+			if (nextDoor != null) {
+
+				nextLocation = nextDoor.getNextRoomStartingLocation();
+			}
+
 			p.addStep(nextLocation);
-
-			nextCell = nextCell.getPreviousCell();
-			nextLocation = nextCell.getCoordinate();
-
-		} while (nextCell.getPreviousCell() != nextCell);
-
-		// Log.WriteLog("Step++ " + nextLocation);
-
-		Door nextDoor = this.worldMap.getDoor(nextLocation);
-		if (nextDoor != null) {
-
-			nextLocation = nextDoor.getNextRoomStartingLocation();
 		}
-
-		p.addStep(nextLocation);
-
 		initClass();
-		Log.WriteLineLog("-Finish implementing");
+		// Log.WriteLineLog("-Finish implementing");
 		this.isActive = false;
 
 	}
@@ -217,7 +219,7 @@ public class Dijkstra implements Calculator {
 			}
 		}
 
-		Log.WriteLineLog("Finished init");
+		// Log.WriteLineLog("Finished init");
 
 	}
 
