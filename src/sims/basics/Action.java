@@ -11,7 +11,7 @@ public interface Action {
 
 	ImageIcon getNextImage();
 
-	boolean canInterupt();
+	boolean canInterrupt();
 
 	boolean isAction(ActionIdentifier identifier);
 

@@ -26,7 +26,7 @@ public class Nothing implements Action {
 	}
 
 	@Override
-	public boolean canInterupt() {
+	public boolean canInterrupt() {
 		return true;
 	}
 

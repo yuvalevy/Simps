@@ -25,7 +25,7 @@ public class Search implements Action {
 	}
 
 	@Override
-	public boolean canInterupt() {
+	public boolean canInterrupt() {
 		return false;
 	}
 

@@ -62,15 +62,15 @@ public abstract class GameObject {
 			return true;
 		}
 
-		if (this.currentAction.canInterupt()) {
+		if (this.currentAction.canInterrupt()) {
 			return true;
 		}
 
 		return false;
 	}
 
-	public boolean canInteruptAction() {
-		return this.currentAction.canInterupt();
+	public boolean canInterruptAction() {
+		return this.currentAction.canInterrupt();
 	}
 
 	/**
