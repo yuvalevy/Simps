@@ -73,6 +73,16 @@ public class ConfigurationManager {
 
 	}
 
+	public static String getPlayerSearchImgsPath() {
+		return Configuration.getString("simps.players.playersearchimgspath");
+	}
+
+	public static int getPlayerSearchTime() {
+
+		return Configuration.getInt("simps.general.playersearchtime");
+
+	}
+
 	/**
 	 * Depends on how much images in the folder
 	 *

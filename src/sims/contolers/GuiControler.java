@@ -13,6 +13,7 @@ import java.awt.event.ItemListener;
 import javax.swing.JButton;
 
 import sims.basics.GameActions;
+import sims.basics.Log;
 import sims.basics.Randomaizer;
 import sims.basics.config.ConfigurationManager;
 import sims.module.main.World;
@@ -120,20 +121,25 @@ public class GuiControler implements GameActions, Runnable {
 
 	}
 
-	public void guiClick(Point pointClicked) {
+	public void guiLeftClick(Point pointClicked, boolean controlPressed) {
 
 		int roomId = this.gameModule.getCurrentRoom();
 		GameLocation newLocation = new GameLocation(pointClicked, roomId);
 
-		movePlayer(newLocation);
+		if (controlPressed) {
+			sendPlayerSearching(pointClicked);
+		} else {
+			movePlayer(newLocation);
+		}
 
 	}
 
-	public void guiDoubleClick(Point pointClicked) {
+	public void guiRightClick(Point pointClicked) {
 
 		String currentPlayer = this.gameModule.getPlayerByPoint(pointClicked);
 
 		if (currentPlayer != null) {
+			Log.WriteLineLog("Setting " + currentPlayer + " to be focused.");
 			setFocusedPlayer(currentPlayer);
 		}
 
@@ -189,6 +195,13 @@ public class GuiControler implements GameActions, Runnable {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public void sendPlayerSearching(Point pointClicked) {
+
+		this.gameModule.sendPlayerSearching(pointClicked);
+		this.gameUi.sendPlayerSearching(pointClicked);
 	}
 
 	@Override

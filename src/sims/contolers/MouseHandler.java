@@ -27,12 +27,20 @@ public class MouseHandler implements MouseListener {
 
 		switch (event.getButton()) {
 
+		// left click
 		case 1:
-			this.controler.guiClick(pointClicked);
+
+			boolean control = false;
+			if (event.isControlDown()) {
+				control = true;
+			}
+
+			this.controler.guiLeftClick(pointClicked, control);
 			break;
 
+		// right click
 		case 3:
-			this.controler.guiDoubleClick(pointClicked);
+			this.controler.guiRightClick(pointClicked);
 			break;
 
 		}

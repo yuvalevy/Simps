@@ -9,8 +9,6 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import sims.basics.Log;
-import sims.basics.config.ConfigurationManager;
 import sims.module.main.World;
 import sims.module.objects.GameObject;
 import sims.module.surface.Cell;
@@ -19,12 +17,8 @@ import sims.module.surface.Map;
 
 public class ImagesPainter {
 
-	private final int roomsLimit;
-
 	private final ArrayList<ImageIcon> roomsImages;
 
-	private int startingPaintWidth;
-	// private final ArrayList<Player> gamePlayers;
 	private final World game;
 	private final Map gameMap;
 
@@ -36,7 +30,6 @@ public class ImagesPainter {
 		this.gameMap = game.getMap();
 
 		this.roomsImages = new ArrayList<ImageIcon>();
-		this.roomsLimit = ConfigurationManager.getRoomsLimit();
 
 	}
 
@@ -44,11 +37,7 @@ public class ImagesPainter {
 	// I can use - roomsImages.size()... need more trust here
 	public void addRoom(int roomIndex) {
 
-		if (roomIndex > this.roomsLimit) {
-			roomIndex %= this.roomsLimit;
-		}
-
-		ImageIcon newRoom = new ImageIcon("images/rooms/room" + roomIndex + ".jpg");
+		ImageIcon newRoom = ImagesProvider.getRoomImage(roomIndex);
 
 		this.roomsImages.add(newRoom);
 
@@ -169,14 +158,14 @@ public class ImagesPainter {
 
 	private void paintByPoint(ImageIcon ic, Point p, Component c, Graphics g) {
 
-		ic.paintIcon(c, g, p.x - this.startingPaintWidth, p.y);
+		ic.paintIcon(c, g, p.x, p.y);
 	}
 
 	private void paintFloor(Component c, Graphics g) {
 
 		ImageIcon floor = this.roomsImages.get(this.currentRoom - 1);
 
-		paintByPoint(floor, new Point(this.startingPaintWidth, 0), c, g);
+		paintByPoint(floor, new Point(0, 0), c, g);
 
 	}
 
@@ -205,25 +194,17 @@ public class ImagesPainter {
 
 		paintFloor(c, g);
 		paintFurnitures(c, g);
-		// paintToys(c, g);
-		// paintPlayers(c, g);
 
 		paintGameObject(c, g);
-		// if (Log.getLogLevel() == LogLevel.Debug) {
+
 		drawDebug(g);
-		// }
+
 	}
 
 	public void setFocusedRoom(int roomId) {
 
 		this.currentRoom = roomId;
 
-	}
-
-	public void setStartingPaintWidth(int width) {
-
-		this.startingPaintWidth = 0;
-		Log.WriteLineLog("ImagesPainter.setStartingPaintWidth = " + width);
 	}
 
 }

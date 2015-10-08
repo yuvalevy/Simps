@@ -7,6 +7,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
@@ -85,8 +86,6 @@ public class GuiViewer extends JPanel implements GameActions {
 
 		this.add(this.managmentPanel);
 		this.add(this.roomsPanel);
-
-		this.painter.setStartingPaintWidth((int) this.managmentPanel.getMaximumSize().getWidth());
 
 	}
 
@@ -246,6 +245,12 @@ public class GuiViewer extends JPanel implements GameActions {
 		} catch (Exception e) {
 
 		}
+	}
+
+	@Override
+	public void sendPlayerSearching(Point pointClicked) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override

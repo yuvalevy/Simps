@@ -11,13 +11,17 @@ public interface Action {
 
 	ImageIcon getNextImage();
 
-	boolean interupt();
+	boolean canInterupt();
 
 	boolean isAction(ActionIdentifier identifier);
 
 	boolean isActive();
 
 	boolean isOver();
+
+	void start();
+
+	void stop();
 
 	GameLocation tick();
 }

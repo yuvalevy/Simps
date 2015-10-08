@@ -5,24 +5,23 @@ import javax.swing.ImageIcon;
 import sims.basics.Action;
 import sims.module.surface.GameLocation;
 
-public class Nothing implements Action {
+public class Hide implements Action {
 
-	private static ActionIdentifier identifier = ActionIdentifier.Nothing;
+	private static ActionIdentifier identifier = ActionIdentifier.Hide;
 	private boolean isActive;
-	private final ImageIcon defaultPic;
 
-	Nothing(ImageIcon defaultObjectPic) {
-		this.defaultPic = defaultObjectPic;
+	Hide() {
 	}
 
 	@Override
 	public ActionIdentifier getIdentifier() {
-		return Nothing.identifier;
+
+		return identifier;
 	}
 
 	@Override
 	public ImageIcon getNextImage() {
-		return this.defaultPic;
+		return null;
 	}
 
 	@Override
@@ -32,7 +31,7 @@ public class Nothing implements Action {
 
 	@Override
 	public boolean isAction(ActionIdentifier identifier) {
-		return Nothing.identifier == identifier;
+		return Hide.identifier == identifier;
 	}
 
 	@Override
@@ -57,7 +56,6 @@ public class Nothing implements Action {
 
 	@Override
 	public GameLocation tick() {
-
 		return null;
 	}
 

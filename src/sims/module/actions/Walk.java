@@ -22,6 +22,7 @@ public class Walk implements Action {
 
 		this.steps = new LinkedList<GameLocation>();
 		this.currentPic = 0;
+		stop();
 	}
 
 	Walk(ImageIcon... icons) {
@@ -42,6 +43,9 @@ public class Walk implements Action {
 	@Override
 	public ImageIcon getNextImage() {
 
+		if (!isActive()) {
+			return null;
+		}
 		ImageIcon $ = this.icons[this.currentPic];
 		this.currentPic++;
 
@@ -52,8 +56,7 @@ public class Walk implements Action {
 	}
 
 	@Override
-	public boolean interupt() {
-		// stop();
+	public boolean canInterupt() {
 		return false;
 	}
 
@@ -70,14 +73,17 @@ public class Walk implements Action {
 	@Override
 	public boolean isOver() {
 		return this.steps.isEmpty();
+
 	}
 
-	private void start() {
+	@Override
+	public void start() {
 		this.isActive = true;
 
 	}
 
-	private void stop() {
+	@Override
+	public void stop() {
 
 		this.steps.clear();
 		this.isActive = false;
@@ -91,10 +97,8 @@ public class Walk implements Action {
 	@Override
 	public GameLocation tick() {
 
-		start();
-
 		if (isOver()) {
-			stop();
+
 			return null;
 		}
 

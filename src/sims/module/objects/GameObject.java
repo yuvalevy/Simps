@@ -18,6 +18,7 @@ public abstract class GameObject {
 	protected ArrayList<Action> objectActions;
 	protected Action currentAction;
 	private final ActionIdentifier defaultActionIdentifier;
+
 	protected GameLocation currentLocation;
 	protected Shape objectSize;
 
@@ -41,8 +42,12 @@ public abstract class GameObject {
 
 	}
 
-	protected void addAction(Action action) {
+	public void addAction(Action action) {
 
+		Action tempAction = getAction(action.getIdentifier());
+		if (tempAction != null) {
+			removeAction(tempAction);
+		}
 		this.objectActions.add(action);
 	}
 
@@ -57,11 +62,15 @@ public abstract class GameObject {
 			return true;
 		}
 
-		if (this.currentAction.interupt()) {
+		if (this.currentAction.canInterupt()) {
 			return true;
 		}
 
 		return false;
+	}
+
+	public boolean canInteruptAction() {
+		return this.currentAction.canInterupt();
 	}
 
 	/**
@@ -86,6 +95,22 @@ public abstract class GameObject {
 
 		return this.objectSize.contains(r);
 
+	}
+
+	/**
+	 * @param identifier
+	 * @param a
+	 * @return
+	 */
+	private Action getAction(ActionIdentifier identifier) {
+
+		for (Action action : this.objectActions) {
+			if (action.isAction(identifier)) {
+
+				return action;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -122,8 +147,23 @@ public abstract class GameObject {
 
 	}
 
-	public boolean interuptAction() {
-		return this.currentAction.interupt();
+	public void removeAction(Action tempAction) {
+
+		if (tempAction != null) {
+			this.objectActions.remove(tempAction);
+		}
+	}
+
+	/**
+	 * @param action
+	 * @param identifier
+	 */
+	private void setAction(Action action) {
+
+		this.currentAction = action;
+		this.currentAction.start();
+
+		Log.WriteLineLog(getObjectId() + " stating " + this.currentAction.getIdentifier());
 	}
 
 	private void setDefaultAction() {
@@ -140,6 +180,11 @@ public abstract class GameObject {
 		}
 
 		if (this.currentAction.isOver()) {
+
+			// if (this.standByAction != null) {
+			// setStandByAction();
+			// }
+
 			setDefaultAction();
 		}
 	}
@@ -156,13 +201,17 @@ public abstract class GameObject {
 			return false;
 		}
 
-		for (Action action : this.objectActions) {
-			if (action.isAction(identifier)) {
+		Action action = getAction(identifier);
 
-				this.currentAction = action;
-				Log.WriteLineLog("Yuval" + this.objectId + "CurrentAction = " + identifier);
-				return true;
-			}
+		if (action != null) {
+
+			Log.WriteLineLog(getObjectId() + " - stopping " + this.currentAction.getIdentifier());
+			this.currentAction.stop();
+
+			setAction(action);
+
+			return true;
+
 		}
 
 		Log.WriteLineLog("Cannot find action " + identifier);

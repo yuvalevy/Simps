@@ -9,6 +9,7 @@ import sims.basics.GameActions;
 import sims.basics.Log;
 import sims.basics.LogLevel;
 import sims.module.actions.ActionIdentifier;
+import sims.module.actions.ActionsFactory;
 import sims.module.objects.GameObject;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
@@ -18,14 +19,11 @@ import sims.module.surface.Map;
 public class World implements GameActions {
 
 	private boolean isRunning = false;
+	private Player focusedPlayer;
 
 	private final ArrayList<Player> players;
-
 	private final WalkingCalculator walkingCalculator;
-
 	private final Map worldMap;
-
-	private Player focusedPlayer;
 
 	public World(Dimension screenDimension, Rectangle cellDefaultSize) {
 
@@ -201,6 +199,18 @@ public class World implements GameActions {
 
 			this.players.remove(tempPlayer);
 		}
+	}
+
+	@Override
+	public void sendPlayerSearching(Point pointClicked) {
+
+		if (this.focusedPlayer == null) {
+			return;
+		}
+		GameLocation start = this.focusedPlayer.getCurrentLocation();
+		this.focusedPlayer.addAction(ActionsFactory.getSearch(start));
+		this.focusedPlayer.trySetAction(ActionIdentifier.Search);
+		// this.focusedPlayer.setStandByAction(ActionsFactory.getSearch(start));
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import sims.module.actions.ActionIdentifier;
 import sims.module.actions.ActionsFactory;
 import sims.module.surface.GameLocation;
 
@@ -21,10 +22,11 @@ public class Toy extends GameObject {
 	private boolean isFound;
 
 	public Toy(GameLocation toyLocation) {
-		super(TOYS_COUNT, TOY_RECT, toyLocation, ActionsFactory.getNothing("Toy"));
+		super(TOYS_COUNT, TOY_RECT, toyLocation, ActionsFactory.getNothing("Toy"), ActionsFactory.getHide());
 
 		TOYS_COUNT++;
 		this.isFound = false;
+		trySetAction(ActionIdentifier.Hide);
 	}
 
 	@Override
@@ -39,7 +41,9 @@ public class Toy extends GameObject {
 	}
 
 	void toyFound() {
+
 		this.isFound = true;
+
 	}
 
 }
