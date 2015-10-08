@@ -10,14 +10,14 @@ public class ConfigurationManager {
 
 	public static String getCalculatorName() {
 
-		return Configuration.getGeneralStringValue("simps.calculatorname"); //$NON-NLS-1$
+		return Configuration.getString("simps.general.calculatorname"); //$NON-NLS-1$
 
 	}
 
 	public static Rectangle getCellDefaultSize() {
 
-		int x = Configuration.getGeneralIntValue("simps.cellxdefaultsize");
-		int y = Configuration.getGeneralIntValue("simps.cellydefaultsize");
+		int x = Configuration.getInt("simps.general.cellxdefaultsize");
+		int y = Configuration.getInt("simps.general.cellydefaultsize");
 
 		return new Rectangle(x, y);
 	}
@@ -26,8 +26,8 @@ public class ConfigurationManager {
 
 		GameLocation $ = new GameLocation(roomId);
 
-		int x = Configuration.getRoomIntValue("simps.Room" + roomId + ".Door" + doorIndex + ".doorxlocation"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-		int y = Configuration.getRoomIntValue("simps.Room" + roomId + ".Door" + doorIndex + ".doorylocation"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		int x = Configuration.getInt("simps.rooms.Room" + roomId + ".Door" + doorIndex + ".doorxlocation"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		int y = Configuration.getInt("simps.rooms.Room" + roomId + ".Door" + doorIndex + ".doorylocation"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		Point location = new Point(x, y);
 
@@ -49,8 +49,8 @@ public class ConfigurationManager {
 
 		GameLocation $ = null;
 
-		int x = Configuration.getRoomIntValue("simps.Room" + roomId + ".Door" + doorIndex + ".nextdoorxlocation");
-		int y = Configuration.getRoomIntValue("simps.Room" + roomId + ".Door" + doorIndex + ".nextdoorylocation");
+		int x = Configuration.getInt("simps.rooms.Room" + roomId + ".Door" + doorIndex + ".nextdoorxlocation");
+		int y = Configuration.getInt("simps.rooms.Room" + roomId + ".Door" + doorIndex + ".nextdoorylocation");
 
 		Point location = new Point(x, y);
 
@@ -63,13 +63,23 @@ public class ConfigurationManager {
 		return $;
 	}
 
+	public static String getPathPrefix() {
+		return Configuration.getString("simps.general.pathprefix");
+	}
+
+	public static String getPlayerImgsPath() {
+
+		return Configuration.getString("simps.players.playerimgpath");
+
+	}
+
 	/**
 	 * Depends on how much images in the folder
 	 *
 	 * @return
 	 */
 	public static int getPlayersLimit() {
-		return Configuration.getGeneralIntValue("simps.playerslimit");
+		return Configuration.getInt("simps.general.playerslimit");
 	}
 
 	public static Polygon[] getRoomDoorsPolygons(int roomId, int doorCount) {
@@ -78,9 +88,9 @@ public class ConfigurationManager {
 
 		for (int i = 0; i < doorCount; i++) {
 
-			$[i] = ConfigurationManager.makePolygon(new String[] {
-					Configuration.getRoomStringValue("simps.Room" + roomId + ".Door" + i + ".xdoorpoints"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-					Configuration.getRoomStringValue("simps.Room" + roomId + ".Door" + i + ".ydoorpoints") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			$[i] = ConfigurationManager.makePolygon(
+					new String[] { Configuration.getString("simps.rooms.Room" + roomId + ".Door" + i + ".xdoorpoints"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+							Configuration.getString("simps.rooms.Room" + roomId + ".Door" + i + ".ydoorpoints") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
 		}
 
@@ -97,8 +107,8 @@ public class ConfigurationManager {
 
 		String[] $ = new String[2];
 
-		$[0] = Configuration.getRoomStringValue("simps.Room" + roomId + ".xroompoints"); //$NON-NLS-1$ //$NON-NLS-2$
-		$[1] = Configuration.getRoomStringValue("simps.Room" + roomId + ".yroompoints"); //$NON-NLS-1$ //$NON-NLS-2$
+		$[0] = Configuration.getString("simps.rooms.Room" + roomId + ".xroompoints"); //$NON-NLS-1$ //$NON-NLS-2$
+		$[1] = Configuration.getString("simps.rooms.Room" + roomId + ".yroompoints"); //$NON-NLS-1$ //$NON-NLS-2$
 
 		Polygon area = new Polygon();
 
@@ -114,19 +124,24 @@ public class ConfigurationManager {
 	 *
 	 * @return
 	 */
+
 	public static int getRoomsLimit() {
 
-		return Configuration.getGeneralIntValue("simps.roomslimit");
+		return Configuration.getInt("simps.general.roomslimit");
 	}
 
 	public static int getSleepTime() {
-		return Configuration.getGeneralIntValue("simps.sleeptime");
+		return Configuration.getInt("simps.general.sleeptime");
 
+	}
+
+	public static String getToyImgsPath() {
+		return Configuration.getString("simps.general.toyimgspath");
 	}
 
 	public static int getToysDefaultNumberPerRoom() {
 
-		return Configuration.getGeneralIntValue("simps.toysdefaultnumberperroom");
+		return Configuration.getInt("simps.general.toysdefaultnumberperroom");
 	}
 
 	/**
@@ -135,14 +150,14 @@ public class ConfigurationManager {
 	 * @return
 	 */
 	public static int getToysLimit() {
-		return Configuration.getGeneralIntValue("simps.toyslimit");
+		return Configuration.getInt("simps.general.toyslimit");
 
 	}
 
 	/**
 	 * @param points
 	 */
-	public static Polygon makePolygon(String[] points) {
+	private static Polygon makePolygon(String[] points) {
 
 		Polygon $ = new Polygon();
 
