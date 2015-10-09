@@ -47,20 +47,12 @@ public class ConfigurationManager {
 	 */
 	public static GameLocation getDoorNextRoomStartingLocation(int roomId, int doorIndex) {
 
-		GameLocation $ = null;
-
 		int x = Configuration.getInt("simps.rooms.Room" + roomId + ".Door" + doorIndex + ".nextdoorxlocation");
 		int y = Configuration.getInt("simps.rooms.Room" + roomId + ".Door" + doorIndex + ".nextdoorylocation");
 
-		Point location = new Point(x, y);
+		int nextRoomIndex = Configuration.getInt("simps.rooms.Room" + roomId + ".Door" + doorIndex + ".nextroomindex");
 
-		if (doorIndex == 0) {
-			$ = new GameLocation(location, roomId - 1);
-		} else {
-			$ = new GameLocation(location, roomId + 1);
-		}
-
-		return $;
+		return new GameLocation(x, y, nextRoomIndex);
 	}
 
 	public static String getPathPrefix() {

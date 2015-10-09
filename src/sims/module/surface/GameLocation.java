@@ -14,10 +14,10 @@ public class GameLocation {
 
 	}
 
-	public GameLocation(Point location) {
+	public GameLocation(int px, int py, int roomId) {
 
-		this.location = location;
-		this.roomId = 1;
+		this.location = new Point(px, py);
+		this.roomId = roomId;
 	}
 
 	public GameLocation(Point location, int roomId) {
