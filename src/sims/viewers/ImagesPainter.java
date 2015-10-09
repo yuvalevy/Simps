@@ -2,6 +2,7 @@ package sims.viewers;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -187,6 +188,18 @@ public class ImagesPainter {
 			}
 
 		}
+
+	}
+
+	public void paintManagmentPanel(Component c, Graphics g) {
+
+		g.setColor(Color.black);
+		g.setFont(new Font("Arial", 1, 20));
+		g.drawString("Only " + this.game.getUnfoundToys() + " toy left to find!!", 20, 170);
+
+		g.setColor(Color.red);
+		g.setFont(new Font("Arial", 4, 20));
+		g.drawString(this.gameMap.getFocusedRoom().getUnfoundToys() + " in this room!!:)", 50, 200);
 
 	}
 

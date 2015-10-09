@@ -18,6 +18,7 @@ import sims.module.surface.Map;
 
 public class World implements GameActions {
 
+	private int unfoundToys;
 	private boolean isRunning = false;
 	private Player focusedPlayer;
 
@@ -29,10 +30,11 @@ public class World implements GameActions {
 
 		this.players = new ArrayList<Player>();
 
-		// TODO: proportion for game width to cell count
 		this.worldMap = new Map(screenDimension, cellDefaultSize);
 
 		this.walkingCalculator = new WalkingCalculator(this.worldMap);
+
+		this.unfoundToys = 0;
 
 		Log.WriteLineLog("Created World instance");
 	}
@@ -51,7 +53,7 @@ public class World implements GameActions {
 
 	@Override
 	public void addRoom(int roomId, int toysCount) {
-
+		this.unfoundToys += toysCount;
 		this.worldMap.addRoom(roomId, toysCount);
 
 	}
@@ -165,6 +167,10 @@ public class World implements GameActions {
 
 	}
 
+	public int getUnfoundToys() {
+		return this.unfoundToys;
+	}
+
 	public boolean isRunning() {
 		return this.isRunning;
 	}
@@ -215,6 +221,7 @@ public class World implements GameActions {
 
 			if (this.worldMap.getFocusedRoom().tryFindToy(pointClicked)) {
 				Log.WriteLineLog("FOUND-------------");
+				this.unfoundToys--;
 			}
 		}
 
@@ -225,7 +232,6 @@ public class World implements GameActions {
 
 		Player currentPlayer = getPlayer(playerName);
 		if (currentPlayer == null) {
-			// TODO: Handle error here
 			Log.WriteLineLog("Could not find player " + playerName, LogLevel.Error);
 		}
 

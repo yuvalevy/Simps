@@ -20,8 +20,9 @@ public class Room {
 	private Door[] doors;
 	private Polygon stepablePolygon;
 	private final Toy[] toys;
+	private int unfoundToys;
 
-	public Room(int doorsCount, int toyCount, int width, int hight) {
+	public Room(int doorsCount, int toysCount, int width, int hight) {
 
 		roomCount++;
 		setRoomId(roomCount);
@@ -30,7 +31,8 @@ public class Room {
 
 		// TODO: cell count is configurable for future flexibility
 		this.roomCells = new Cell[width][hight];
-		this.toys = new Toy[toyCount];
+		this.toys = new Toy[toysCount];
+		this.unfoundToys = toysCount;
 	}
 
 	public void createDefalutMap() {
@@ -215,6 +217,10 @@ public class Room {
 		return this.toys;
 	}
 
+	public int getUnfoundToys() {
+		return this.unfoundToys;
+	}
+
 	public boolean isFullyOnPropery(Rectangle objRect, CellProperty property) {
 
 		boolean step = this.stepablePolygon.contains(objRect);
@@ -305,8 +311,10 @@ public class Room {
 
 		for (Toy toy : this.toys) {
 			if (toy.contains(p)) {
-				toy.trySetAction(ActionIdentifier.Nothing);
-				return true;
+				if (toy.trySetAction(ActionIdentifier.Nothing)) {
+					this.unfoundToys--;
+					return true;
+				}
 			}
 		}
 		return false;

@@ -127,7 +127,7 @@ public class GuiViewer extends JPanel implements GameActions {
 	private JPanel createManagmentPanel() {
 
 		JPanel managmentPanel = new JPanel();
-		managmentPanel.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+		managmentPanel.setBorder(new LineBorder(Color.PINK, 2, true));
 		managmentPanel.setLayout(new BorderLayout());
 
 		int maxWidth = (int) (this.screenSize.getWidth() * 0.3);
@@ -135,7 +135,18 @@ public class GuiViewer extends JPanel implements GameActions {
 		Dimension maxDimension = new Dimension(maxWidth, maxHight);
 		managmentPanel.setMaximumSize(maxDimension);
 
-		JPanel panel = new JPanel();
+		JPanel panel = new JPanel() {
+
+			private static final long serialVersionUID = -5827637145228481113L;
+
+			@Override
+			protected void paintComponent(Graphics g) {
+
+				super.paintComponent(g);
+
+				paintManagmentPanel(this, g);
+			}
+		};
 		panel.setBorder(new LineBorder(Color.GREEN, 3));
 		managmentPanel.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
@@ -175,13 +186,9 @@ public class GuiViewer extends JPanel implements GameActions {
 			@Override
 			protected void paintComponent(Graphics g) {
 
-				// Log.WriteLog("Start roomsPanel paintComponent ");
-
 				super.paintComponent(g);
 
 				paintRoomPanel(this, g);
-
-				// Log.WriteLog("End roomsPanel paintComponent ");
 
 			}
 		};
@@ -219,6 +226,8 @@ public class GuiViewer extends JPanel implements GameActions {
 	}
 
 	public void paintManagmentPanel(Component c, Graphics g) {
+
+		this.painter.paintManagmentPanel(c, g);
 
 		// Log.WriteLog("Paint manage panel");
 
