@@ -179,14 +179,6 @@ public class GuiControler implements GameActions, Runnable {
 
 			tick();
 
-			int changing = this.gameModule.changingRoom();
-
-			if (changing != -1) {
-
-				setFocusedRoom(changing);
-
-			}
-
 			try {
 
 				Thread.sleep(sleepTime);
@@ -251,9 +243,17 @@ public class GuiControler implements GameActions, Runnable {
 
 	}
 
+	@Override
+	public void stopGame(boolean isWinner) {
+
+		this.gameModule.stopGame(isWinner);
+		this.gameUi.stopGame(isWinner);
+	}
+
 	/**
 	 * ticks game module and viewer
 	 */
+	@SuppressWarnings("deprecation")
 	public void tick() {
 
 		// Log.WriteLog("Start tick");
@@ -261,6 +261,26 @@ public class GuiControler implements GameActions, Runnable {
 		this.gameModule.tick();
 		this.gameUi.tick();
 
+		tryChangeRoom();
+
+		if (this.gameModule.getUnfoundToys() == 0) {
+			this.gameThread.suspend();
+			stopGame(true);
+		}
 		// Log.WriteLog("End tick");
+	}
+
+	/**
+	 * If it is needed to change room, the room is changing. otherwise, nothing
+	 * is happening
+	 */
+	private void tryChangeRoom() {
+		int changing = this.gameModule.needRoomChaning();
+
+		if (changing != -1) {
+
+			setFocusedRoom(changing);
+
+		}
 	}
 }

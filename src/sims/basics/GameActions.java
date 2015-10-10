@@ -23,4 +23,6 @@ public interface GameActions {
 	public void setFocusedRoom(int roomId);
 
 	public void startGame();
+
+	public void stopGame(boolean isWinner);
 }

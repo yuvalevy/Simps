@@ -14,6 +14,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
@@ -279,6 +280,24 @@ public class GuiViewer extends JPanel implements GameActions {
 	public void startGame() {
 
 		createFrame();
+
+	}
+
+	@Override
+	public void stopGame(boolean isWinner) {
+
+		String message = "Game is over and you ";
+		if (isWinner) {
+			message += "WON :D!";
+		} else {
+			message += "LOST :(";
+		}
+
+		message += System.getProperty("line.separator") + " Thanks for playing";
+
+		JOptionPane.showMessageDialog(null, message, "Bye bye", JOptionPane.INFORMATION_MESSAGE);
+
+		System.exit(0);
 
 	}
 

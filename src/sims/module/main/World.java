@@ -58,28 +58,6 @@ public class World implements GameActions {
 
 	}
 
-	/**
-	 * Determines whether it is time to change rooms. Basically, if the focused
-	 * player needs to move to another room, the room should be changed.
-	 *
-	 * @return The room this game should switch to, of -1 if romm is not
-	 *         changing
-	 */
-	public int changingRoom() {
-
-		if (this.focusedPlayer != null) {
-
-			int playerCurrentRoom = this.focusedPlayer.getCurrentLocation().getRoomId();
-
-			if (playerCurrentRoom != this.worldMap.getFocusedRoom().getRoomId()) {
-
-				return playerCurrentRoom;
-			}
-		}
-
-		return -1;
-	}
-
 	public void createDefalutMap() {
 
 		this.worldMap.createDefalutMap();
@@ -190,6 +168,28 @@ public class World implements GameActions {
 		}
 	}
 
+	/**
+	 * Determines whether it is time to change rooms. Basically, if the focused
+	 * player needs to move to another room, the room should be changed.
+	 *
+	 * @return The room this game should switch to, of -1 if romm is not
+	 *         changing
+	 */
+	public int needRoomChaning() {
+
+		if (this.focusedPlayer != null) {
+
+			int playerCurrentRoom = this.focusedPlayer.getCurrentLocation().getRoomId();
+
+			if (playerCurrentRoom != this.worldMap.getFocusedRoom().getRoomId()) {
+
+				return playerCurrentRoom;
+			}
+		}
+
+		return -1;
+	}
+
 	@Override
 	public void pauseGame() {
 
@@ -252,6 +252,13 @@ public class World implements GameActions {
 	@Override
 	public void startGame() {
 		this.isRunning = true;
+	}
+
+	@Override
+	public void stopGame(boolean isWinner) {
+
+		this.isRunning = false;
+
 	}
 
 	public void tick() {
