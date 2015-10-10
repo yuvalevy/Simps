@@ -7,11 +7,11 @@ import sims.module.surface.GameLocation;
 
 public interface Action {
 
+	boolean canInterrupt();
+
 	ActionIdentifier getIdentifier();
 
 	ImageIcon getNextImage();
-
-	boolean canInterrupt();
 
 	boolean isAction(ActionIdentifier identifier);
 

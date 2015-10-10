@@ -7,7 +7,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
@@ -258,8 +257,7 @@ public class GuiViewer extends JPanel implements GameActions {
 	}
 
 	@Override
-	public void sendPlayerSearching(Point pointClicked) {
-		// TODO Auto-generated method stub
+	public void sendPlayerSearching(GameLocation newLocation) {
 
 	}
 
@@ -301,11 +299,10 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	}
 
+	@Override
 	public void tick() {
 
-		// Log.WriteLog("Start GUI tick");
 		repaint();
-		// Log.WriteLog("End GUI tick");
 	}
 
 }

@@ -184,10 +184,6 @@ public abstract class GameObject {
 
 		if (this.currentAction.isOver()) {
 
-			// if (this.standByAction != null) {
-			// setStandByAction();
-			// }
-
 			setDefaultAction();
 		}
 	}

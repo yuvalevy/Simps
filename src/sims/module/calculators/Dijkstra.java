@@ -27,31 +27,9 @@ public class Dijkstra implements Calculator {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see sims.module.main.calculators.Calculator#isMulti()
-	 */
 	@Override
 	public boolean canMulti() {
 		return false;
-	}
-
-	private void convert(GameLocation start, GameLocation end) {
-
-		if (start.getRoomId() != end.getRoomId()) {
-			Log.WriteLineLog("Dijkstra.convert - not same room");
-			// return;
-		}
-
-		/**
-		 * this "mistake" is on propose! player holds FIFO set so steps should
-		 * be inserted in the same way.
-		 */
-
-		this.startCell = this.worldMap.getCell(start);
-		this.endCell = this.worldMap.getCell(end);
-
 	}
 
 	/**
@@ -76,99 +54,17 @@ public class Dijkstra implements Calculator {
 
 	}
 
-	private void executeSingleRoom(Room currentRoom) {
-
-		if (this.startCell == this.endCell) {
-			Log.WriteLineLog("executeSingleRoom: Start == End");
-			return;
-		}
-
-		// Log.WriteLog("-Start single room dikjstra-");
-
-		Cell[][] spaceCells = currentRoom.getCells();
-
-		Cell helpPointer = this.startCell;
-		helpPointer.setPreviousCell(this.startCell);
-		helpPointer.setDistanceFromStart(0);
-
-		while (helpPointer != this.endCell) {
-
-			helpPointer.setVisited(true);
-			for (NeighborRelationship relationship : helpPointer.getNeighbors()) {
-
-				Cell relationCell = relationship.getNighborCell();
-
-				if (!relationCell.isVisited() && (relationCell
-						.getDistanceFromStart() > (helpPointer.getDistanceFromStart() + relationship.getDistance()))) {
-
-					relationCell.setDistanceFromStart(helpPointer.getDistanceFromStart() + relationship.getDistance());
-
-					relationCell.setPreviousCell(helpPointer);
-				}
-			}
-
-			helpPointer = getClosestCell(spaceCells);
-			if (helpPointer == null) {
-				helpPointer = this.endCell;
-				Log.WriteLineLog("Problem");
-			}
-		}
-		// Log.WriteLog("-End single room dikjstra ");
-
-	}
-
-	/**
-	 *
-	 * Returns the closest Cell to initialized startCell that was not yet
-	 * visited.
-	 *
-	 * @param spaceCells
-	 *            : Array of cells
-	 * @return the cell whose 'dijDistanceFromStart' parameter is the smallest
-	 */
-	private Cell getClosestCell(Cell[][] spaceCells) {
-
-		double min = Double.MAX_VALUE;
-
-		Cell cellPointer = null;
-
-		for (Cell[] line : spaceCells) {
-			for (Cell currentCell : line) {
-
-				if (!currentCell.isVisited() && (currentCell.getDistanceFromStart() < min)
-						&& currentCell.containsProperty(CellProperty.Stepable)) {
-					cellPointer = currentCell;
-					min = currentCell.getDistanceFromStart();
-				}
-
-			}
-		}
-
-		return cellPointer;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see sims.module.main.calculators.Calculator#implementSteps(sims.module.
-	 * objects.Player, sims.module.surface.Cell, int)
-	 */
 	@Override
 	public void implementSteps(Player p, GameLocation start, GameLocation end) {
-
-		// Log.WriteLog("-Implementing");
 
 		convert(start, end);
 
 		Cell nextCell = this.startCell;
-		GameLocation nextLocation = this.startCell.getCoordinate();
+		GameLocation nextLocation = nextCell.getCoordinate();
 
 		if (nextCell.getPreviousCell() != null) {
 
 			do {
-
-				// Log.WriteLog("Step++ " + nextLocation);
 
 				p.addStep(nextLocation);
 
@@ -193,9 +89,97 @@ public class Dijkstra implements Calculator {
 
 	}
 
+	@Override
+	public boolean isActive() {
+		return this.isActive;
+	}
+
+	private void convert(GameLocation start, GameLocation end) {
+
+		this.startCell = this.worldMap.getCell(start);
+		this.endCell = this.worldMap.getCell(end);
+
+	}
+
+	private void executeSingleRoom(Room currentRoom) {
+
+		if (this.startCell == this.endCell) {
+			Log.WriteLineLog("executeSingleRoom: Start == End");
+			return;
+		}
+
+		Cell[][] spaceCells = currentRoom.getCells();
+
+		if (!isCellStepable(this.startCell)) {
+
+			this.startCell = this.endCell.getClosesetCell(this.startCell, CellProperty.Stepable);
+		}
+
+		Cell helpPointer = this.startCell;
+		helpPointer.setPreviousCell(this.startCell);
+		helpPointer.setDistanceFromStart(0);
+
+		while (helpPointer != this.endCell) {
+
+			helpPointer.setVisited(true);
+			for (NeighborRelationship relationship : helpPointer.getNeighbors(CellProperty.Stepable)) {
+
+				Cell relationCell = relationship.getNighborCell();
+
+				if (!relationCell.isVisited() && (relationCell
+						.getDistanceFromStart() > (helpPointer.getDistanceFromStart() + relationship.getDistance()))) {
+
+					relationCell.setDistanceFromStart(helpPointer.getDistanceFromStart() + relationship.getDistance());
+
+					relationCell.setPreviousCell(helpPointer);
+				}
+			}
+
+			helpPointer = getClosestCellToStart(spaceCells);
+
+			if (helpPointer == null) {
+
+				helpPointer = this.endCell;
+				Log.WriteLineLog(getClass() + "Dijkstra.executeSingleRoom Problem");
+				Log.WriteLineLog(getClass() + "Dijkstra.executeSingleRoom " + this.endCell);
+
+			}
+		}
+		// Log.WriteLog("-End single room dikjstra ");
+
+	}
+
 	/**
 	 *
+	 * Returns the closest Cell to initialized startCell that was not yet
+	 * visited.
+	 *
+	 * @param spaceCells
+	 *            : Array of cells
+	 * @return the cell whose 'dijDistanceFromStart' parameter is the smallest
 	 */
+	private Cell getClosestCellToStart(Cell[][] spaceCells) {
+
+		double min = Double.MAX_VALUE;
+
+		Cell cellPointer = null;
+
+		for (Cell[] line : spaceCells) {
+			for (Cell currentCell : line) {
+
+				if (!currentCell.isVisited() && (currentCell.getDistanceFromStart() < min)
+						&& currentCell.containsProperty(CellProperty.Stepable)) {
+					cellPointer = currentCell;
+					min = currentCell.getDistanceFromStart();
+				}
+
+			}
+		}
+
+		return cellPointer;
+
+	}
+
 	private void initClass() {
 
 		this.startCell = null;
@@ -214,12 +198,10 @@ public class Dijkstra implements Calculator {
 			for (Cell[] lines : room.getCells()) {
 				for (Cell item : lines) {
 
-					item.initializeForDijkstra();
+					item.initializeProperties();
 				}
 			}
 		}
-
-		// Log.WriteLineLog("Finished init");
 
 	}
 
@@ -228,31 +210,12 @@ public class Dijkstra implements Calculator {
 	 */
 	private void innerExcute(GameLocation start, GameLocation end) {
 
-		// .WriteLog("START all dijkstra");
-
 		ArrayList<GameLocation> doors = this.worldMap.getRoomsRoad(start.getRoomId(), end.getRoomId());
 
 		doors.add(0, start);
 		doors.add(end);
 
 		Cell temp = this.endCell;
-
-		// Log.WriteLog("---------");
-		// for (int i = 0; i < doors.size(); i++) {
-		//
-		// Log.WriteLog("STEP " + i + " " + doors.get(i));
-		// }
-		// Log.WriteLog("---------");
-
-		// for (int i = doors.size() - 1; i > 0; i--) {
-		//
-		// convert(doors.get(i - 1), doors.get(i));
-		//
-		// if (i == 1) {
-		// this.startCell.setPreviousCell(this.startCell);
-		// }
-		//
-		// this.endCell.setPreviousCell(this.startCell);
 
 		for (int i = 0; i < (doors.size() - 1); i += 2) {
 
@@ -273,18 +236,12 @@ public class Dijkstra implements Calculator {
 
 		temp.setPreviousCell(temp);
 
-		// Log.WriteLineLog("END all dijkstra");
-
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see sims.module.main.calculators.Calculator#isActive()
-	 */
-	@Override
-	public boolean isActive() {
-		return this.isActive;
+	private boolean isCellStepable(Cell calculatedCell) {
+
+		return calculatedCell.containsProperty(CellProperty.Stepable);
+
 	}
 
 }

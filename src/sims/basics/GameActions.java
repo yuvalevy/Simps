@@ -1,7 +1,5 @@
 package sims.basics;
 
-import java.awt.Point;
-
 import sims.module.surface.GameLocation;
 
 public interface GameActions {
@@ -16,7 +14,7 @@ public interface GameActions {
 
 	public void removePlayer(String playerName);
 
-	public void sendPlayerSearching(Point pointClicked);
+	public void sendPlayerSearching(GameLocation newLocation);
 
 	public void setFocusedPlayer(String playerName);
 
@@ -25,4 +23,6 @@ public interface GameActions {
 	public void startGame();
 
 	public void stopGame(boolean isWinner);
+
+	public void tick();
 }

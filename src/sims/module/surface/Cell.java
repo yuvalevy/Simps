@@ -9,34 +9,21 @@ import java.util.ArrayList;
 
 import sims.basics.Log;
 import sims.basics.LogLevel;
+import sims.module.calculators.DijkstraElement;
 
 /**
  * @author Yuval
  *
  */
-public class Cell {
+public class Cell extends DijkstraElement {
 
 	static Rectangle CELL_RECT;
-
-	public static Rectangle getCellSize() {
-
-		return Cell.CELL_RECT;
-	}
-
-	public static void setCellSize(Rectangle cellsize) {
-
-		Cell.CELL_RECT = cellsize;
-	}
 
 	private final ArrayList<CellProperty> properties;
 
 	private final ArrayList<NeighborRelationship> neighbors;
 
 	private final GameLocation location;
-
-	private Cell dijPreviousCell;
-	private double dijDistanceFromStart;
-	private boolean dijVisited;
 
 	/**
 	 * @param coordinate
@@ -46,10 +33,7 @@ public class Cell {
 
 		if (CELL_RECT == null) {
 
-			Log.WriteLineLog("Cell size was not init. Initilizing to (10,10)", LogLevel.Error);
-
-			// CELL_RECT = new Rectangle(10, 10);
-
+			Log.WriteLineLog("Cell size was not initialized. ", LogLevel.Error);
 		}
 
 		this.properties = new ArrayList<CellProperty>(5);
@@ -63,42 +47,61 @@ public class Cell {
 
 	}
 
-	private void addNeighbor(NeighborRelationship neighbor) {
+	public static Rectangle getCellSize() {
 
-		if (!containsNieghbors(neighbor.getNighborCell())) {
+		return Cell.CELL_RECT;
+	}
 
-			this.neighbors.add(neighbor);
+	public static void setCellSize(Rectangle cellsize) {
 
-		}
-
+		Cell.CELL_RECT = cellsize;
 	}
 
 	public void addTupleNeighbors(Cell neighborCell, double distance) {
 
-		// if (neighborCell.containsProperty(CellProperty.Stepable) &&
-		// containsProperty(CellProperty.Stepable)) {
-
 		addNeighbor(new NeighborRelationship(neighborCell, distance));
 		neighborCell.addNeighbor(new NeighborRelationship(this, distance));
-		// }
-	}
 
-	private boolean containsNieghbors(Cell c) {
-
-		for (NeighborRelationship neighborRelationship : this.neighbors) {
-
-			if (neighborRelationship.getNighborCell() == c) {
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	public boolean containsProperty(CellProperty prop) {
 
 		return this.properties.contains(prop);
 
+	}
+
+	/**
+	 * Gets the closest between c and this (starting from this) that contains
+	 * the CellProperty prop
+	 *
+	 * @param c
+	 * @param prop
+	 * @return
+	 */
+	public Cell getClosesetCell(Cell c, CellProperty prop) {
+
+		double minimum = Double.MAX_VALUE;
+		Cell closest = null;
+
+		for (NeighborRelationship neigh : c.getNeighbors(prop)) {
+
+			Cell neighborCell = neigh.getNighborCell();
+
+			double distance = getDistance(neighborCell);
+			if (distance < minimum) {
+
+				minimum = distance;
+				closest = neighborCell;
+			}
+		}
+
+		if (closest == null) {
+
+			closest = getNeighborsClosestCell(prop, c.getNeighbors());
+
+		}
+
+		return closest;
 	}
 
 	/**
@@ -110,49 +113,21 @@ public class Cell {
 
 	}
 
-	public double getDistanceFromStart() {
-		return this.dijDistanceFromStart;
-	}
-
 	public ArrayList<NeighborRelationship> getNeighbors() {
 		return this.neighbors;
 	}
 
-	public Cell getPreviousCell() {
-		return this.dijPreviousCell;
+	public ArrayList<NeighborRelationship> getNeighbors(CellProperty prop) {
+		ArrayList<NeighborRelationship> $ = new ArrayList<>();
+
+		for (NeighborRelationship neighborRelationship : getNeighbors()) {
+			if (neighborRelationship.getNighborCell().containsProperty(prop)) {
+				$.add(neighborRelationship);
+			}
+		}
+
+		return $;
 	}
-
-	/**
-	 * Initialize cell's Dijkstra parameters
-	 *
-	 * Params: dijDistanceFromStart, dijVisited, dijPreviousCell
-	 *
-	 */
-	public void initializeForDijkstra() {
-
-		this.dijDistanceFromStart = Double.MAX_VALUE - 1;
-		this.dijVisited = false;
-		this.dijPreviousCell = null;
-
-	}
-
-	// /**
-	// * Adds all neighbors to current cell
-	// *
-	// * @param nei
-	// */
-	// public void addNeighbors(Cell... nei) {
-	//
-	// for (Cell cell : nei) {
-	//
-	// NeighborRelationship temp = new NeighborRelationship(cell, cell.id);
-	// addNeighbor(temp);
-	//
-	// temp = new NeighborRelationship(this, cell.id);
-	// cell.addNeighbor(temp);
-	// }
-	//
-	// }
 
 	/**
 	 * @param p
@@ -168,20 +143,80 @@ public class Cell {
 		return currentSpace.contains(p);
 	}
 
-	public boolean isVisited() {
-		return this.dijVisited;
+	private void addNeighbor(NeighborRelationship neighbor) {
+
+		if (!containsNieghbors(neighbor.getNighborCell())) {
+
+			this.neighbors.add(neighbor);
+
+		}
+
 	}
 
-	public void setDistanceFromStart(double dijDistanceFromStart) {
-		this.dijDistanceFromStart = dijDistanceFromStart;
+	private boolean containsNieghbors(Cell c) {
+
+		for (NeighborRelationship neighborRelationship : this.neighbors) {
+
+			if (neighborRelationship.getNighborCell() == c) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
-	public void setPreviousCell(Cell dijPreviousCell) {
-		this.dijPreviousCell = dijPreviousCell;
+	private double getDistance(Cell secondCell) {
+
+		Point secondCellLocation = secondCell.getCoordinate().getLocation();
+
+		return secondCellLocation.distance(this.location.getLocation());
 	}
 
-	public void setVisited(boolean isVisited) {
-		this.dijVisited = isVisited;
+	private Cell getNeighborsClosestCell(CellProperty prop, ArrayList<NeighborRelationship> neighbors) {
+
+		Cell closest = null;
+		double minimum = Double.MAX_VALUE;
+
+		for (NeighborRelationship relation : neighbors) {
+
+			Cell cell = relation.getNighborCell();
+
+			for (NeighborRelationship neigh : cell.getNeighbors(prop)) {
+
+				Cell neighborCell = neigh.getNighborCell();
+				double distance = getDistance(neighborCell);
+
+				if (distance < minimum) {
+
+					minimum = distance;
+					closest = neighborCell;
+				}
+
+			}
+		}
+
+		if (closest == null) {
+
+			ArrayList<NeighborRelationship> arrayList = getNeighborsNeighbors(neighbors);
+
+			closest = getNeighborsClosestCell(prop, arrayList);
+		}
+
+		return closest;
+	}
+
+	private ArrayList<NeighborRelationship> getNeighborsNeighbors(ArrayList<NeighborRelationship> neighbors) {
+
+		ArrayList<NeighborRelationship> arrayList = new ArrayList<>();
+
+		for (NeighborRelationship neighborRelationship : neighbors) {
+
+			Cell cell = neighborRelationship.getNighborCell();
+
+			arrayList.addAll(cell.getNeighbors());
+		}
+
+		return arrayList;
 	}
 
 }

@@ -127,7 +127,7 @@ public class GuiControler implements GameActions, Runnable {
 		GameLocation newLocation = new GameLocation(pointClicked, roomId);
 
 		if (controlPressed) {
-			sendPlayerSearching(pointClicked);
+			sendPlayerSearching(newLocation);
 		} else {
 			movePlayer(newLocation);
 		}
@@ -190,10 +190,10 @@ public class GuiControler implements GameActions, Runnable {
 	}
 
 	@Override
-	public void sendPlayerSearching(Point pointClicked) {
+	public void sendPlayerSearching(GameLocation newLocation) {
 
-		this.gameModule.sendPlayerSearching(pointClicked);
-		this.gameUi.sendPlayerSearching(pointClicked);
+		this.gameModule.sendPlayerSearching(newLocation);
+		this.gameUi.sendPlayerSearching(newLocation);
 	}
 
 	@Override
@@ -253,10 +253,8 @@ public class GuiControler implements GameActions, Runnable {
 	/**
 	 * ticks game module and viewer
 	 */
-	@SuppressWarnings("deprecation")
+	@Override
 	public void tick() {
-
-		// Log.WriteLog("Start tick");
 
 		this.gameModule.tick();
 		this.gameUi.tick();
@@ -264,10 +262,13 @@ public class GuiControler implements GameActions, Runnable {
 		tryChangeRoom();
 
 		if (this.gameModule.getUnfoundToys() == 0) {
-			this.gameThread.suspend();
+			try {
+				this.gameThread.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			stopGame(true);
 		}
-		// Log.WriteLog("End tick");
 	}
 
 	/**
