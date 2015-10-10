@@ -1,6 +1,5 @@
 package sims.module.objects;
 
-import java.awt.Point;
 import java.awt.Shape;
 
 import sims.basics.Action;
@@ -12,9 +11,10 @@ public abstract class MovableObject extends GameObject {
 
 	private final Walk walker;
 
-	protected MovableObject(int objectId, Shape objShape, Point startingPoint, int staringRoom, String className,
+	protected MovableObject(int objectId, Shape objShape, GameLocation location, String className,
 			Action... objectActions) {
-		super(objectId, objShape, new GameLocation(startingPoint, staringRoom), className, objectActions);
+		super(objectId, objShape, location, className, objectActions);
+
 		this.walker = ActionsFactory.getWalk(getObjectId());
 		super.addAction(this.walker);
 
@@ -32,4 +32,7 @@ public abstract class MovableObject extends GameObject {
 
 	}
 
+	protected Walk getWalker() {
+		return this.walker;
+	}
 }

@@ -9,15 +9,17 @@ import sims.module.surface.GameLocation;
 public class Search implements Action {
 
 	private static final ActionIdentifier identifier = ActionIdentifier.Search;
-	private final GameLocation startingPosition;
+
+	private final Action preAction;
+	private GameLocation searchStartingPosition;
 	private final ImageIcon icon;
 	private final int searchTime;
 	private int countDown;
 	private boolean isActive;
 
-	Search(GameLocation startingPosition, ImageIcon icons) {
+	Search(Action preAction, ImageIcon icons) {
 
-		this.startingPosition = startingPosition;
+		this.preAction = preAction;
 		this.searchTime = ConfigurationManager.getPlayerSearchTime();
 
 		stop();
@@ -41,7 +43,12 @@ public class Search implements Action {
 			return null;
 		}
 
-		return this.icon;
+		if (this.preAction.isOver()) {
+			return this.icon;
+		} else {
+			return this.preAction.getNextImage();
+		}
+
 	}
 
 	@Override
@@ -64,13 +71,17 @@ public class Search implements Action {
 	public void start() {
 		this.isActive = true;
 		this.countDown = this.searchTime;
+
+		// Starting pre action
+		this.preAction.start();
 	}
 
 	@Override
 	public void stop() {
+
 		this.isActive = false;
 		this.countDown = 0;
-
+		this.searchStartingPosition = null;
 	}
 
 	@Override
@@ -78,11 +89,29 @@ public class Search implements Action {
 
 		if (isActive()) {
 
-			if (this.countDown == 0) {
-				return this.startingPosition;
-			} else {
-				this.countDown--;
+			// If preAction is finished, search count down is starting
+			if (this.preAction.isOver()) {
+
+				this.preAction.stop();
+
+				if (this.countDown == 0) {
+					return this.searchStartingPosition;
+				} else {
+					this.countDown--;
+				}
 			}
+			// If preAction is not finished, tick() it and return result
+			else {
+
+				GameLocation preActionResult = this.preAction.tick();
+
+				if (preActionResult != null) {
+					this.searchStartingPosition = preActionResult;
+				}
+
+				return preActionResult;
+			}
+
 		}
 
 		return null;

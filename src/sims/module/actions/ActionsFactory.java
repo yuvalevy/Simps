@@ -2,10 +2,10 @@ package sims.module.actions;
 
 import javax.swing.ImageIcon;
 
+import sims.basics.Action;
 import sims.module.objects.Door;
 import sims.module.objects.Player;
 import sims.module.objects.Toy;
-import sims.module.surface.GameLocation;
 import sims.viewers.ImagesProvider;
 
 public class ActionsFactory {
@@ -38,11 +38,11 @@ public class ActionsFactory {
 
 	}
 
-	public static Search getSearch(GameLocation startingLocation) {
+	public static Search getSearch(Action preAction) {
 
 		ImageIcon image = ImagesProvider.getPlayerSearchImages();
 
-		return new Search(startingLocation, image);
+		return new Search(preAction, image);
 	}
 
 	public static Walk getWalk(int playerId) {

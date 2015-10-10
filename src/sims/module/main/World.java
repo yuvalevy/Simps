@@ -9,7 +9,6 @@ import sims.basics.GameActions;
 import sims.basics.Log;
 import sims.basics.LogLevel;
 import sims.module.actions.ActionIdentifier;
-import sims.module.actions.ActionsFactory;
 import sims.module.objects.GameObject;
 import sims.module.objects.Player;
 import sims.module.objects.Room;
@@ -208,18 +207,17 @@ public class World implements GameActions {
 	}
 
 	@Override
-	public void sendPlayerSearching(Point pointClicked) {
+	public void sendPlayerSearching(GameLocation newLocation) {
 
 		if (this.focusedPlayer == null) {
 			return;
 		}
 
-		GameLocation start = this.focusedPlayer.getCurrentLocation();
-		this.focusedPlayer.addAction(ActionsFactory.getSearch(start));
+		movePlayer(newLocation);
 
 		if (this.focusedPlayer.trySetAction(ActionIdentifier.Search)) {
 
-			if (this.worldMap.getFocusedRoom().tryFindToy(pointClicked)) {
+			if (this.worldMap.getFocusedRoom().tryFindToy(newLocation.getLocation())) {
 				Log.WriteLineLog("FOUND-------------");
 				this.unfoundToys--;
 			}
@@ -261,17 +259,14 @@ public class World implements GameActions {
 
 	}
 
+	@Override
 	public void tick() {
-
-		// Log.WriteLog("Start module tick");
 
 		for (Player player : this.players) {
 
 			player.tick();
 
 		}
-
-		// Log.WriteLog("End module tick");
 	}
 
 }

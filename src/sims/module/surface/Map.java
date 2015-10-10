@@ -175,5 +175,4 @@ public class Map {
 
 		this.focusedRoom = currentRoom;
 	}
-
 }
