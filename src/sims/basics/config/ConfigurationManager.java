@@ -10,6 +10,11 @@ import sims.module.surface.GameLocation;
 
 public class ConfigurationManager {
 
+	public static int getBoredCapability() {
+		return Configuration.getInt("simps.feelings.boredcapability");
+
+	}
+
 	public static String getCalculatorName() {
 
 		return Configuration.getString("simps.general.calculatorname"); //$NON-NLS-1$
@@ -55,6 +60,18 @@ public class ConfigurationManager {
 		int nextRoomIndex = Configuration.getInt("simps.rooms.Room" + roomId + ".Door" + doorIndex + ".nextroomindex");
 
 		return new GameLocation(x, y, nextRoomIndex);
+	}
+
+	public static int getFeelingsIncreacingAmount() {
+		return Configuration.getInt("simps.feelings.feelingsincreacingamount");
+	}
+
+	public static int getHave2PeeCapability() {
+		return Configuration.getInt("simps.feelings.have2peecapability");
+	}
+
+	public static int getHungryCapability() {
+		return Configuration.getInt("simps.feelings.hungrycapability");
 	}
 
 	public static String getPathPrefix() {
@@ -157,6 +174,10 @@ public class ConfigurationManager {
 
 	}
 
+	public static int getTiredCapability() {
+		return Configuration.getInt("simps.feelings.tiredcapability");
+	}
+
 	public static String getToyImgsPath() {
 		return Configuration.getString("simps.general.toyimgspath");
 	}
@@ -173,7 +194,6 @@ public class ConfigurationManager {
 	 */
 	public static int getToysLimit() {
 		return Configuration.getInt("simps.general.toyslimit");
-
 	}
 
 	/**
