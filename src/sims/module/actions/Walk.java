@@ -15,24 +15,25 @@ public class Walk implements Action {
 
 	private boolean isActive;
 
-	private ImageIcon[] icons;
+	private final ImageIcon[] icons;
 	private int currentPic;
 
-	private Walk() {
+	Walk(ImageIcon... icons) {
 
 		this.steps = new LinkedList<GameLocation>();
 		this.currentPic = 0;
-		stop();
-	}
-
-	Walk(ImageIcon... icons) {
-		this();
 		this.icons = icons;
+		stop();
 	}
 
 	public void addStep(GameLocation step) {
 
 		this.steps.add(step);
+	}
+
+	@Override
+	public boolean canInterrupt() {
+		return true;
 	}
 
 	@Override
@@ -53,11 +54,6 @@ public class Walk implements Action {
 			this.currentPic = 0;
 		}
 		return $;
-	}
-
-	@Override
-	public boolean canInterrupt() {
-		return false;
 	}
 
 	@Override

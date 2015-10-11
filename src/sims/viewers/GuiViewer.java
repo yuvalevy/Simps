@@ -20,7 +20,6 @@ import javax.swing.border.LineBorder;
 import sims.basics.GameActions;
 import sims.basics.Log;
 import sims.module.main.World;
-import sims.module.surface.GameLocation;
 
 public class GuiViewer extends JPanel implements GameActions {
 
@@ -87,6 +86,93 @@ public class GuiViewer extends JPanel implements GameActions {
 		this.add(this.managmentPanel);
 		this.add(this.roomsPanel);
 
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+
+		// Log.WriteLog("Start GuiViewer paintComponent ");
+
+		super.paintComponent(g);
+
+		paintManagmentPanel(this, g);
+
+		// Log.WriteLog("End GuiViewer paintComponent ");
+
+	}
+
+	public void paintManagmentPanel(Component c, Graphics g) {
+
+		this.painter.paintManagmentPanel(c, g);
+
+		// Log.WriteLog("Paint manage panel");
+
+	}
+
+	public void paintRoomPanel(Component c, Graphics g) {
+
+		this.painter.paintRoom(c, g);
+
+		// Log.WriteLog("Paint room panel");
+	}
+
+	@Override
+	public void pauseGame() {
+
+	}
+
+	@Override
+	public void removePlayer(String playerName) {
+
+		try {
+			this.playerChoice.remove(playerName);
+		} catch (Exception e) {
+
+		}
+	}
+
+	@Override
+	public void setFocusedPlayer(String playerName) {
+
+		this.playerChoice.select(playerName);
+	}
+
+	@Override
+	public void setFocusedRoom(int roomId) {
+
+		this.painter.setFocusedRoom(roomId);
+
+	}
+
+	@Override
+	public void startGame() {
+
+		createFrame();
+
+	}
+
+	@Override
+	public void stopGame(boolean isWinner) {
+
+		String message = "Game is over and you ";
+		if (isWinner) {
+			message += "WON :D!";
+		} else {
+			message += "LOST :(";
+		}
+
+		message += System.getProperty("line.separator") + " Thanks for playing";
+
+		JOptionPane.showMessageDialog(null, message, "Bye bye", JOptionPane.INFORMATION_MESSAGE);
+
+		System.exit(0);
+
+	}
+
+	@Override
+	public void tick() {
+
+		repaint();
 	}
 
 	/**
@@ -204,105 +290,6 @@ public class GuiViewer extends JPanel implements GameActions {
 		Log.WriteLineLog("Created room panel");
 
 		return roomsPanel;
-	}
-
-	@Override
-	public void movePlayer(GameLocation newLocation) {
-		// gui controller does not implements this func
-
-	}
-
-	@Override
-	public void paintComponent(Graphics g) {
-
-		// Log.WriteLog("Start GuiViewer paintComponent ");
-
-		super.paintComponent(g);
-
-		paintManagmentPanel(this, g);
-
-		// Log.WriteLog("End GuiViewer paintComponent ");
-
-	}
-
-	public void paintManagmentPanel(Component c, Graphics g) {
-
-		this.painter.paintManagmentPanel(c, g);
-
-		// Log.WriteLog("Paint manage panel");
-
-	}
-
-	public void paintRoomPanel(Component c, Graphics g) {
-
-		this.painter.paintRoom(c, g);
-
-		// Log.WriteLog("Paint room panel");
-	}
-
-	@Override
-	public void pauseGame() {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void removePlayer(String playerName) {
-
-		try {
-			this.playerChoice.remove(playerName);
-		} catch (Exception e) {
-
-		}
-	}
-
-	@Override
-	public void sendPlayerSearching(GameLocation newLocation) {
-
-	}
-
-	@Override
-	public void setFocusedPlayer(String playerName) {
-
-		this.playerChoice.select(playerName);
-	}
-
-	@Override
-	public void setFocusedRoom(int roomId) {
-
-		this.painter.setFocusedRoom(roomId);
-
-	}
-
-	@Override
-	public void startGame() {
-
-		createFrame();
-
-	}
-
-	@Override
-	public void stopGame(boolean isWinner) {
-
-		String message = "Game is over and you ";
-		if (isWinner) {
-			message += "WON :D!";
-		} else {
-			message += "LOST :(";
-		}
-
-		message += System.getProperty("line.separator") + " Thanks for playing";
-
-		JOptionPane.showMessageDialog(null, message, "Bye bye", JOptionPane.INFORMATION_MESSAGE);
-
-		System.exit(0);
-
-	}
-
-	@Override
-	public void tick() {
-
-		repaint();
 	}
 
 }

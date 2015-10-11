@@ -78,43 +78,6 @@ public class GuiControler implements GameActions, Runnable {
 		setFocusedRoom(roomId);
 	}
 
-	private void buildGameControlers() {
-
-		// Pause Game
-		this.btnPauseGame = new JButton("Pause Game");
-		this.btnPauseGame.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				pauseGame();
-			}
-		});
-
-		// Player Choice
-		this.playerChoice = new Choice();
-		this.playerChoice.addItemListener(new ItemListener() {
-
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				setFocusedPlayer(GuiControler.this.playerChoice.getSelectedItem());
-			}
-		});
-
-		// Player Adder
-		this.btnAddPlayer = new JButton("Add Player ->");
-		this.btnAddPlayer.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-
-				String name = "Yuval" + Randomaizer.getPlayerNumber();
-				addPlayer(name);
-			}
-		});
-
-	}
-
 	public void createDefalutMap() {
 
 		this.gameModule.createDefalutMap();
@@ -145,11 +108,9 @@ public class GuiControler implements GameActions, Runnable {
 
 	}
 
-	@Override
 	public void movePlayer(GameLocation newLocation) {
 
-		this.gameModule.movePlayer(newLocation);
-		this.gameUi.movePlayer(newLocation);
+		this.gameModule.movePlayer(newLocation, true);
 
 	}
 
@@ -189,11 +150,9 @@ public class GuiControler implements GameActions, Runnable {
 		}
 	}
 
-	@Override
 	public void sendPlayerSearching(GameLocation newLocation) {
 
 		this.gameModule.sendPlayerSearching(newLocation);
-		this.gameUi.sendPlayerSearching(newLocation);
 	}
 
 	@Override
@@ -210,19 +169,6 @@ public class GuiControler implements GameActions, Runnable {
 		this.gameUi.setFocusedRoom(roomId);
 		this.gameModule.setFocusedRoom(roomId);
 
-	}
-
-	/**
-	 * Sets game dimension by screen size
-	 */
-	private void setGameDimention() {
-		// size of the screen
-		this.gameDimension = Toolkit.getDefaultToolkit().getScreenSize();
-
-		// height of the task bar
-		int taskBarSize = 40;// Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom;
-		this.gameDimension.setSize((int) this.gameDimension.getWidth(),
-				((int) this.gameDimension.getHeight()) - taskBarSize);
 	}
 
 	@Override
@@ -269,6 +215,56 @@ public class GuiControler implements GameActions, Runnable {
 			}
 			stopGame(true);
 		}
+	}
+
+	private void buildGameControlers() {
+
+		// Pause Game
+		this.btnPauseGame = new JButton("Pause Game");
+		this.btnPauseGame.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				pauseGame();
+			}
+		});
+
+		// Player Choice
+		this.playerChoice = new Choice();
+		this.playerChoice.addItemListener(new ItemListener() {
+
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				setFocusedPlayer(GuiControler.this.playerChoice.getSelectedItem());
+			}
+		});
+
+		// Player Adder
+		this.btnAddPlayer = new JButton("Add Player ->");
+		this.btnAddPlayer.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				String name = "Yuval" + Randomaizer.getPlayerNumber();
+				addPlayer(name);
+			}
+		});
+
+	}
+
+	/**
+	 * Sets game dimension by screen size
+	 */
+	private void setGameDimention() {
+		// size of the screen
+		this.gameDimension = Toolkit.getDefaultToolkit().getScreenSize();
+
+		// height of the task bar
+		int taskBarSize = 40;// Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom;
+		this.gameDimension.setSize((int) this.gameDimension.getWidth(),
+				((int) this.gameDimension.getHeight()) - taskBarSize);
 	}
 
 	/**

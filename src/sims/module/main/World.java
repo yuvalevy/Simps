@@ -152,19 +152,24 @@ public class World implements GameActions {
 		return this.isRunning;
 	}
 
-	@Override
-	public void movePlayer(GameLocation newLocation) {
+	public void movePlayer(GameLocation newLocation, boolean setAsCurrent) {
 
 		if (this.focusedPlayer == null) {
 			Log.WriteLineLog("Cannot move - No player in focuse");
 			return;
 		}
 
-		if (!this.focusedPlayer.trySetAction(ActionIdentifier.Walk)) {
-			Log.WriteLineLog("Cant start walking, other action is not over.");
-		} else {
+		boolean startPlanning = true;
+		if (setAsCurrent) {
+			if (!this.focusedPlayer.trySetAction(ActionIdentifier.Walk)) {
+				startPlanning = false;
+			}
+		}
+
+		if (startPlanning) {
 			this.walkingCalculator.planTrip(this.focusedPlayer, newLocation);
 		}
+
 	}
 
 	/**
@@ -206,19 +211,18 @@ public class World implements GameActions {
 		}
 	}
 
-	@Override
 	public void sendPlayerSearching(GameLocation newLocation) {
 
 		if (this.focusedPlayer == null) {
 			return;
 		}
 
-		movePlayer(newLocation);
+		movePlayer(newLocation, false);
 
 		if (this.focusedPlayer.trySetAction(ActionIdentifier.Search)) {
 
 			if (this.worldMap.tryFindToy(newLocation)) {
-				Log.WriteLineLog("FOUND-------------");
+				Log.WriteLineLog("FOUND a toy-------------");
 				this.unfoundToys--;
 			}
 		}

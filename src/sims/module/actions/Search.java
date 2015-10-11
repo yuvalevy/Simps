@@ -17,13 +17,13 @@ public class Search implements Action {
 	private int countDown;
 	private boolean isActive;
 
-	Search(Action preAction, ImageIcon icons) {
+	Search(Action preAction, ImageIcon icon) {
 
 		this.preAction = preAction;
 		this.searchTime = ConfigurationManager.getPlayerSearchTime();
 
 		stop();
-		this.icon = icons;
+		this.icon = icon;
 	}
 
 	@Override
