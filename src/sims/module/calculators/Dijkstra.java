@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import sims.basics.Log;
 import sims.module.objects.Door;
 import sims.module.objects.Player;
-import sims.module.objects.Room;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
 import sims.module.surface.GameLocation;
 import sims.module.surface.Map;
 import sims.module.surface.NeighborRelationship;
+import sims.module.surface.Room;
 
 public class Dijkstra implements Calculator {
 

@@ -1,4 +1,4 @@
-package sims.module.objects;
+package sims.module.surface;
 
 import java.awt.Point;
 import java.awt.Polygon;
@@ -7,9 +7,8 @@ import java.awt.Rectangle;
 import sims.basics.Randomaizer;
 import sims.basics.config.ConfigurationManager;
 import sims.module.actions.ActionIdentifier;
-import sims.module.surface.Cell;
-import sims.module.surface.CellProperty;
-import sims.module.surface.GameLocation;
+import sims.module.objects.Door;
+import sims.module.objects.Toy;
 
 public class Room {
 
@@ -35,6 +34,40 @@ public class Room {
 		this.unfoundToys = toysCount;
 	}
 
+	Door getDoor(Point locationOnDoor) {
+
+		for (Door door : this.doors) {
+			if (door.contains(locationOnDoor)) {
+				return door;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Gets all toys in this room
+	 *
+	 * @return
+	 */
+	Toy[] getToys() {
+
+		return this.toys;
+	}
+
+	boolean tryFindToy(Point p) {
+
+		for (Toy toy : this.toys) {
+			if (toy.contains(p)) {
+				if (toy.trySetAction(ActionIdentifier.Nothing)) {
+					this.unfoundToys--;
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public void createDefalutMap() {
 
 		Rectangle cellSize = Cell.getCellSize();
@@ -49,6 +82,103 @@ public class Room {
 
 		putToy();
 
+	}
+
+	/**
+	 * Returns area main cell property.
+	 *
+	 * @param objRect
+	 * @return If objRect is intersects with doorSpace, returns
+	 *         CellProperty.Door. If objRect is fully contained in
+	 *         stepablePolygon, returns CellProperty.Stepable. Otherwise,
+	 *         returns CellProperty.NoProperty.
+	 */
+	public CellProperty getAreaCellType(Rectangle objRect) {
+
+		// Only intersects... means only touching it
+		for (Door door : this.doors) {
+			if (door.intersects(objRect)) {
+				return CellProperty.Door;
+			}
+		}
+
+		// Contains it all
+		if (isFullyOnPropery(objRect, CellProperty.Stepable)) {
+			return CellProperty.Stepable;
+		}
+
+		return CellProperty.NoProperty;
+	}
+
+	public Cell getCell(Point p) {
+
+		for (int i = 0; i < this.roomCells.length; i++) {
+			for (int j = 0; j < this.roomCells[i].length; j++) {
+				if (this.roomCells[i][j].isOnCell(p)) {
+					return this.roomCells[i][j];
+				}
+			}
+		}
+		return null;
+	}
+
+	public Cell[][] getCells() {
+
+		return this.roomCells;
+
+	}
+
+	public Door getDoor(int nextRoomId) {
+
+		for (Door door : this.doors) {
+			if (door.getNextRoomStartingLocation().getRoomId() == nextRoomId) {
+				return door;
+			}
+		}
+
+		return null;
+
+	}
+
+	public GameLocation getNextRoom(Point locationOnDoor) {
+
+		Door $ = getDoor(locationOnDoor);
+
+		if ($ == null) {
+			return null;
+		}
+
+		return $.getNextRoomStartingLocation();
+	}
+
+	public int getRoomId() {
+		return this.roomId;
+	}
+
+	public int getUnfoundToys() {
+		return this.unfoundToys;
+	}
+
+	public boolean isFullyOnPropery(Rectangle objRect, CellProperty property) {
+
+		boolean step = this.stepablePolygon.contains(objRect);
+
+		switch (property) {
+		case Door:
+
+			for (Door door : this.doors) {
+				if (door.contains(objRect)) {
+					return true;
+				}
+			}
+
+			break;
+		case Stepable:
+			return step;
+		case NoProperty:
+			return (!step);
+		}
+		return false;
 	}
 
 	/**
@@ -125,124 +255,6 @@ public class Room {
 		}
 	}
 
-	/**
-	 * Returns area main cell property.
-	 *
-	 * @param objRect
-	 * @return If objRect is intersects with doorSpace, returns
-	 *         CellProperty.Door. If objRect is fully contained in
-	 *         stepablePolygon, returns CellProperty.Stepable. Otherwise,
-	 *         returns CellProperty.NoProperty.
-	 */
-	public CellProperty getAreaCellType(Rectangle objRect) {
-
-		// Only intersects... means only touching it
-		for (Door door : this.doors) {
-			if (door.intersects(objRect)) {
-				return CellProperty.Door;
-			}
-		}
-
-		// Contains it all
-		if (isFullyOnPropery(objRect, CellProperty.Stepable)) {
-			return CellProperty.Stepable;
-		}
-
-		return CellProperty.NoProperty;
-	}
-
-	public Cell getCell(Point p) {
-
-		for (int i = 0; i < this.roomCells.length; i++) {
-			for (int j = 0; j < this.roomCells[i].length; j++) {
-				if (this.roomCells[i][j].isOnCell(p)) {
-					return this.roomCells[i][j];
-				}
-			}
-		}
-		return null;
-	}
-
-	public Cell[][] getCells() {
-
-		return this.roomCells;
-
-	}
-
-	public Door getDoor(int nextRoomId) {
-
-		for (Door door : this.doors) {
-			if (door.getNextRoomStartingLocation().getRoomId() == nextRoomId) {
-				return door;
-			}
-		}
-
-		return null;
-
-	}
-
-	public Door getDoor(Point locationOnDoor) {
-
-		for (Door door : this.doors) {
-			if (door.contains(locationOnDoor)) {
-				return door;
-			}
-		}
-
-		return null;
-	}
-
-	public GameLocation getNextRoom(Point locationOnDoor) {
-
-		Door $ = getDoor(locationOnDoor);
-
-		if ($ == null) {
-			return null;
-		}
-
-		return $.getNextRoomStartingLocation();
-	}
-
-	public int getRoomId() {
-		return this.roomId;
-	}
-
-	/**
-	 * Gets all toys in this room
-	 *
-	 * @return
-	 */
-	public Toy[] getToys() {
-
-		return this.toys;
-	}
-
-	public int getUnfoundToys() {
-		return this.unfoundToys;
-	}
-
-	public boolean isFullyOnPropery(Rectangle objRect, CellProperty property) {
-
-		boolean step = this.stepablePolygon.contains(objRect);
-
-		switch (property) {
-		case Door:
-
-			for (Door door : this.doors) {
-				if (door.contains(objRect)) {
-					return true;
-				}
-			}
-
-			break;
-		case Stepable:
-			return step;
-		case NoProperty:
-			return (!step);
-		}
-		return false;
-	}
-
 	private void makeNeighbors() {
 
 		final double verticalMove = 10, ofekiMove = 10,
@@ -301,23 +313,10 @@ public class Room {
 
 	}
 
-	public void setRoomId(int roomId) {
+	private void setRoomId(int roomId) {
 
 		this.roomId = roomId;
 
-	}
-
-	public boolean tryFindToy(Point p) {
-
-		for (Toy toy : this.toys) {
-			if (toy.contains(p)) {
-				if (toy.trySetAction(ActionIdentifier.Nothing)) {
-					this.unfoundToys--;
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 }

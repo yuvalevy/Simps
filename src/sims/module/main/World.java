@@ -11,9 +11,9 @@ import sims.basics.LogLevel;
 import sims.module.actions.ActionIdentifier;
 import sims.module.objects.GameObject;
 import sims.module.objects.Player;
-import sims.module.objects.Room;
 import sims.module.surface.GameLocation;
 import sims.module.surface.Map;
+import sims.module.surface.Room;
 
 public class World implements GameActions {
 
@@ -217,7 +217,7 @@ public class World implements GameActions {
 
 		if (this.focusedPlayer.trySetAction(ActionIdentifier.Search)) {
 
-			if (this.worldMap.getFocusedRoom().tryFindToy(newLocation.getLocation())) {
+			if (this.worldMap.tryFindToy(newLocation)) {
 				Log.WriteLineLog("FOUND-------------");
 				this.unfoundToys--;
 			}

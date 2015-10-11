@@ -11,7 +11,6 @@ import java.util.Arrays;
 import sims.basics.Log;
 import sims.basics.LogLevel;
 import sims.module.objects.Door;
-import sims.module.objects.Room;
 import sims.module.objects.Toy;
 
 /**
@@ -174,5 +173,10 @@ public class Map {
 		Room currentRoom = getRoom(roomId);
 
 		this.focusedRoom = currentRoom;
+	}
+
+	public boolean tryFindToy(GameLocation newLocation) {
+
+		return getRoom(newLocation.getRoomId()).tryFindToy(newLocation.getLocation());
 	}
 }

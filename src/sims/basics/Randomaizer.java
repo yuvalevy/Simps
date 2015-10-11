@@ -3,11 +3,11 @@ package sims.basics;
 import java.util.ArrayList;
 import java.util.Random;
 
-import sims.module.objects.Room;
 import sims.module.objects.Toy;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
 import sims.module.surface.GameLocation;
+import sims.module.surface.Room;
 
 public class Randomaizer {
 

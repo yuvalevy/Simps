@@ -44,6 +44,35 @@ public class ImagesPainter {
 
 	}
 
+	public void paintManagmentPanel(Component c, Graphics g) {
+
+		g.setColor(Color.black);
+		g.setFont(new Font("Arial", 1, 20));
+		g.drawString("Only " + this.game.getUnfoundToys() + " toy left to find!!", 20, 170);
+
+		g.setColor(Color.red);
+		g.setFont(new Font("Arial", 4, 20));
+		g.drawString(this.gameMap.getFocusedRoom().getUnfoundToys() + " in this room!!:)", 50, 200);
+
+	}
+
+	public void paintRoom(Component c, Graphics g) {
+
+		paintFloor(c, g);
+		paintFurnitures(c, g);
+
+		paintGameObject(c, g);
+
+		drawDebug(g);
+
+	}
+
+	public void setFocusedRoom(int roomId) {
+
+		this.currentRoom = roomId;
+
+	}
+
 	private void drawDebug(Graphics g) {
 
 		/**
@@ -153,7 +182,6 @@ public class ImagesPainter {
 	 * @return
 	 */
 	private boolean isCurrentRoom(GameObject gameObject) {
-
 		return gameObject.getCurrentLocation().getRoomId() == this.currentRoom;
 	}
 
@@ -188,35 +216,6 @@ public class ImagesPainter {
 			}
 
 		}
-
-	}
-
-	public void paintManagmentPanel(Component c, Graphics g) {
-
-		g.setColor(Color.black);
-		g.setFont(new Font("Arial", 1, 20));
-		g.drawString("Only " + this.game.getUnfoundToys() + " toy left to find!!", 20, 170);
-
-		g.setColor(Color.red);
-		g.setFont(new Font("Arial", 4, 20));
-		g.drawString(this.gameMap.getFocusedRoom().getUnfoundToys() + " in this room!!:)", 50, 200);
-
-	}
-
-	public void paintRoom(Component c, Graphics g) {
-
-		paintFloor(c, g);
-		paintFurnitures(c, g);
-
-		paintGameObject(c, g);
-
-		drawDebug(g);
-
-	}
-
-	public void setFocusedRoom(int roomId) {
-
-		this.currentRoom = roomId;
 
 	}
 
