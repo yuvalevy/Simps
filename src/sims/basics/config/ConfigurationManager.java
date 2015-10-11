@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 
+import javax.swing.ImageIcon;
+
 import sims.module.surface.GameLocation;
 
 public class ConfigurationManager {
@@ -75,6 +77,16 @@ public class ConfigurationManager {
 
 	}
 
+	public static Rectangle getPlayerSize() {
+
+		String $ = getPlayerImgsPath();
+
+		ImageIcon icon = new ImageIcon($);
+		int h = icon.getIconHeight(), w = icon.getIconWidth();
+
+		return new Rectangle(h, w);
+	}
+
 	/**
 	 * Depends on how much images in the folder
 	 *
@@ -82,6 +94,14 @@ public class ConfigurationManager {
 	 */
 	public static int getPlayersLimit() {
 		return Configuration.getInt("simps.general.playerslimit");
+	}
+
+	public static Point getPlayerStartingPoint() {
+
+		int x = Configuration.getInt("simps.players.playerstartingxpoint");
+		int y = Configuration.getInt("simps.players.playerstartingypoint");
+
+		return new Point(x, y);
 	}
 
 	public static Polygon[] getRoomDoorsPolygons(int roomId, int doorCount) {

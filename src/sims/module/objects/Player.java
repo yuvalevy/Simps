@@ -3,6 +3,7 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import sims.basics.config.ConfigurationManager;
 import sims.module.actions.ActionsFactory;
 import sims.module.actions.Search;
 import sims.module.surface.GameLocation;
@@ -10,9 +11,8 @@ import sims.module.surface.GameLocation;
 public class Player extends MovableObject {
 
 	public static int PLAYERS_COUNT = 1;
-	// TODO: Add configuration for point location
-	private static final Point PLAYER_STARTING_POINT = new Point(200, 200);
-	private static final Rectangle PLAYER_RECT = new Rectangle(44, 44);
+	private static final Point PLAYER_STARTING_POINT = ConfigurationManager.getPlayerStartingPoint();
+	private static final Rectangle PLAYER_RECT = ConfigurationManager.getPlayerSize();
 
 	private final String playerName;
 
