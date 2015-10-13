@@ -48,7 +48,7 @@ public class ImagesPainter {
 
 	}
 
-	public void paintManagmentPanel(Component c, Graphics g, JTable table) {
+	public void paintManagementPanel(Component c, Graphics g, JTable table) {
 
 		paintFeelingsTable(table);
 

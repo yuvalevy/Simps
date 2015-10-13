@@ -88,7 +88,7 @@ public class GuiViewer extends JPanel implements GameActions {
 
 		addMouseListener(eventControler);
 		this.roomsPanel = createRoomPanel();
-		this.managmentPanel = createManagmentPanel();
+		this.managmentPanel = createManagementPanel();
 
 		this.add(this.managmentPanel);
 		this.add(this.roomsPanel);
@@ -128,7 +128,7 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	public void paintManagmentPanel(Component c, Graphics g, JTable table) {
 
-		this.painter.paintManagmentPanel(c, g, table);
+		this.painter.paintManagementPanel(c, g, table);
 		// Log.WriteLog("Paint manage panel");
 
 	}
@@ -234,13 +234,13 @@ public class GuiViewer extends JPanel implements GameActions {
 	 *
 	 * @return
 	 */
-	private JPanel createManagmentPanel() {
+	private JPanel createManagementPanel() {
 
-		JPanel managmentPanel = new JPanel();
-		managmentPanel.setBorder(new LineBorder(Color.PINK, 2, true));
-		managmentPanel.setLayout(new BorderLayout());
+		JPanel managementPanel = new JPanel();
+		managementPanel.setBorder(new LineBorder(Color.PINK, 2, true));
+		managementPanel.setLayout(new BorderLayout());
 
-		managmentPanel.setMaximumSize(getManagmentPanelMaxSize());
+		managementPanel.setMaximumSize(getManagementPanelMaxSize());
 
 		JPanel panel = new JPanel() {
 
@@ -291,7 +291,7 @@ public class GuiViewer extends JPanel implements GameActions {
 		};
 
 		panel.setBorder(new LineBorder(Color.GREEN, 3));
-		managmentPanel.add(panel, BorderLayout.CENTER);
+		managementPanel.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
 
 		JLabel lblPlayerFocus = new JLabel("Player Focus");
@@ -311,11 +311,11 @@ public class GuiViewer extends JPanel implements GameActions {
 		JScrollPane scrol = getFeelingsTable();
 
 		panel.add(scrol);
-		managmentPanel.add(this.btnPauseGame, BorderLayout.SOUTH);
+		managementPanel.add(this.btnPauseGame, BorderLayout.SOUTH);
 
 		Log.WriteLineLog("Created managment panel");
 
-		return managmentPanel;
+		return managementPanel;
 	}
 
 	/**
@@ -400,7 +400,7 @@ public class GuiViewer extends JPanel implements GameActions {
 		return scrol;
 	}
 
-	private Dimension getManagmentPanelMaxSize() {
+	private Dimension getManagementPanelMaxSize() {
 		int maxWidth = (int) (this.screenSize.getWidth() * 0.3);
 		int maxHight = (int) (this.screenSize.getHeight());
 		Dimension maxDimension = new Dimension(maxWidth, maxHight);
