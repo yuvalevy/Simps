@@ -2,18 +2,21 @@ package sims.module.actions;
 
 import javax.swing.ImageIcon;
 
+import sims.basics.Log;
+import sims.module.feelings.Feeling;
 import sims.module.surface.GameLocation;
 
 public class Action {
 
-	protected ImageIcon[] images;
-	protected int imgIndex;
-	protected final Action preAction;
-	protected boolean isActive;
-
 	private final ActionIdentifier identifier;
+	private final Feeling feeling;
+	private ImageIcon[] images;
+	private int imgIndex;
+	private boolean isActive;
 
-	protected Action(ActionIdentifier identifier, Action preAction, ImageIcon... images) {
+	protected final Action preAction;
+
+	protected Action(ActionIdentifier identifier, Action preAction, Feeling feeling, ImageIcon... images) {
 
 		this.images = images;
 		this.imgIndex = 0;
@@ -23,14 +26,23 @@ public class Action {
 			this.images[0] = null;
 		}
 
+		this.feeling = feeling;
 		this.preAction = preAction;
 		this.identifier = identifier;
 		this.isActive = false;
 
 	}
 
+	protected Action(ActionIdentifier identifier, Action preAction, ImageIcon... images) {
+		this(identifier, preAction, null, images);
+	}
+
+	protected Action(ActionIdentifier identifier, Feeling feeling, ImageIcon... images) {
+		this(identifier, null, feeling, images);
+	}
+
 	protected Action(ActionIdentifier identifier, ImageIcon... images) {
-		this(identifier, null, images);
+		this(identifier, null, null, images);
 	}
 
 	/**
@@ -123,6 +135,11 @@ public class Action {
 	 * default: stops pre-action if it's not null and deactivates this
 	 */
 	public void stop() {
+
+		if (this.feeling != null) {
+			Log.WriteLineLog("initialSuffering!!");
+			this.feeling.initialSuffering();
+		}
 
 		this.isActive = false;
 

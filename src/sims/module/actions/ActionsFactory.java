@@ -2,6 +2,7 @@ package sims.module.actions;
 
 import javax.swing.ImageIcon;
 
+import sims.module.feelings.Feeling;
 import sims.module.objects.Door;
 import sims.module.objects.Player;
 import sims.module.objects.Toy;
@@ -37,11 +38,11 @@ public class ActionsFactory {
 
 	}
 
-	public static Search getSearch(Action preAction) {
+	public static Search getSearch(Action preAction, Feeling feel) {
 
 		ImageIcon image = ImagesProvider.getPlayerSearchImages();
 
-		return new Search(preAction, image);
+		return new Search(preAction, feel, image);
 	}
 
 	public static Walk getWalk(int playerId) {

@@ -3,6 +3,7 @@ package sims.module.actions;
 import javax.swing.ImageIcon;
 
 import sims.basics.configurations.ConfigurationManager;
+import sims.module.feelings.Feeling;
 import sims.module.surface.GameLocation;
 
 public class Search extends Action {
@@ -11,9 +12,9 @@ public class Search extends Action {
 	private final int searchTime;
 	private int countDown;
 
-	Search(Action preAction, ImageIcon icon) {
+	Search(Action preAction, Feeling feel, ImageIcon icon) {
 
-		super(ActionIdentifier.Search, preAction, icon);
+		super(ActionIdentifier.Search, preAction, feel, icon);
 		this.searchTime = ConfigurationManager.getPlayerSearchTime();
 
 		stop();

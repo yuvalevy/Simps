@@ -40,7 +40,7 @@ public class Player extends MovableObject {
 
 	public void addSearch() {
 
-		Search search = ActionsFactory.getSearch(getWalker());
+		Search search = ActionsFactory.getSearch(getWalker(), this.feelings[0]);
 
 		addAction(search);
 	}

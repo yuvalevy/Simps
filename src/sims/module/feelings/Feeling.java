@@ -9,7 +9,7 @@ public class Feeling {
 	Feeling(String feelingName, int capability) {
 		this.name = feelingName;
 		this.capability = capability;
-		this.suffered = 0;
+		initialSuffering();
 	}
 
 	public String getName() {
@@ -20,7 +20,7 @@ public class Feeling {
 		this.suffered += suffringAmount;
 	}
 
-	public void initialFeeling() {
+	public void initialSuffering() {
 		this.suffered = 0;
 	}
 
