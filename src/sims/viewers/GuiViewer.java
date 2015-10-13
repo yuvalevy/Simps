@@ -7,18 +7,25 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.LineBorder;
+import javax.swing.table.DefaultTableModel;
 
 import sims.basics.GameActions;
 import sims.basics.Log;
+import sims.module.feelings.FeelingFactory;
 import sims.module.main.World;
 
 public class GuiViewer extends JPanel implements GameActions {
@@ -88,6 +95,26 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	}
 
+	public Component changeTableCellsColor(JTable table, Component c, int row, int column) {
+
+		c.setFont(new Font("Arial", 4, 10));
+
+		String clmnProp = "c" + column;
+		String rowProp = "r" + row;
+
+		Integer hitColumn = (Integer) table.getClientProperty(clmnProp);
+		Integer hitRow = (Integer) table.getClientProperty(rowProp);
+
+		if ((hitColumn != null) && (column == hitColumn) && (hitRow != null) && (row == hitRow)) {
+			c.setBackground(Color.red);
+		} else {
+
+			c.setBackground(Color.white);
+		}
+
+		return c;
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 
@@ -95,16 +122,13 @@ public class GuiViewer extends JPanel implements GameActions {
 
 		super.paintComponent(g);
 
-		paintManagmentPanel(this, g);
-
 		// Log.WriteLog("End GuiViewer paintComponent ");
 
 	}
 
-	public void paintManagmentPanel(Component c, Graphics g) {
+	public void paintManagmentPanel(Component c, Graphics g, JTable table) {
 
-		this.painter.paintManagmentPanel(c, g);
-
+		this.painter.paintManagmentPanel(c, g, table);
 		// Log.WriteLog("Paint manage panel");
 
 	}
@@ -216,10 +240,7 @@ public class GuiViewer extends JPanel implements GameActions {
 		managmentPanel.setBorder(new LineBorder(Color.PINK, 2, true));
 		managmentPanel.setLayout(new BorderLayout());
 
-		int maxWidth = (int) (this.screenSize.getWidth() * 0.3);
-		int maxHight = (int) (this.screenSize.getHeight());
-		Dimension maxDimension = new Dimension(maxWidth, maxHight);
-		managmentPanel.setMaximumSize(maxDimension);
+		managmentPanel.setMaximumSize(getManagmentPanelMaxSize());
 
 		JPanel panel = new JPanel() {
 
@@ -230,9 +251,45 @@ public class GuiViewer extends JPanel implements GameActions {
 
 				super.paintComponent(g);
 
-				paintManagmentPanel(this, g);
+				JTable table = getTable();
+
+				paintManagmentPanel(this, g, table);
+			}
+
+			private JScrollPane getJScrollPane() {
+
+				for (Component comp : getComponents()) {
+					if (comp instanceof JScrollPane) {
+						return (JScrollPane) comp;
+					}
+				}
+
+				return null;
+			}
+
+			private JTable getJTable(JComponent comp) {
+
+				for (Component subcomp : comp.getComponents()) {
+					if (subcomp instanceof JTable) {
+						return (JTable) subcomp;
+					}
+				}
+
+				return null;
+			}
+
+			private JTable getTable() {
+
+				JTable table = null;
+				JScrollPane pane = getJScrollPane();
+
+				if (pane != null) {
+					table = getJTable(pane.getViewport());
+				}
+				return table;
 			}
 		};
+
 		panel.setBorder(new LineBorder(Color.GREEN, 3));
 		managmentPanel.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
@@ -251,6 +308,9 @@ public class GuiViewer extends JPanel implements GameActions {
 		panel.add(this.playerChoice);
 		panel.add(this.btnAddPlayer);
 
+		JScrollPane scrol = getFeelingsTable();
+
+		panel.add(scrol);
 		managmentPanel.add(this.btnPauseGame, BorderLayout.SOUTH);
 
 		Log.WriteLineLog("Created managment panel");
@@ -279,10 +339,7 @@ public class GuiViewer extends JPanel implements GameActions {
 			}
 		};
 
-		int maxWidth = (int) (this.screenSize.getWidth() * 0.7);
-		int maxHight = (int) (this.screenSize.getHeight());
-		Dimension maxDimension = new Dimension(maxWidth, maxHight);
-		roomsPanel.setMaximumSize(maxDimension);
+		roomsPanel.setMaximumSize(getRoomPanelMaxSize());
 
 		roomsPanel.setBorder(new LineBorder(new Color(255, 175, 175), 2, true));
 		roomsPanel.setMinimumSize(new Dimension(1000, 1000));
@@ -292,4 +349,68 @@ public class GuiViewer extends JPanel implements GameActions {
 		return roomsPanel;
 	}
 
+	private JScrollPane getFeelingsTable() {
+		/**
+		 * stimulate feelings
+		 */
+		JTable feelingsTable = new JTable() {
+
+			private static final long serialVersionUID = 7755646788868082357L;
+
+			@Override
+			public Component prepareRenderer(javax.swing.table.TableCellRenderer renderer, int row, int column) {
+
+				Component c = super.prepareRenderer(renderer, row, column);
+
+				c = changeTableCellsColor(this, c, row, column);
+
+				return c;
+			}
+		};
+
+		feelingsTable.addFocusListener(new FocusListener() {
+
+			@Override
+			public void focusGained(FocusEvent e) {
+
+			}
+
+			@Override
+			public void focusLost(FocusEvent e) {
+			}
+		});
+
+		JScrollPane scrol = new JScrollPane(feelingsTable);
+		scrol.setBounds(10, 250, 350, 100);
+		scrol.setAutoscrolls(true);
+
+		DefaultTableModel tableModel = (DefaultTableModel) feelingsTable.getModel();
+
+		tableModel.addColumn("Player");
+
+		String[] exisingFeelingsNames = FeelingFactory.getExisingFeelingsNames();
+
+		for (int i = 0; i < exisingFeelingsNames.length; i++) {
+
+			String name = exisingFeelingsNames[i];
+
+			tableModel.addColumn(name);
+
+		}
+		return scrol;
+	}
+
+	private Dimension getManagmentPanelMaxSize() {
+		int maxWidth = (int) (this.screenSize.getWidth() * 0.3);
+		int maxHight = (int) (this.screenSize.getHeight());
+		Dimension maxDimension = new Dimension(maxWidth, maxHight);
+		return maxDimension;
+	}
+
+	private Dimension getRoomPanelMaxSize() {
+		int maxWidth = (int) (this.screenSize.getWidth() * 0.7);
+		int maxHight = (int) (this.screenSize.getHeight());
+		Dimension maxDimension = new Dimension(maxWidth, maxHight);
+		return maxDimension;
+	}
 }

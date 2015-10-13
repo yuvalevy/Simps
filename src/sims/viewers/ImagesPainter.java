@@ -9,9 +9,13 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
+import sims.module.feelings.Feeling;
 import sims.module.main.World;
 import sims.module.objects.GameObject;
+import sims.module.objects.Player;
 import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
 import sims.module.surface.Map;
@@ -44,7 +48,9 @@ public class ImagesPainter {
 
 	}
 
-	public void paintManagmentPanel(Component c, Graphics g) {
+	public void paintManagmentPanel(Component c, Graphics g, JTable table) {
+
+		paintFeelingsTable(table);
 
 		g.setColor(Color.black);
 		g.setFont(new Font("Arial", 1, 20));
@@ -188,6 +194,45 @@ public class ImagesPainter {
 	private void paintByPoint(ImageIcon ic, Point p, Component c, Graphics g) {
 
 		ic.paintIcon(c, g, p.x, p.y);
+	}
+
+	private void paintFeelingsTable(JTable table) {
+
+		DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+
+		ArrayList<Player> players = this.game.getPlayers();
+
+		tableModel.setRowCount(players.size());
+
+		for (int i = 0; i < players.size(); i++) {
+
+			Player player = players.get(i);
+
+			tableModel.setValueAt(player.getPlayerName(), i, 0);
+
+			Feeling[] feelings = player.getFeelings();
+
+			for (int j = 0; j < feelings.length; j++) {
+
+				int clmn = j + 1;
+
+				String clmnProp = "c" + clmn;
+				String rowProp = "r" + i;
+
+				if (feelings[j].isDangerous()) {
+
+					table.putClientProperty(clmnProp, clmn);
+					table.putClientProperty(rowProp, i);
+
+				} else {
+					table.putClientProperty(clmnProp, null);
+					table.putClientProperty(rowProp, null);
+				}
+
+				tableModel.setValueAt(feelings[j], i, clmn);
+			}
+
+		}
 	}
 
 	private void paintFloor(Component c, Graphics g) {
