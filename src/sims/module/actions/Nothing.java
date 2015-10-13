@@ -8,4 +8,8 @@ public class Nothing extends Action {
 		super(ActionIdentifier.Nothing, defaultObjectPic);
 	}
 
+	@Override
+	public boolean isOver() {
+		return false;
+	}
 }

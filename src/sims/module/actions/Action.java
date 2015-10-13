@@ -10,13 +10,40 @@ public class Action {
 
 	private final ActionIdentifier identifier;
 	private final Feeling feeling;
+	private final GameLocation actionDestination;
+
+	private boolean isActive;
+
 	private ImageIcon[] images;
 	private int imgIndex;
-	private boolean isActive;
+
+	private final int actionTime;
+	private int timer;
 
 	protected final Action preAction;
 
-	protected Action(ActionIdentifier identifier, Action preAction, Feeling feeling, ImageIcon... images) {
+	protected Action(ActionIdentifier identifier, Action preAction, ImageIcon... images) {
+		this(identifier, 0, null, preAction, null, images);
+	}
+
+	protected Action(ActionIdentifier identifier, Feeling feeling, ImageIcon... images) {
+		this(identifier, 0, null, null, feeling, images);
+	}
+
+	protected Action(ActionIdentifier identifier, ImageIcon... images) {
+		this(identifier, 0, null, null, null, images);
+	}
+
+	protected Action(ActionIdentifier identifier, int playerSearchTime, Action preAction, ImageIcon icon) {
+		this(identifier, playerSearchTime, null, preAction, null, icon);
+	}
+
+	protected Action(ActionIdentifier identifier, int actionTime, Feeling feel, ImageIcon icon) {
+		this(identifier, actionTime, null, null, feel, icon);
+	}
+
+	protected Action(ActionIdentifier identifier, int actionTime, GameLocation actionDestination, Action preAction,
+			Feeling feeling, ImageIcon... images) {
 
 		this.images = images;
 		this.imgIndex = 0;
@@ -31,18 +58,11 @@ public class Action {
 		this.identifier = identifier;
 		this.isActive = false;
 
-	}
+		this.actionTime = actionTime;
+		this.timer = this.actionTime;
 
-	protected Action(ActionIdentifier identifier, Action preAction, ImageIcon... images) {
-		this(identifier, preAction, null, images);
-	}
+		this.actionDestination = actionDestination;
 
-	protected Action(ActionIdentifier identifier, Feeling feeling, ImageIcon... images) {
-		this(identifier, null, feeling, images);
-	}
-
-	protected Action(ActionIdentifier identifier, ImageIcon... images) {
-		this(identifier, null, null, images);
 	}
 
 	/**
@@ -51,6 +71,18 @@ public class Action {
 	 */
 	public boolean canInterrupt() {
 		return true;
+	}
+
+	public void decreaseTimer() {
+		this.timer--;
+	}
+
+	public GameLocation getActionDestination() {
+		return this.actionDestination;
+	}
+
+	public Feeling getFeeling() {
+		return this.feeling;
 	}
 
 	/**
@@ -76,11 +108,16 @@ public class Action {
 
 			if (!this.preAction.isOver()) {
 
+				Log.WriteLineLog("Image from pre Action");
 				return this.preAction.getNextImage();
 			}
 		}
 
 		ImageIcon $ = this.images[this.imgIndex];
+		if (isAction(ActionIdentifier.Walk)) {
+			Log.WriteLineLog("Image from Action " + this.imgIndex + "/" + this.images.length);
+			Log.WriteLineLog(this.images[this.imgIndex].toString());
+		}
 
 		this.imgIndex++;
 
@@ -110,10 +147,10 @@ public class Action {
 
 	/**
 	 *
-	 * @return default: returns false
+	 * @return default: returns whether timer is equals to 0
 	 */
 	public boolean isOver() {
-		return false;
+		return this.timer == 0;
 	}
 
 	/**
@@ -122,6 +159,7 @@ public class Action {
 	public void start() {
 
 		this.isActive = true;
+		this.timer = this.actionTime;
 
 		if (this.preAction != null) {
 
@@ -142,6 +180,7 @@ public class Action {
 		}
 
 		this.isActive = false;
+		this.timer = 0;
 
 		if (this.preAction != null) {
 
@@ -169,11 +208,42 @@ public class Action {
 	 * @return default: returns null
 	 */
 	public GameLocation tick() {
+
+		if (isActive()) {
+
+			if (this.preAction != null) {
+
+				// If preAction is finished, start
+				if (this.preAction.isOver()) {
+
+					this.preAction.stop();
+
+					innerTick();
+				} else {
+
+					// If preAction is not finished, tick() it and return result
+					// else {
+					return this.preAction.tick();
+				}
+			} else {
+
+				innerTick();
+			}
+		}
+
 		return null;
+
 	}
 
 	@Override
 	public String toString() {
 		return super.toString() + this.identifier;
+	}
+
+	private void innerTick() {
+		if (!isOver()) {
+
+			decreaseTimer();
+		}
 	}
 }

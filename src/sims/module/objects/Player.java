@@ -3,9 +3,12 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import sims.basics.Log;
 import sims.basics.configurations.ConfigurationManager;
+import sims.module.actions.Action;
 import sims.module.actions.ActionsFactory;
 import sims.module.actions.Search;
+import sims.module.actions.WatchTV;
 import sims.module.feelings.Feeling;
 import sims.module.feelings.FeelingFactory;
 import sims.module.surface.GameLocation;
@@ -30,6 +33,7 @@ public class Player extends MovableObject {
 
 		createFeeling();
 		addSearch();
+		addWatchTV();
 	}
 
 	public static Rectangle getObjectShape(Point p) {
@@ -40,9 +44,16 @@ public class Player extends MovableObject {
 
 	public void addSearch() {
 
-		Search search = ActionsFactory.getSearch(getWalker(), this.feelings[0]);
+		Search search = ActionsFactory.getSearch(getWalker());
 
 		addAction(search);
+	}
+
+	public void addWatchTV() {
+
+		WatchTV tv = ActionsFactory.getWatchTV(getWalker(), this.feelings[0]);
+
+		addAction(tv);
 	}
 
 	@Override
@@ -101,5 +112,32 @@ public class Player extends MovableObject {
 	public void tick() {
 		super.tick();
 		increaceSuffering(FeelingFactory.getIncreacingAmount());
+	}
+
+	public GameLocation trySetAction(Feeling feeling) {
+
+		Action action = getAction(feeling);
+
+		if (action != null) {
+
+			if (super.trySetAction(action.getIdentifier())) {
+				return action.getActionDestination();
+			}
+		}
+
+		Log.WriteLineLog("No action holds this feeling");
+		return null;
+	}
+
+	private Action getAction(Feeling feel) {
+
+		for (Action action : this.objectActions) {
+
+			if (action.getFeeling() == feel) {
+				return action;
+			}
+		}
+
+		return null;
 	}
 }

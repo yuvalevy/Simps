@@ -66,6 +66,16 @@ public class ConfigurationManager {
 		return Configuration.getInt("simps.feelings.feelingsincreacingamount");
 	}
 
+	public static GameLocation getFunLocation() {
+
+		int x = Configuration.getInt("simps.players.funxlocation");
+		int y = Configuration.getInt("simps.players.funylocation");
+
+		int roomIndex = Configuration.getInt("simps.players.funroomindex");
+
+		return new GameLocation(x, y, roomIndex);
+	}
+
 	public static int getHave2PeeCapability() {
 		return Configuration.getInt("simps.feelings.have2peecapability");
 	}
@@ -78,19 +88,29 @@ public class ConfigurationManager {
 		return Configuration.getString("simps.general.pathprefix");
 	}
 
+	public static String getPlayerFunImgPath() {
+
+		return Configuration.getString("simps.players.playerfunimgpath");
+	}
+
+	public static int getPlayerFunTime() {
+
+		return Configuration.getInt("simps.players.playerfuntime");
+	}
+
 	public static String getPlayerImgsPath() {
 
 		return Configuration.getString("simps.players.playerimgpath");
 
 	}
 
-	public static String getPlayerSearchImgsPath() {
-		return Configuration.getString("simps.players.playersearchimgspath");
+	public static String getPlayerSearchImgPath() {
+		return Configuration.getString("simps.players.playersearchimgpath");
 	}
 
 	public static int getPlayerSearchTime() {
 
-		return Configuration.getInt("simps.general.playersearchtime");
+		return Configuration.getInt("simps.players.playersearchtime");
 
 	}
 
@@ -119,6 +139,21 @@ public class ConfigurationManager {
 		int y = Configuration.getInt("simps.players.playerstartingypoint");
 
 		return new Point(x, y);
+	}
+
+	public static String getPlayerTVImgPath() {
+
+		return Configuration.getString("simps.players.playertvimgpath");
+	}
+
+	public static int getPlayerTVTime() {
+
+		return Configuration.getInt("simps.players.playertvtime");
+	}
+
+	public static String getPlayerWalkImgsPath() {
+
+		return Configuration.getString("simps.players.playerwalkimgpath");
 	}
 
 	public static Polygon[] getRoomDoorsPolygons(int roomId, int doorCount) {
@@ -196,6 +231,16 @@ public class ConfigurationManager {
 		return Configuration.getInt("simps.general.toyslimit");
 	}
 
+	public static GameLocation getTVLocation() {
+
+		int x = Configuration.getInt("simps.players.tvxlocation");
+		int y = Configuration.getInt("simps.players.tvylocation");
+
+		int roomIndex = Configuration.getInt("simps.players.tvroomindex");
+
+		return new GameLocation(x, y, roomIndex);
+	}
+
 	/**
 	 * @param points
 	 */
@@ -219,5 +264,4 @@ public class ConfigurationManager {
 
 		return $;
 	}
-
 }

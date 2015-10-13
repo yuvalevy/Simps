@@ -9,6 +9,7 @@ import sims.basics.GameActions;
 import sims.basics.Log;
 import sims.basics.LogLevel;
 import sims.module.actions.ActionIdentifier;
+import sims.module.feelings.Feeling;
 import sims.module.objects.GameObject;
 import sims.module.objects.Player;
 import sims.module.surface.GameLocation;
@@ -146,6 +147,28 @@ public class World implements GameActions {
 
 	public int getUnfoundToys() {
 		return this.unfoundToys;
+	}
+
+	public void initialFeeling(String playerName, Object obj) {
+
+		if (!(obj instanceof Feeling)) {
+
+			Log.WriteLineLog("Cannot convert table value to feeling");
+			return;
+		}
+
+		Feeling feel = (Feeling) obj;
+
+		GameLocation actionDestination = getPlayer(playerName).trySetAction(feel);
+
+		if (actionDestination != null) {
+
+			Log.WriteLineLog("feeling clicked " + feel.getName());
+			Log.WriteLineLog("Game feeling Location " + actionDestination);
+
+			movePlayer(actionDestination, false);
+		}
+
 	}
 
 	public boolean isOnePlayerSufferedEnough() {

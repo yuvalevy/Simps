@@ -24,7 +24,6 @@ public class GuiControler implements GameActions, Runnable {
 
 	private final World gameModule;
 	private final GuiViewer gameUi;
-	private final MouseHandler handler;
 
 	private Choice playerChoice;
 	private JButton btnPauseGame;
@@ -42,7 +41,7 @@ public class GuiControler implements GameActions, Runnable {
 
 		setGameDimention();
 
-		this.handler = new MouseHandler(this, (int) (this.gameDimension.width * 0.3));
+		MouseHandler handler = new MouseHandler(this, (int) (this.gameDimension.width * 0.3));
 
 		this.gameModule = new World(this.gameDimension, cellDefaultSize);
 
@@ -50,7 +49,7 @@ public class GuiControler implements GameActions, Runnable {
 
 		buildGameControlers();
 
-		this.gameUi.buildViewer(this.playerChoice, this.btnPauseGame, this.btnAddPlayer, this.handler);
+		this.gameUi.buildViewer(this.playerChoice, this.btnPauseGame, this.btnAddPlayer, handler);
 
 	}
 
@@ -105,6 +104,15 @@ public class GuiControler implements GameActions, Runnable {
 			Log.WriteLineLog("Setting " + currentPlayer + " to be focused.");
 			setFocusedPlayer(currentPlayer);
 		}
+
+	}
+
+	public void initialFeeling(Point pointClicked) {
+
+		Object obj = this.gameUi.getFeelingAtPoint(pointClicked);
+		String playerName = this.gameUi.getPlayerNameAtPoint(pointClicked);
+
+		this.gameModule.initialFeeling(playerName, obj);
 
 	}
 

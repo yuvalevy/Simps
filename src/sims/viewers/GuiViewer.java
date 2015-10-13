@@ -7,8 +7,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.awt.Point;
 import java.awt.event.MouseListener;
 
 import javax.swing.BoxLayout;
@@ -43,6 +42,8 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	private final BoardPainter painter;
 
+	private JTable tableFeelings;
+
 	public GuiViewer(Dimension gameDimention, World gameModule) {
 
 		// ArrayList<MovableObject> gamePlayers
@@ -75,8 +76,6 @@ public class GuiViewer extends JPanel implements GameActions {
 	 *            The player choicer
 	 * @param gamePauser
 	 *            The 'Pause Game' button
-	 * @throws Exception
-	 *             If one of the parameters sent is null
 	 */
 	public void buildViewer(Choice plyrChoice, JButton gamePauser, JButton playerAdder, MouseListener eventControler) {
 
@@ -88,10 +87,10 @@ public class GuiViewer extends JPanel implements GameActions {
 
 		addMouseListener(eventControler);
 		this.roomsPanel = createRoomPanel();
-		this.managmentPanel = createManagementPanel();
+		this.managmentPanel = createManagementPanel(eventControler);
 
-		this.add(this.managmentPanel);
-		this.add(this.roomsPanel);
+		add(this.managmentPanel);
+		add(this.roomsPanel);
 
 	}
 
@@ -115,29 +114,42 @@ public class GuiViewer extends JPanel implements GameActions {
 		return c;
 	}
 
+	public Object getFeelingAtPoint(Point pointClicked) {
+
+		int row = this.tableFeelings.rowAtPoint(pointClicked);
+		int column = this.tableFeelings.columnAtPoint(pointClicked);
+
+		Object feelingAtPoint = this.tableFeelings.getValueAt(row, column);
+
+		return feelingAtPoint;
+
+	}
+
+	public String getPlayerNameAtPoint(Point pointClicked) {
+
+		int row = this.tableFeelings.rowAtPoint(pointClicked);
+
+		String feelingAtPoint = (String) this.tableFeelings.getValueAt(row, 0);
+
+		return feelingAtPoint;
+
+	}
+
 	@Override
 	public void paintComponent(Graphics g) {
 
-		// Log.WriteLog("Start GuiViewer paintComponent ");
-
 		super.paintComponent(g);
-
-		// Log.WriteLog("End GuiViewer paintComponent ");
-
 	}
 
 	public void paintManagmentPanel(Component c, Graphics g, JTable table) {
 
 		this.painter.paintManagementPanel(c, g, table);
-		// Log.WriteLog("Paint manage panel");
 
 	}
 
 	public void paintRoomPanel(Component c, Graphics g) {
 
 		this.painter.paintRoom(c, g);
-
-		// Log.WriteLog("Paint room panel");
 	}
 
 	@Override
@@ -212,15 +224,6 @@ public class GuiViewer extends JPanel implements GameActions {
 		 * Copied code
 		 */
 
-		// size of the screen
-		// this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		//
-		// // height of the task bar
-		// int taskBarSize =
-		// Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration()).bottom;
-		// (int) screenSize.getWidth(), (int) screenSize.getHeight() -
-		// taskBarSize
-
 		mainFrame.setSize(this.screenSize);
 
 		mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -233,9 +236,11 @@ public class GuiViewer extends JPanel implements GameActions {
 	/**
 	 * Creates the left management panel
 	 *
+	 * @param feelingsListener
+	 *
 	 * @return
 	 */
-	private JPanel createManagementPanel() {
+	private JPanel createManagementPanel(MouseListener feelingsListener) {
 
 		JPanel managementPanel = new JPanel();
 		managementPanel.setBorder(new LineBorder(Color.PINK, 2, true));
@@ -309,7 +314,7 @@ public class GuiViewer extends JPanel implements GameActions {
 		panel.add(this.playerChoice);
 		panel.add(this.btnAddPlayer);
 
-		JScrollPane scrol = getFeelingsTable();
+		JScrollPane scrol = getFeelingsTable(feelingsListener);
 
 		panel.add(scrol);
 		managementPanel.add(this.btnPauseGame, BorderLayout.SOUTH);
@@ -350,11 +355,9 @@ public class GuiViewer extends JPanel implements GameActions {
 		return roomsPanel;
 	}
 
-	private JScrollPane getFeelingsTable() {
-		/**
-		 * stimulate feelings
-		 */
-		JTable feelingsTable = new JTable() {
+	private JScrollPane getFeelingsTable(MouseListener feelingsListener) {
+
+		this.tableFeelings = new JTable() {
 
 			private static final long serialVersionUID = 7755646788868082357L;
 
@@ -369,23 +372,13 @@ public class GuiViewer extends JPanel implements GameActions {
 			}
 		};
 
-		feelingsTable.addFocusListener(new FocusListener() {
+		this.tableFeelings.addMouseListener(feelingsListener);
 
-			@Override
-			public void focusGained(FocusEvent e) {
-
-			}
-
-			@Override
-			public void focusLost(FocusEvent e) {
-			}
-		});
-
-		JScrollPane scrol = new JScrollPane(feelingsTable);
+		JScrollPane scrol = new JScrollPane(this.tableFeelings);
 		scrol.setBounds(10, 250, 350, 100);
 		scrol.setAutoscrolls(true);
 
-		DefaultTableModel tableModel = (DefaultTableModel) feelingsTable.getModel();
+		DefaultTableModel tableModel = (DefaultTableModel) this.tableFeelings.getModel();
 
 		tableModel.addColumn("Player");
 

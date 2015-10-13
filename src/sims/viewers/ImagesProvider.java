@@ -1,5 +1,8 @@
 package sims.viewers;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import javax.swing.ImageIcon;
 
 import sims.basics.configurations.ConfigurationManager;
@@ -9,6 +12,7 @@ public class ImagesProvider {
 	private static final int toysLimit = ConfigurationManager.getToysLimit();
 	private static final int playersLimit = ConfigurationManager.getPlayersLimit();
 	private static final int roomsLimit = ConfigurationManager.getRoomsLimit();
+
 	private static final String pathPrefix = ConfigurationManager.getPathPrefix();
 
 	public static ImageIcon getDoorDefaultImage(int objectId) {
@@ -32,13 +36,50 @@ public class ImagesProvider {
 
 	}
 
+	public static ImageIcon getPlayerFunImages() {
+
+		String funImgPath = ConfigurationManager.getPlayerFunImgPath();
+
+		ImageIcon image = new ImageIcon(funImgPath);
+
+		return image;
+	}
+
 	public static ImageIcon getPlayerSearchImages() {
 
-		String searchImgPath = ConfigurationManager.getPlayerSearchImgsPath();
+		String searchImgPath = ConfigurationManager.getPlayerSearchImgPath();
 
 		ImageIcon image = new ImageIcon(searchImgPath);
 
 		return image;
+	}
+
+	public static ImageIcon getPlayerTVImages() {
+
+		String tvImgPath = ConfigurationManager.getPlayerTVImgPath();
+
+		ImageIcon image = new ImageIcon(tvImgPath);
+
+		return image;
+	}
+
+	public static ImageIcon[] getPlayerWalkImage(int playerId) {
+
+		String playerWalkImgsPath = ConfigurationManager.getPlayerWalkImgsPath();
+		ArrayList<ImageIcon> images = new ArrayList<>();
+
+		for (String filePath : getFiles(playerWalkImgsPath)) {
+			images.add(new ImageIcon(filePath));
+		}
+
+		return shrinkImages(images);
+
+		// ImageIcon[] files = new ImageIcon[2];
+		//
+		// files[0] = new ImageIcon("images/players/walk/0.gif");
+		// files[1] = new ImageIcon("images/players/walk/1.gif");
+		//
+		// return files;
 	}
 
 	public static ImageIcon getRoomImage(int roomIndex) {
@@ -63,6 +104,38 @@ public class ImagesProvider {
 		ImageIcon image = new ImageIcon(toyImgPath);
 
 		return image;
+	}
+
+	private static String[] getFiles(String folderPath) {
+
+		File folder = new File(folderPath);
+		File[] listOfFiles = folder.listFiles();
+
+		ArrayList<String> files = new ArrayList<>();
+
+		for (File file : listOfFiles) {
+
+			if (file.isFile()) {
+				files.add(file.getPath());
+			}
+		}
+
+		String[] arr = shrinkStrings(files);
+
+		return arr;
+	}
+
+	private static ImageIcon[] shrinkImages(ArrayList<ImageIcon> lst) {
+		ImageIcon[] arr = new ImageIcon[lst.size()];
+		arr = lst.toArray(arr);
+		return arr;
+	}
+
+	private static String[] shrinkStrings(ArrayList<String> lst) {
+
+		String[] arr = new String[lst.size()];
+		arr = lst.toArray(arr);
+		return arr;
 	}
 
 }

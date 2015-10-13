@@ -21,22 +21,28 @@ public class MouseHandler implements MouseListener {
 	public void mouseClicked(MouseEvent event) {
 
 		Point pointClicked = event.getPoint();
-
-		pointClicked.x = pointClicked.x - this.startingPaintWidth;
 		Log.WriteLineLog("Point clicked: " + pointClicked);
 
-		switch (event.getButton()) {
+		if (pointClicked.x > this.startingPaintWidth) {
 
-		// left click
-		case 1:
-			this.controler.guiLeftClick(pointClicked, event.isControlDown());
-			break;
+			pointClicked.x = pointClicked.x - this.startingPaintWidth;
+			Log.WriteLineLog("Point clicked: " + pointClicked);
 
-		// right click
-		case 3:
-			this.controler.guiRightClick(pointClicked);
-			break;
+			switch (event.getButton()) {
 
+			// left click
+			case 1:
+				this.controler.guiLeftClick(pointClicked, event.isControlDown());
+				break;
+
+			// right click
+			case 3:
+				this.controler.guiRightClick(pointClicked);
+				break;
+
+			}
+		} else {
+			this.controler.initialFeeling(pointClicked);
 		}
 	}
 

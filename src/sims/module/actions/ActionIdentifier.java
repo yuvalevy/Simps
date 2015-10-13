@@ -2,6 +2,6 @@ package sims.module.actions;
 
 public enum ActionIdentifier {
 
-	Nothing, Walk, Hide, Search;
+	Nothing, Walk, Hide, Search, WatchTV;
 
 }
