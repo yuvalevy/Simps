@@ -2,7 +2,7 @@ package sims.module.objects;
 
 import java.awt.Shape;
 
-import sims.basics.Action;
+import sims.module.actions.Action;
 import sims.module.actions.ActionsFactory;
 import sims.module.actions.Walk;
 import sims.module.surface.GameLocation;

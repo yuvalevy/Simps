@@ -2,7 +2,6 @@ package sims.module.actions;
 
 import javax.swing.ImageIcon;
 
-import sims.basics.Action;
 import sims.basics.configurations.ConfigurationManager;
 import sims.module.surface.GameLocation;
 

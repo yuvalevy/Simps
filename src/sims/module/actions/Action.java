@@ -1,8 +1,7 @@
-package sims.basics;
+package sims.module.actions;
 
 import javax.swing.ImageIcon;
 
-import sims.module.actions.ActionIdentifier;
 import sims.module.surface.GameLocation;
 
 public class Action {

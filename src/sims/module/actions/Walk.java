@@ -4,7 +4,6 @@ import java.util.LinkedList;
 
 import javax.swing.ImageIcon;
 
-import sims.basics.Action;
 import sims.module.surface.GameLocation;
 
 public class Walk extends Action {

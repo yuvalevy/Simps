@@ -2,7 +2,6 @@ package sims.module.actions;
 
 import javax.swing.ImageIcon;
 
-import sims.basics.Action;
 import sims.module.objects.Door;
 import sims.module.objects.Player;
 import sims.module.objects.Toy;

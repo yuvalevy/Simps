@@ -8,8 +8,8 @@ import java.util.Arrays;
 
 import javax.swing.ImageIcon;
 
-import sims.basics.Action;
 import sims.basics.Log;
+import sims.module.actions.Action;
 import sims.module.actions.ActionIdentifier;
 import sims.module.actions.ActionsFactory;
 import sims.module.actions.Nothing;
