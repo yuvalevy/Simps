@@ -181,6 +181,7 @@ public class GuiViewer extends JPanel implements GameActions {
 		String message = "Game is over and you ";
 		if (isWinner) {
 			message += "WON :D!";
+
 		} else {
 			message += "LOST :(";
 		}

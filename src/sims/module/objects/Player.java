@@ -87,6 +87,16 @@ public class Player extends MovableObject {
 		}
 	}
 
+	public boolean isPlayerSufferedEnough() {
+
+		for (Feeling feeling : this.feelings) {
+			if (feeling.isPlayerSufferedEnough()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public void tick() {
 		super.tick();

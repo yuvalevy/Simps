@@ -207,13 +207,17 @@ public class GuiControler implements GameActions, Runnable {
 
 		tryChangeRoom();
 
-		if (this.gameModule.getUnfoundToys() == 0) {
-			try {
-				this.gameThread.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			stopGame(true);
+		if (isGameOver()) {
+
+			boolean isWinner = isWinner();
+
+			// try {
+			// this.gameThread.wait();
+			// } catch (InterruptedException e) {
+			// e.printStackTrace();
+			// }
+
+			stopGame(isWinner);
 		}
 	}
 
@@ -252,6 +256,18 @@ public class GuiControler implements GameActions, Runnable {
 			}
 		});
 
+	}
+
+	private boolean isGameOver() {
+		return isLosser() || isWinner();
+	}
+
+	private boolean isLosser() {
+		return this.gameModule.isOnePlayerSufferedEnough();
+	}
+
+	private boolean isWinner() {
+		return this.gameModule.getUnfoundToys() == 0;
 	}
 
 	/**

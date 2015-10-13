@@ -148,6 +148,17 @@ public class World implements GameActions {
 		return this.unfoundToys;
 	}
 
+	public boolean isOnePlayerSufferedEnough() {
+
+		for (Player player : this.players) {
+			if (player.isPlayerSufferedEnough()) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public boolean isRunning() {
 		return this.isRunning;
 	}
@@ -260,7 +271,7 @@ public class World implements GameActions {
 	public void stopGame(boolean isWinner) {
 
 		this.isRunning = false;
-
+		this.focusedPlayer = null;
 	}
 
 	@Override

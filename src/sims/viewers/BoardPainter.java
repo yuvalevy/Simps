@@ -38,7 +38,7 @@ public class BoardPainter {
 
 	}
 
-	// TODO I dont think i need room id
+	// TODO I don't think i need room id
 	// I can use - roomsImages.size()... need more trust here
 	public void addRoom(int roomIndex) {
 
