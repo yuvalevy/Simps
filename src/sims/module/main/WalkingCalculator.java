@@ -1,7 +1,7 @@
 package sims.module.main;
 
 import sims.basics.Log;
-import sims.basics.config.ConfigurationManager;
+import sims.basics.configurations.ConfigurationManager;
 import sims.module.calculators.Calculator;
 import sims.module.calculators.Dijkstra;
 import sims.module.calculators.Line;

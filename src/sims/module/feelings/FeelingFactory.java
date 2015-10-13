@@ -1,6 +1,6 @@
 package sims.module.feelings;
 
-import sims.basics.config.ConfigurationManager;
+import sims.basics.configurations.ConfigurationManager;
 
 class Bored extends Feeling {
 

@@ -1,9 +1,9 @@
-package sims.basics.config;
+package sims.basics.configurations;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-public class Configuration {
+class Configuration {
 
 	private static final String ROOM_BUNDLE_NAME = "sims.basics.config.rooms";
 	private static final String GENERAL_BUNDLE_NAME = "sims.basics.config.general";

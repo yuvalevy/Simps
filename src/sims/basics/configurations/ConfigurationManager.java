@@ -1,4 +1,4 @@
-package sims.basics.config;
+package sims.basics.configurations;
 
 import java.awt.Point;
 import java.awt.Polygon;

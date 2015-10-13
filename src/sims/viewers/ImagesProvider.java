@@ -2,7 +2,7 @@ package sims.viewers;
 
 import javax.swing.ImageIcon;
 
-import sims.basics.config.ConfigurationManager;
+import sims.basics.configurations.ConfigurationManager;
 
 public class ImagesProvider {
 

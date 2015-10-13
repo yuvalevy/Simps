@@ -3,7 +3,7 @@ package sims.module.objects;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import sims.basics.config.ConfigurationManager;
+import sims.basics.configurations.ConfigurationManager;
 import sims.module.actions.ActionsFactory;
 import sims.module.actions.Search;
 import sims.module.feelings.Feeling;

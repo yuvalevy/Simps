@@ -5,7 +5,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 
 import sims.basics.Randomaizer;
-import sims.basics.config.ConfigurationManager;
+import sims.basics.configurations.ConfigurationManager;
 import sims.module.actions.ActionIdentifier;
 import sims.module.objects.Door;
 import sims.module.objects.Toy;
