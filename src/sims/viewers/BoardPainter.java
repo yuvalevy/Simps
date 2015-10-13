@@ -20,7 +20,7 @@ import sims.module.surface.Cell;
 import sims.module.surface.CellProperty;
 import sims.module.surface.Map;
 
-public class ImagesPainter {
+public class BoardPainter {
 
 	private final ArrayList<ImageIcon> roomsImages;
 
@@ -29,7 +29,7 @@ public class ImagesPainter {
 
 	private int currentRoom;
 
-	public ImagesPainter(World game) {
+	public BoardPainter(World game) {
 
 		this.game = game;
 		this.gameMap = game.getMap();

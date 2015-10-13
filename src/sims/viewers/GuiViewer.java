@@ -41,14 +41,14 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	private final Dimension screenSize;
 
-	private final ImagesPainter painter;
+	private final BoardPainter painter;
 
 	public GuiViewer(Dimension gameDimention, World gameModule) {
 
 		// ArrayList<MovableObject> gamePlayers
 		this.screenSize = gameDimention;
 
-		this.painter = new ImagesPainter(gameModule);
+		this.painter = new BoardPainter(gameModule);
 		Log.WriteLineLog("Created WorldViewer instance");
 
 	}
