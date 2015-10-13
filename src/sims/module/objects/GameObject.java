@@ -42,7 +42,7 @@ public abstract class GameObject {
 		this.defaultActionIdentifier = defaultAction.getIdentifier();
 
 		this.currentAction = defaultAction;
-
+		this.currentAction.start();
 	}
 
 	public void addAction(Action action) {
@@ -52,24 +52,6 @@ public abstract class GameObject {
 			removeAction(tempAction);
 		}
 		this.objectActions.add(action);
-	}
-
-	/**
-	 * If the action is not over and it's not interruptible, action cannot be
-	 * changed
-	 *
-	 * @return true if it is allow to change action. false otherwise
-	 */
-	private boolean canChangeAction() {
-		if (this.currentAction.isOver()) {
-			return true;
-		}
-
-		if (this.currentAction.canInterrupt()) {
-			return true;
-		}
-
-		return false;
 	}
 
 	public boolean canInterruptAction() {
@@ -98,22 +80,6 @@ public abstract class GameObject {
 
 		return this.objectSize.contains(r);
 
-	}
-
-	/**
-	 * @param identifier
-	 * @param a
-	 * @return
-	 */
-	private Action getAction(ActionIdentifier identifier) {
-
-		for (Action action : this.objectActions) {
-			if (action.isAction(identifier)) {
-
-				return action;
-			}
-		}
-		return null;
 	}
 
 	/**
@@ -157,23 +123,6 @@ public abstract class GameObject {
 		}
 	}
 
-	/**
-	 * @param action
-	 * @param identifier
-	 */
-	private void setAction(Action action) {
-
-		this.currentAction = action;
-		this.currentAction.start();
-
-		Log.WriteLineLog(getObjectId() + " stating " + this.currentAction.getIdentifier());
-	}
-
-	private void setDefaultAction() {
-
-		trySetAction(this.defaultActionIdentifier);
-	}
-
 	public void tick() {
 
 		GameLocation actionLocation = this.currentAction.tick();
@@ -197,6 +146,8 @@ public abstract class GameObject {
 	public boolean trySetAction(ActionIdentifier identifier) {
 
 		if (!canChangeAction()) {
+			Log.WriteLineLog("Cannot change action{" + identifier + "}. current action{"
+					+ this.currentAction.getIdentifier() + "} is not intteruptable");
 			return false;
 		}
 
@@ -204,7 +155,8 @@ public abstract class GameObject {
 
 		if (action != null) {
 
-			Log.WriteLineLog(getObjectId() + " - stopping " + this.currentAction.getIdentifier());
+			Log.WriteLineLog("{" + getObjectId() + "} - stopping {" + this.currentAction.getIdentifier()
+					+ "} and starting {" + identifier + "}");
 			this.currentAction.stop();
 
 			setAction(action);
@@ -215,6 +167,57 @@ public abstract class GameObject {
 
 		Log.WriteLineLog("Cannot find action " + identifier);
 		return false;
+	}
+
+	/**
+	 * If the action is not over and it's not interruptible, action cannot be
+	 * changed
+	 *
+	 * @return true if it is allow to change action. false otherwise
+	 */
+	private boolean canChangeAction() {
+		if (this.currentAction.isOver()) {
+			return true;
+		}
+
+		if (this.currentAction.canInterrupt()) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param identifier
+	 * @param a
+	 * @return
+	 */
+	private Action getAction(ActionIdentifier identifier) {
+
+		for (Action action : this.objectActions) {
+			if (action.isAction(identifier)) {
+
+				return action;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @param action
+	 * @param identifier
+	 */
+	private void setAction(Action action) {
+
+		this.currentAction = action;
+		this.currentAction.start();
+
+		Log.WriteLineLog(getObjectId() + " stating " + this.currentAction.getIdentifier());
+	}
+
+	private void setDefaultAction() {
+
+		trySetAction(this.defaultActionIdentifier);
 	}
 
 }

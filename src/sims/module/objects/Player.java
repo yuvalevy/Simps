@@ -30,7 +30,6 @@ public class Player extends MovableObject {
 
 		createFeeling();
 		addSearch();
-
 	}
 
 	public static Rectangle getObjectShape(Point p) {

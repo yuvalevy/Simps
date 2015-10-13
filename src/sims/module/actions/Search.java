@@ -6,24 +6,18 @@ import sims.basics.Action;
 import sims.basics.configurations.ConfigurationManager;
 import sims.module.surface.GameLocation;
 
-public class Search implements Action {
+public class Search extends Action {
 
-	private static final ActionIdentifier identifier = ActionIdentifier.Search;
-
-	private final Action preAction;
-	private GameLocation searchStartingPosition;
-	private final ImageIcon icon;
+	// private GameLocation searchStartingPosition;
 	private final int searchTime;
 	private int countDown;
-	private boolean isActive;
 
 	Search(Action preAction, ImageIcon icon) {
 
-		this.preAction = preAction;
+		super(ActionIdentifier.Search, preAction, icon);
 		this.searchTime = ConfigurationManager.getPlayerSearchTime();
 
 		stop();
-		this.icon = icon;
 	}
 
 	@Override
@@ -32,56 +26,23 @@ public class Search implements Action {
 	}
 
 	@Override
-	public ActionIdentifier getIdentifier() {
-		return identifier;
-	}
-
-	@Override
-	public ImageIcon getNextImage() {
-
-		if (!isActive()) {
-			return null;
-		}
-
-		if (this.preAction.isOver()) {
-			return this.icon;
-		} else {
-			return this.preAction.getNextImage();
-		}
-
-	}
-
-	@Override
-	public boolean isAction(ActionIdentifier identifier) {
-		return Search.identifier == identifier;
-	}
-
-	@Override
-	public boolean isActive() {
-		return this.isActive;
-	}
-
-	@Override
 	public boolean isOver() {
-
 		return this.countDown == 0;
 	}
 
 	@Override
 	public void start() {
-		this.isActive = true;
-		this.countDown = this.searchTime;
 
-		// Starting pre action
-		this.preAction.start();
+		super.start();
+		this.countDown = this.searchTime;
 	}
 
 	@Override
 	public void stop() {
 
-		this.isActive = false;
+		super.stop();
 		this.countDown = 0;
-		this.searchStartingPosition = null;
+		// this.searchStartingPosition = null;
 	}
 
 	@Override
@@ -89,24 +50,21 @@ public class Search implements Action {
 
 		if (isActive()) {
 
-			// If preAction is finished, search count down is starting
 			if (this.preAction.isOver()) {
 
 				this.preAction.stop();
 
 				if (this.countDown == 0) {
-					return this.searchStartingPosition;
+					// return this.searchStartingPosition;
 				} else {
 					this.countDown--;
 				}
-			}
-			// If preAction is not finished, tick() it and return result
-			else {
+			} else {
 
 				GameLocation preActionResult = this.preAction.tick();
 
 				if (preActionResult != null) {
-					this.searchStartingPosition = preActionResult;
+					// this.searchStartingPosition = preActionResult;
 				}
 
 				return preActionResult;

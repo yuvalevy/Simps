@@ -217,9 +217,9 @@ public class World implements GameActions {
 			return;
 		}
 
-		movePlayer(newLocation, false);
-
 		if (this.focusedPlayer.trySetAction(ActionIdentifier.Search)) {
+
+			movePlayer(newLocation, false);
 
 			if (this.worldMap.tryFindToy(newLocation)) {
 				Log.WriteLineLog("FOUND a toy-------------");
