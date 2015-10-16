@@ -58,7 +58,7 @@ public class ActionsFactory {
 
 	public static Walk getWalk(int playerId) {
 
-		ImageIcon[] image = ImagesProvider.getPlayerWalkImage(playerId);
+		ImageIcon[] image = ImagesProvider.getPlayerWalkImages(playerId);
 
 		return new Walk(image);
 	}

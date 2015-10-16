@@ -1,5 +1,6 @@
 package sims;
 
+import sims.basics.GameState;
 import sims.basics.Log;
 import sims.basics.LogLevel;
 import sims.basics.configurations.ConfigurationManager;
@@ -9,7 +10,7 @@ public class Program {
 
 	public static void main(String[] args) {
 
-		Log.WriteLineLog("Starting game!", LogLevel.Debug);
+		Log.WriteLineLog("Starting game!", LogLevel.DEBUG);
 
 		GuiControler controler = new GuiControler();
 
@@ -20,6 +21,6 @@ public class Program {
 
 		controler.createDefalutMap();
 
-		controler.startGame();
+		controler.changeGameState(GameState.STARTED);
 	}
 }

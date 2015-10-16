@@ -108,7 +108,6 @@ public class Action {
 
 			if (!this.preAction.isOver()) {
 
-				Log.WriteLineLog("Image from pre Action");
 				return this.preAction.getNextImage();
 			}
 		}

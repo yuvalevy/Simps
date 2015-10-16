@@ -13,6 +13,7 @@ import java.awt.event.ItemListener;
 import javax.swing.JButton;
 
 import sims.basics.GameActions;
+import sims.basics.GameState;
 import sims.basics.Log;
 import sims.basics.Randomaizer;
 import sims.basics.configurations.ConfigurationManager;
@@ -32,12 +33,14 @@ public class GuiControler implements GameActions, Runnable {
 	private final Thread gameThread;
 	private Dimension gameDimension;
 
+	private GameState gameState;
+
 	public GuiControler() {
 
-		// TODO: Configuration
 		final Rectangle cellDefaultSize = ConfigurationManager.getCellDefaultSize();
 
 		this.gameThread = new Thread(this);
+		this.gameState = null;
 
 		setGameDimention();
 
@@ -77,6 +80,35 @@ public class GuiControler implements GameActions, Runnable {
 		setFocusedRoom(roomId);
 	}
 
+	@Override
+	public void changeGameState(GameState state) {
+
+		Log.WriteLineLog("Game State changed: " + state);
+		this.gameState = state;
+
+		switch (state) {
+
+		case STARTED:
+			if (!startGame()) {
+
+				this.gameState = null;
+				return;
+			}
+			break;
+
+		case PAUSING:
+			pauseGame();
+			break;
+
+		default:
+			break;
+
+		}
+
+		this.gameModule.changeGameState(state);
+		this.gameUi.changeGameState(state);
+	}
+
 	public void createDefalutMap() {
 
 		this.gameModule.createDefalutMap();
@@ -112,7 +144,9 @@ public class GuiControler implements GameActions, Runnable {
 		Object obj = this.gameUi.getFeelingAtPoint(pointClicked);
 		String playerName = this.gameUi.getPlayerNameAtPoint(pointClicked);
 
-		this.gameModule.initialFeeling(playerName, obj);
+		setFocusedPlayer(playerName);
+
+		this.gameModule.initialFeeling(obj);
 
 	}
 
@@ -120,15 +154,6 @@ public class GuiControler implements GameActions, Runnable {
 
 		this.gameModule.movePlayer(newLocation, true);
 
-	}
-
-	@Override
-	public void pauseGame() {
-
-		this.gameThread.interrupt();
-
-		this.gameModule.pauseGame();
-		this.gameUi.pauseGame();
 	}
 
 	@Override
@@ -179,53 +204,26 @@ public class GuiControler implements GameActions, Runnable {
 
 	}
 
-	@Override
-	public void startGame() {
-
-		// Conditions before starting a game:
-
-		if (this.gameModule.getRoomCount() == 0) {
-
-			return;
-
-		}
-
-		this.gameUi.startGame();
-		this.gameModule.startGame();
-
-		this.gameThread.start();
-
-	}
-
-	@Override
-	public void stopGame(boolean isWinner) {
-
-		this.gameModule.stopGame(isWinner);
-		this.gameUi.stopGame(isWinner);
-	}
-
 	/**
 	 * ticks game module and viewer
 	 */
 	@Override
 	public void tick() {
 
+		if (this.gameState != GameState.STARTED) {
+			return;
+		}
+
 		this.gameModule.tick();
 		this.gameUi.tick();
 
 		tryChangeRoom();
 
-		if (isGameOver()) {
+		GameState tempState = isGameOver();
 
-			boolean isWinner = isWinner();
+		if (tempState != null) {
 
-			// try {
-			// this.gameThread.wait();
-			// } catch (InterruptedException e) {
-			// e.printStackTrace();
-			// }
-
-			stopGame(isWinner);
+			changeGameState(tempState);
 		}
 	}
 
@@ -238,7 +236,7 @@ public class GuiControler implements GameActions, Runnable {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				pauseGame();
+				changeGameState(GameState.PAUSING);
 			}
 		});
 
@@ -266,16 +264,13 @@ public class GuiControler implements GameActions, Runnable {
 
 	}
 
-	private boolean isGameOver() {
-		return isLosser() || isWinner();
+	private GameState isGameOver() {
+		return this.gameModule.isGameOver();
 	}
 
-	private boolean isLosser() {
-		return this.gameModule.isOnePlayerSufferedEnough();
-	}
+	private void pauseGame() {
 
-	private boolean isWinner() {
-		return this.gameModule.getUnfoundToys() == 0;
+		this.gameThread.interrupt();
 	}
 
 	/**
@@ -291,12 +286,28 @@ public class GuiControler implements GameActions, Runnable {
 				((int) this.gameDimension.getHeight()) - taskBarSize);
 	}
 
+	private boolean startGame() {
+
+		// Conditions before starting a game:
+
+		if (this.gameModule.getRoomCount() == 0) {
+
+			return false;
+
+		}
+
+		this.gameThread.start();
+
+		return true;
+
+	}
+
 	/**
 	 * If it is needed to change room, the room is changing. otherwise, nothing
 	 * is happening
 	 */
 	private void tryChangeRoom() {
-		int changing = this.gameModule.needRoomChaning();
+		int changing = this.gameModule.needRoomChanging();
 
 		if (changing != -1) {
 

@@ -63,7 +63,7 @@ public class ImagesProvider {
 		return image;
 	}
 
-	public static ImageIcon[] getPlayerWalkImage(int playerId) {
+	public static ImageIcon[] getPlayerWalkImages(int playerId) {
 
 		String playerWalkImgsPath = ConfigurationManager.getPlayerWalkImgsPath();
 		ArrayList<ImageIcon> images = new ArrayList<>();
@@ -73,13 +73,6 @@ public class ImagesProvider {
 		}
 
 		return shrinkImages(images);
-
-		// ImageIcon[] files = new ImageIcon[2];
-		//
-		// files[0] = new ImageIcon("images/players/walk/0.gif");
-		// files[1] = new ImageIcon("images/players/walk/1.gif");
-		//
-		// return files;
 	}
 
 	public static ImageIcon getRoomImage(int roomIndex) {
@@ -116,7 +109,8 @@ public class ImagesProvider {
 		for (File file : listOfFiles) {
 
 			if (file.isFile()) {
-				files.add(file.getPath());
+				String replace = file.getPath().replace('\\', '/');
+				files.add(replace);
 			}
 		}
 

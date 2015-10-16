@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 
 import sims.basics.GameActions;
+import sims.basics.GameState;
 import sims.basics.Log;
 import sims.basics.LogLevel;
 import sims.module.actions.ActionIdentifier;
@@ -55,6 +56,31 @@ public class World implements GameActions {
 	public void addRoom(int roomId, int toysCount) {
 		this.unfoundToys += toysCount;
 		this.worldMap.addRoom(roomId, toysCount);
+
+	}
+
+	@Override
+	public void changeGameState(GameState state) {
+
+		switch (state) {
+
+		case STARTED:
+			startGame();
+			break;
+
+		case PAUSING:
+			pauseGame();
+			break;
+
+		case WINNING:
+			stopGame();
+			break;
+
+		case LOSSING:
+			stopGame();
+			break;
+
+		}
 
 	}
 
@@ -149,7 +175,7 @@ public class World implements GameActions {
 		return this.unfoundToys;
 	}
 
-	public void initialFeeling(String playerName, Object obj) {
+	public void initialFeeling(Object obj) {
 
 		if (!(obj instanceof Feeling)) {
 
@@ -159,7 +185,7 @@ public class World implements GameActions {
 
 		Feeling feel = (Feeling) obj;
 
-		GameLocation actionDestination = getPlayer(playerName).trySetAction(feel);
+		GameLocation actionDestination = this.focusedPlayer.trySetAction(feel);
 
 		if (actionDestination != null) {
 
@@ -169,6 +195,18 @@ public class World implements GameActions {
 			movePlayer(actionDestination, false);
 		}
 
+	}
+
+	public GameState isGameOver() {
+
+		if (isWinner()) {
+			return GameState.WINNING;
+		}
+
+		if (isLosser()) {
+			return GameState.LOSSING;
+		}
+		return null;
 	}
 
 	public boolean isOnePlayerSufferedEnough() {
@@ -213,7 +251,7 @@ public class World implements GameActions {
 	 * @return The room this game should switch to, of -1 if romm is not
 	 *         changing
 	 */
-	public int needRoomChaning() {
+	public int needRoomChanging() {
 
 		if (this.focusedPlayer != null) {
 
@@ -226,13 +264,6 @@ public class World implements GameActions {
 		}
 
 		return -1;
-	}
-
-	@Override
-	public void pauseGame() {
-
-		this.isRunning = false;
-
 	}
 
 	@Override
@@ -268,12 +299,12 @@ public class World implements GameActions {
 
 		Player currentPlayer = getPlayer(playerName);
 		if (currentPlayer == null) {
-			Log.WriteLineLog("Could not find player " + playerName, LogLevel.Error);
+			Log.WriteLineLog("Could not find player " + playerName, LogLevel.ERROR);
 		}
 
 		this.focusedPlayer = currentPlayer;
 
-		Log.WriteLineLog("Focused player is " + playerName, LogLevel.Debug);
+		Log.WriteLineLog("Focused player is " + playerName, LogLevel.DEBUG);
 
 	}
 
@@ -286,18 +317,6 @@ public class World implements GameActions {
 	}
 
 	@Override
-	public void startGame() {
-		this.isRunning = true;
-	}
-
-	@Override
-	public void stopGame(boolean isWinner) {
-
-		this.isRunning = false;
-		this.focusedPlayer = null;
-	}
-
-	@Override
 	public void tick() {
 
 		for (Player player : this.players) {
@@ -305,6 +324,30 @@ public class World implements GameActions {
 			player.tick();
 
 		}
+	}
+
+	private boolean isLosser() {
+		return isOnePlayerSufferedEnough();
+	}
+
+	private boolean isWinner() {
+		return getUnfoundToys() == 0;
+	}
+
+	private void pauseGame() {
+
+		this.isRunning = false;
+
+	}
+
+	private void startGame() {
+		this.isRunning = true;
+	}
+
+	private void stopGame() {
+
+		this.isRunning = false;
+		this.focusedPlayer = null;
 	}
 
 }

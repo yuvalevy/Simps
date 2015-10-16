@@ -57,7 +57,7 @@ public class Map {
 
 		if (this.mapRooms.size() == 0) {
 
-			Log.WriteLineLog("There are no rooms.", LogLevel.Error);
+			Log.WriteLineLog("There are no rooms.", LogLevel.ERROR);
 
 			try {
 				throw new Exception("Cannot start game. There are no rooms.");

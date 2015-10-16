@@ -33,7 +33,7 @@ public class Cell extends DijkstraElement {
 
 		if (CELL_RECT == null) {
 
-			Log.WriteLineLog("Cell size was not initialized. ", LogLevel.Error);
+			Log.WriteLineLog("Cell size was not initialized. ", LogLevel.ERROR);
 		}
 
 		this.properties = new ArrayList<CellProperty>(5);

@@ -23,6 +23,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
 import sims.basics.GameActions;
+import sims.basics.GameState;
 import sims.basics.Log;
 import sims.module.feelings.FeelingFactory;
 import sims.module.main.World;
@@ -94,6 +95,29 @@ public class GuiViewer extends JPanel implements GameActions {
 
 	}
 
+	@Override
+	public void changeGameState(GameState state) {
+
+		switch (state) {
+
+		case STARTED:
+			startGame();
+			break;
+
+		case WINNING:
+			winner();
+			break;
+
+		case LOSSING:
+			losser();
+			break;
+
+		default:
+			break;
+
+		}
+	}
+
 	public Component changeTableCellsColor(JTable table, Component c, int row, int column) {
 
 		c.setFont(new Font("Arial", 4, 10));
@@ -153,11 +177,6 @@ public class GuiViewer extends JPanel implements GameActions {
 	}
 
 	@Override
-	public void pauseGame() {
-
-	}
-
-	@Override
 	public void removePlayer(String playerName) {
 
 		try {
@@ -177,32 +196,6 @@ public class GuiViewer extends JPanel implements GameActions {
 	public void setFocusedRoom(int roomId) {
 
 		this.painter.setFocusedRoom(roomId);
-
-	}
-
-	@Override
-	public void startGame() {
-
-		createFrame();
-
-	}
-
-	@Override
-	public void stopGame(boolean isWinner) {
-
-		String message = "Game is over and you ";
-		if (isWinner) {
-			message += "WON :D!";
-
-		} else {
-			message += "LOST :(";
-		}
-
-		message += System.getProperty("line.separator") + " Thanks for playing";
-
-		JOptionPane.showMessageDialog(null, message, "Bye bye", JOptionPane.INFORMATION_MESSAGE);
-
-		System.exit(0);
 
 	}
 
@@ -407,4 +400,38 @@ public class GuiViewer extends JPanel implements GameActions {
 		Dimension maxDimension = new Dimension(maxWidth, maxHight);
 		return maxDimension;
 	}
+
+	private void losser() {
+
+		String message = "LOST :(";
+
+		stopGame(message);
+	}
+
+	private void startGame() {
+
+		createFrame();
+
+	}
+
+	private void stopGame(String middleMessage) {
+
+		String message = "Game is over and you " + middleMessage;
+
+		message += System.getProperty("line.separator") + " Thanks for playing";
+
+		JOptionPane.showMessageDialog(null, message, "Bye bye", JOptionPane.INFORMATION_MESSAGE);
+
+		System.exit(0);
+
+	}
+
+	private void winner() {
+
+		String message = "WON! :D";
+
+		stopGame(message);
+
+	}
+
 }

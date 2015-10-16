@@ -19,7 +19,7 @@ public class Log {
 	 */
 	public static void WriteLineLog(String message) {
 
-		Log.WriteLineLog(message, LogLevel.Debug);
+		Log.WriteLineLog(message, LogLevel.DEBUG);
 
 	}
 
@@ -30,7 +30,7 @@ public class Log {
 	 */
 	public static void WriteLineLog(String message, LogLevel level) {
 
-		if (level == LogLevel.Debug) {
+		if (level == LogLevel.DEBUG) {
 
 			System.out.println(message);
 
@@ -49,7 +49,7 @@ public class Log {
 	 */
 	public static void WriteLog(String message) {
 
-		Log.WriteLog(message, LogLevel.Debug);
+		Log.WriteLog(message, LogLevel.DEBUG);
 
 	}
 
@@ -60,7 +60,7 @@ public class Log {
 	 */
 	public static void WriteLog(String message, LogLevel level) {
 
-		if (level == LogLevel.Debug) {
+		if (level == LogLevel.DEBUG) {
 
 			System.out.print(message);
 
