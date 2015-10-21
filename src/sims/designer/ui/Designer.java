@@ -1,9 +1,10 @@
 package sims.designer.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.ComponentOrientation;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,17 +20,116 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 
+import sims.basics.Log;
+
 public class Designer extends JPanel {
 
 	private static final long serialVersionUID = 5625046021958313278L;
 
-	private final DefaultMutableTreeNode treePlayersNode;
-	private final DefaultMutableTreeNode treeRoomsNode;
-	private final DefaultMutableTreeNode treeRootNode;
+	private DefaultMutableTreeNode treePlayersNode;
+	private DefaultMutableTreeNode treeRoomsNode;
+	private DefaultMutableTreeNode treeRootNode;
+
+	private final GeneralSettingsPanel pGeneral;
+
+	private final RoomsCanvas pRooms;
+
+	private Component currentComponent;
+
+	private JTree tree;
 
 	public Designer() {
+
 		setLayout(new BorderLayout(0, 0));
 
+		createMenu();
+		createTree();
+
+		JButton btnSaveCurrentState = new JButton("Save Current State");
+		add(btnSaveCurrentState, BorderLayout.SOUTH);
+
+		this.pGeneral = new GeneralSettingsPanel();
+		this.pRooms = new RoomsCanvas();
+
+		this.pGeneral.setVisible(false);
+		this.pRooms.setVisible(false);
+
+		// change2Rooms();
+	}
+
+	public void addToPlayersNode(String str) {
+
+		if (str != null) {
+			if (str.length() != 0) {
+
+				this.treePlayersNode.add(new DefaultMutableTreeNode(str));
+			}
+		}
+
+	}
+
+	public void addToRoomsNode(String str) {
+
+		if (str != null) {
+			if (str.length() != 0) {
+
+				this.treeRoomsNode.add(new DefaultMutableTreeNode(str));
+			}
+		}
+
+	}
+
+	private void change2Rooms() {
+
+		if (!this.pRooms.isVisible()) {
+			Log.WriteLineLog("2) pRooms is not visible... :(");
+
+			setTreeNode(this.treeRoomsNode);
+			changePanel(this.pRooms);
+		}
+	}
+
+	private void change2Settings() {
+
+		if (!this.pGeneral.isVisible()) {
+			Log.WriteLineLog("2) pGeneral is not visible... :(");
+
+			setTreeNode(null);
+			changePanel(this.pGeneral);
+		}
+	}
+
+	private void changePanel(Component component) {
+
+		Log.WriteLineLog("3) changing to panel " + component.getName());
+
+		Component temp = this.currentComponent;
+
+		if (temp != null) {
+			temp.setVisible(false);
+			remove(this.currentComponent);
+
+		}
+
+		this.currentComponent = component;
+		add(this.currentComponent, BorderLayout.CENTER);
+		this.currentComponent.setVisible(true);
+
+		Log.WriteLineLog("pGeneral isVisible " + this.pGeneral.isVisible());
+		Log.WriteLineLog("pRooms isVisible " + this.pRooms.isVisible());
+
+		for (Component element : getComponents()) {
+			Log.WriteLineLog(element.getClass() + " - " + element.getName() + " -vsbla -" + element.isVisible());
+		}
+
+		revalidate();
+	}
+
+	private void collapseTree() {
+		this.tree.collapseRow(0);
+	}
+
+	private void createMenu() {
 		JMenuBar menuBar = new JMenuBar();
 		add(menuBar, BorderLayout.NORTH);
 
@@ -37,23 +137,35 @@ public class Designer extends JPanel {
 		menuBar.add(mnMennu);
 
 		JMenu mnMap = new JMenu("Map");
-		mnMap.addActionListener(new ActionListener() {
+
+		JMenu mntmgGeneral = new JMenu("General");
+
+		mnMennu.add(mntmgGeneral);
+
+		JMenuItem mntmShowAllSettings = new JMenuItem("Show All Settings");
+		mntmShowAllSettings.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				setTreeNode(Designer.this.treeRoomsNode);
+				Log.WriteLineLog("1) changing to settings");
+				change2Settings();
 			}
 		});
+		mntmgGeneral.add(mntmShowAllSettings);
 
 		mnMennu.add(mnMap);
-		// mntmGameObjects.addActionListener(new ActionListener() {
-		// @Override
-		// public void actionPerformed(ActionEvent arg0) {
-		// setTreeNode(Designer.this.treePlayersNode);
-		// }
-		// });
 
 		JMenu mnRooms = new JMenu("Rooms");
 		mnMap.add(mnRooms);
+
+		JMenuItem mntmManageRooms = new JMenuItem("Manage Rooms");
+		mntmManageRooms.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				change2Rooms();
+			}
+		});
+		mnRooms.add(mntmManageRooms);
 
 		JMenuItem mntmAddRoom = new JMenuItem("Add Room");
 		mnRooms.add(mntmAddRoom);
@@ -79,62 +191,40 @@ public class Designer extends JPanel {
 
 		JMenuItem mntmChangeRoomDimension = new JMenuItem("Change Room Dimension");
 		mnRooms.add(mntmChangeRoomDimension);
+	}
 
-		JMenuItem mntmGameObjects = new JMenuItem("Game Objects");
+	private void createTree() {
 
-		mnMennu.add(mntmGameObjects);
-
-		JTree tree = new JTree();
-		tree.setBorder(new MatteBorder(1, 1, 1, 1, new Color(0, 0, 0)));
-		tree.setPreferredSize(new Dimension(150, 72));
-		tree.setMinimumSize(new Dimension(150, 0));
-		tree.setMaximumSize(new Dimension(150, 72));
-		tree.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		this.tree = new JTree();
+		this.tree.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		this.tree.setBorder(new MatteBorder(1, 1, 1, 1, new Color(0, 0, 0)));
+		this.tree.setPreferredSize(new Dimension(150, 72));
+		this.tree.setMinimumSize(new Dimension(150, 0));
+		this.tree.setMaximumSize(new Dimension(150, 72));
+		this.tree.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 
 		this.treeRootNode = new DefaultMutableTreeNode("Game");
 
 		DefaultTreeModel treeModule = new DefaultTreeModel(this.treeRootNode);
-		tree.setModel(treeModule);
+		this.tree.setModel(treeModule);
 
 		this.treePlayersNode = new DefaultMutableTreeNode("Players");
 		this.treeRoomsNode = new DefaultMutableTreeNode("Rooms");
 
-		add(tree, BorderLayout.WEST);
-
-		Canvas canvas = new Canvas();
-		add(canvas, BorderLayout.CENTER);
-
-		JButton btnSaveCurrentState = new JButton("Save Current State");
-		add(btnSaveCurrentState, BorderLayout.SOUTH);
+		add(this.tree, BorderLayout.WEST);
 	}
 
-	public void addToPlayersNode(String str) {
-
-		if (str != null) {
-			if (str.length() != 0) {
-
-				this.treePlayersNode.add(new DefaultMutableTreeNode(str));
-			}
-		}
-
-	}
-
-	public void addToRoomsNode(String str) {
-
-		if (str != null) {
-			if (str.length() != 0) {
-
-				this.treeRoomsNode.add(new DefaultMutableTreeNode(str));
-			}
-		}
-
-	}
-
-	public void setTreeNode(MutableTreeNode node) {
+	private void setTreeNode(MutableTreeNode node) {
 
 		this.treeRootNode.removeAllChildren();
 
-		this.treeRootNode.add(node);
+		collapseTree();
 
+		if (node == null) {
+			return;
+		}
+
+		this.treeRootNode.add(node);
 	}
+
 }
