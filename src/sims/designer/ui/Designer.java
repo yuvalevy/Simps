@@ -21,40 +21,37 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 
 import sims.basics.Log;
+import sims.designer.demos.DemoWorld;
 
 public class Designer extends JPanel {
 
 	private static final long serialVersionUID = 5625046021958313278L;
 
 	private DefaultMutableTreeNode treePlayersNode;
-	private DefaultMutableTreeNode treeRoomsNode;
 	private DefaultMutableTreeNode treeRootNode;
 
 	private final GeneralSettingsPanel pGeneral;
 
 	private final RoomsCanvas pRooms;
 
-	private Component currentComponent;
+	private PropertiesComponent currentComponent;
 
 	private JTree tree;
 
-	public Designer() {
+	public Designer(DemoWorld demoWorld) {
 
 		setLayout(new BorderLayout(0, 0));
 
 		createMenu();
 		createTree();
+		createSaveButton();
 
-		JButton btnSaveCurrentState = new JButton("Save Current State");
-		add(btnSaveCurrentState, BorderLayout.SOUTH);
-
-		this.pGeneral = new GeneralSettingsPanel();
+		this.pGeneral = new GeneralSettingsPanel(demoWorld.getDemoSettings());
 		this.pRooms = new RoomsCanvas();
 
 		this.pGeneral.setVisible(false);
 		this.pRooms.setVisible(false);
 
-		// change2Rooms();
 	}
 
 	public void addToPlayersNode(String str) {
@@ -68,24 +65,12 @@ public class Designer extends JPanel {
 
 	}
 
-	public void addToRoomsNode(String str) {
-
-		if (str != null) {
-			if (str.length() != 0) {
-
-				this.treeRoomsNode.add(new DefaultMutableTreeNode(str));
-			}
-		}
-
-	}
-
 	private void change2Rooms() {
 
 		if (!this.pRooms.isVisible()) {
 			Log.WriteLineLog("2) pRooms is not visible... :(");
 
-			setTreeNode(this.treeRoomsNode);
-			changePanel(this.pRooms);
+			changeComponent(this.pRooms);
 		}
 	}
 
@@ -95,34 +80,37 @@ public class Designer extends JPanel {
 			Log.WriteLineLog("2) pGeneral is not visible... :(");
 
 			setTreeNode(null);
-			changePanel(this.pGeneral);
+			changeComponent(this.pGeneral);
 		}
 	}
 
-	private void changePanel(Component component) {
+	private void changeComponent(PropertiesComponent component) {
 
-		Log.WriteLineLog("3) changing to panel " + component.getName());
+		Log.WriteLineLog("3) changing to panel " + ((Component) component).getName());
 
-		Component temp = this.currentComponent;
+		PropertiesComponent temp = this.currentComponent;
 
 		if (temp != null) {
 			temp.setVisible(false);
-			remove(this.currentComponent);
-
+			remove((Component) this.currentComponent);
+			clearTree();
 		}
 
 		this.currentComponent = component;
-		add(this.currentComponent, BorderLayout.CENTER);
+
+		add((Component) this.currentComponent, BorderLayout.CENTER);
+		setTreeNode(this.currentComponent.getTreeNodes());
+
 		this.currentComponent.setVisible(true);
 
 		Log.WriteLineLog("pGeneral isVisible " + this.pGeneral.isVisible());
 		Log.WriteLineLog("pRooms isVisible " + this.pRooms.isVisible());
 
-		for (Component element : getComponents()) {
-			Log.WriteLineLog(element.getClass() + " - " + element.getName() + " -vsbla -" + element.isVisible());
-		}
-
 		revalidate();
+	}
+
+	private void clearTree() {
+		this.treeRootNode.removeAllChildren();
 	}
 
 	private void collapseTree() {
@@ -193,6 +181,22 @@ public class Designer extends JPanel {
 		mnRooms.add(mntmChangeRoomDimension);
 	}
 
+	private void createSaveButton() {
+
+		JButton btnSaveCurrentState = new JButton("Save Current State");
+
+		btnSaveCurrentState.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
+		add(btnSaveCurrentState, BorderLayout.SOUTH);
+
+	}
+
 	private void createTree() {
 
 		this.tree = new JTree();
@@ -209,22 +213,22 @@ public class Designer extends JPanel {
 		this.tree.setModel(treeModule);
 
 		this.treePlayersNode = new DefaultMutableTreeNode("Players");
-		this.treeRoomsNode = new DefaultMutableTreeNode("Rooms");
 
 		add(this.tree, BorderLayout.WEST);
 	}
 
-	private void setTreeNode(MutableTreeNode node) {
-
-		this.treeRootNode.removeAllChildren();
+	private void setTreeNode(MutableTreeNode treeNode) {
 
 		collapseTree();
 
-		if (node == null) {
+		if (treeNode == null) {
 			return;
 		}
 
-		this.treeRootNode.add(node);
+		// for (MutableTreeNode treeNode : nodes) {
+
+		this.treeRootNode.add(treeNode);
+		// }
 	}
 
 }

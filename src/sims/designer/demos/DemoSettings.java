@@ -7,15 +7,13 @@ import sims.basics.configurations.ConfigurationManager;
 
 public class DemoSettings {
 
-	private final Dimension screenSize;
-	private final Rectangle cellSize;
+	private Dimension screenSize;
+	private Rectangle cellSize;
 	private int toysGlobalCount;
 
 	public DemoSettings() {
 
-		this.cellSize = ConfigurationManager.getCellDefaultSize();
-		this.screenSize = new Dimension();
-		this.toysGlobalCount = ConfigurationManager.getToysLimit();
+		setConfigurationValues();
 
 	}
 
@@ -34,6 +32,12 @@ public class DemoSettings {
 	public void setCellSize(int width, int height) {
 
 		this.cellSize.setSize(width, height);
+	}
+
+	public void setConfigurationValues() {
+		this.cellSize = ConfigurationManager.getCellDefaultSize();
+		this.screenSize = new Dimension();
+		this.toysGlobalCount = ConfigurationManager.getToysLimit();
 	}
 
 	public void setScreenSize(int width, int height) {

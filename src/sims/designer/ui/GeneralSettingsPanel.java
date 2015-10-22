@@ -2,22 +2,27 @@ package sims.designer.ui;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import sims.basics.Log;
 import sims.designer.demos.DemoSettings;
-import sims.designer.demos.DemoWorld;
 
-public class GeneralSettingsPanel extends JPanel {
+public class GeneralSettingsPanel extends JPanel implements PropertiesComponent {
 
 	private static final long serialVersionUID = 8085548354970837234L;
 
@@ -29,13 +34,14 @@ public class GeneralSettingsPanel extends JPanel {
 
 	private final DemoSettings settings;
 
-	public GeneralSettingsPanel() {
+	public GeneralSettingsPanel(DemoSettings settings) {
 		super();
 
 		setName("General Settings");
-		this.settings = DemoWorld.getDemoSettings();
+		this.settings = settings;
 
 		buildGrid();
+		setFieldsValues();
 
 		repaint();
 	}
@@ -44,26 +50,51 @@ public class GeneralSettingsPanel extends JPanel {
 	protected void paintComponent(Graphics g) {
 
 		Log.WriteLineLog("GeneralSettingsPanel.paint");
-		// super.paint(g);
 	}
 
-	public void save() {
+	protected void restoreConfiguration() {
+
+		this.settings.setConfigurationValues();
+		setFieldsValues();
+	}
+
+	@Override
+	public DefaultMutableTreeNode getTreeNodes() {
+
+		return null;
+	}
+
+	public void saveChanges() {
 
 		int x, y;
 
-		x = Integer.parseInt(this.txtXScreenSize.getText());
-		y = Integer.parseInt(this.txtYScreenSize.getText());
+		x = getInt(this.txtXScreenSize.getText());
+		y = getInt(this.txtYScreenSize.getText());
 
 		this.settings.setScreenSize(x, y);
 
-		x = Integer.parseInt(this.txtXCellSize.getText());
-		y = Integer.parseInt(this.txtYCellSize.getText());
+		x = getInt(this.txtXCellSize.getText());
+		y = getInt(this.txtYCellSize.getText());
 
 		this.settings.setCellSize(x, y);
 
 	}
 
+	@Override
+	public void setVisible(boolean aFlag) {
+
+		if (aFlag == true) {
+			setFieldsValues();
+
+		} else {
+			saveChanges();
+
+		}
+		super.setVisible(aFlag);
+	}
+
 	private void buildGrid() {
+
 		GridBagLayout gbl_pGeneral = new GridBagLayout();
 		gbl_pGeneral.columnWidths = new int[] { 30, 100, 70, 0, 0, 0, 0, 70, 78, 127, 0 };
 		gbl_pGeneral.rowHeights = new int[] { 29, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -197,5 +228,50 @@ public class GeneralSettingsPanel extends JPanel {
 		gbc_lblGlobalToysCount.gridx = 1;
 		gbc_lblGlobalToysCount.gridy = 8;
 		add(lblGlobalToysCount, gbc_lblGlobalToysCount);
+
+		JButton btnRestoreConfiguration = new JButton("Restore Configuration");
+		btnRestoreConfiguration.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				restoreConfiguration();
+			}
+		});
+
+		GridBagConstraints gbc_btnRestoreConfiguration = new GridBagConstraints();
+		gbc_btnRestoreConfiguration.insets = new Insets(0, 0, 5, 5);
+		gbc_btnRestoreConfiguration.gridx = 6;
+		gbc_btnRestoreConfiguration.gridy = 10;
+		add(btnRestoreConfiguration, gbc_btnRestoreConfiguration);
+
+	}
+
+	private int getInt(String str) {
+		if (str == null) {
+			return 0;
+		}
+
+		if (str.equals("")) {
+			return 0;
+		}
+
+		return Integer.parseInt(str);
+	}
+
+	private void setFieldsValues() {
+
+		Dimension dmnsn = this.settings.getScreenSize();
+		int x = (int) dmnsn.getWidth(), y = (int) dmnsn.getHeight();
+		this.txtXScreenSize.setText(x + "");
+		this.txtYScreenSize.setText(y + "");
+
+		Rectangle rctngl = this.settings.getCellSize();
+		x = (int) rctngl.getWidth();
+		y = (int) rctngl.getHeight();
+
+		this.txtXCellSize.setText(x + "");
+		this.txtYCellSize.setText(y + "");
+
+		this.txtGlobalToysCount.setText(this.settings.getToysGlobalCount() + "");
 	}
 }
