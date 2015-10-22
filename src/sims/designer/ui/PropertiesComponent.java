@@ -8,6 +8,8 @@ public interface PropertiesComponent {
 
 	// public void save();
 
+	public boolean isVisible();
+
 	public void setVisible(boolean b);
 
 }

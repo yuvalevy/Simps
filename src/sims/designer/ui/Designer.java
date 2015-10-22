@@ -10,9 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.border.MatteBorder;
@@ -22,6 +20,7 @@ import javax.swing.tree.MutableTreeNode;
 
 import sims.basics.Log;
 import sims.designer.demos.DemoWorld;
+import sims.designer.menu.MenuBuilder;
 
 public class Designer extends JPanel {
 
@@ -42,7 +41,9 @@ public class Designer extends JPanel {
 
 		setLayout(new BorderLayout(0, 0));
 
-		createMenu();
+		JMenuBar menuBar = MenuBuilder.createMenu(this);
+		add(menuBar, BorderLayout.NORTH);
+
 		createTree();
 		createSaveButton();
 
@@ -65,48 +66,39 @@ public class Designer extends JPanel {
 
 	}
 
-	private void change2Rooms() {
-
-		if (!this.pRooms.isVisible()) {
-			Log.WriteLineLog("2) pRooms is not visible... :(");
-
-			changeComponent(this.pRooms);
-		}
+	public void change2Rooms() {
+		changeComponent(this.pRooms);
 	}
 
-	private void change2Settings() {
-
-		if (!this.pGeneral.isVisible()) {
-			Log.WriteLineLog("2) pGeneral is not visible... :(");
-
-			setTreeNode(null);
-			changeComponent(this.pGeneral);
-		}
+	public void change2Settings() {
+		changeComponent(this.pGeneral);
 	}
 
 	private void changeComponent(PropertiesComponent component) {
 
-		Log.WriteLineLog("3) changing to panel " + ((Component) component).getName());
+		if (!component.isVisible()) {
+			Log.WriteLineLog("3) changing to panel " + ((Component) component).getName());
 
-		PropertiesComponent temp = this.currentComponent;
+			PropertiesComponent temp = this.currentComponent;
 
-		if (temp != null) {
-			temp.setVisible(false);
-			remove((Component) this.currentComponent);
-			clearTree();
+			if (temp != null) {
+				temp.setVisible(false);
+				remove((Component) this.currentComponent);
+				clearTree();
+			}
+
+			this.currentComponent = component;
+
+			add((Component) this.currentComponent, BorderLayout.CENTER);
+			setTreeNode(this.currentComponent.getTreeNodes());
+
+			this.currentComponent.setVisible(true);
+
+			Log.WriteLineLog("pGeneral isVisible " + this.pGeneral.isVisible());
+			Log.WriteLineLog("pRooms isVisible " + this.pRooms.isVisible());
+
+			revalidate();
 		}
-
-		this.currentComponent = component;
-
-		add((Component) this.currentComponent, BorderLayout.CENTER);
-		setTreeNode(this.currentComponent.getTreeNodes());
-
-		this.currentComponent.setVisible(true);
-
-		Log.WriteLineLog("pGeneral isVisible " + this.pGeneral.isVisible());
-		Log.WriteLineLog("pRooms isVisible " + this.pRooms.isVisible());
-
-		revalidate();
 	}
 
 	private void clearTree() {
@@ -115,70 +107,6 @@ public class Designer extends JPanel {
 
 	private void collapseTree() {
 		this.tree.collapseRow(0);
-	}
-
-	private void createMenu() {
-		JMenuBar menuBar = new JMenuBar();
-		add(menuBar, BorderLayout.NORTH);
-
-		JMenu mnMennu = new JMenu("Designer Menu");
-		menuBar.add(mnMennu);
-
-		JMenu mnMap = new JMenu("Map");
-
-		JMenu mntmgGeneral = new JMenu("General");
-
-		mnMennu.add(mntmgGeneral);
-
-		JMenuItem mntmShowAllSettings = new JMenuItem("Show All Settings");
-		mntmShowAllSettings.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				Log.WriteLineLog("1) changing to settings");
-				change2Settings();
-			}
-		});
-		mntmgGeneral.add(mntmShowAllSettings);
-
-		mnMennu.add(mnMap);
-
-		JMenu mnRooms = new JMenu("Rooms");
-		mnMap.add(mnRooms);
-
-		JMenuItem mntmManageRooms = new JMenuItem("Manage Rooms");
-		mntmManageRooms.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				change2Rooms();
-			}
-		});
-		mnRooms.add(mntmManageRooms);
-
-		JMenuItem mntmAddRoom = new JMenuItem("Add Room");
-		mnRooms.add(mntmAddRoom);
-		mnRooms.addSeparator();
-
-		JMenu mntmAddFurnitures = new JMenu("Add Furnitures");
-		mnRooms.add(mntmAddFurnitures);
-
-		JMenuItem mntmAddTable = new JMenuItem("Add Table");
-		mntmAddFurnitures.add(mntmAddTable);
-
-		JMenuItem mntmAddSofa = new JMenuItem("Add Sofa");
-		mntmAddFurnitures.add(mntmAddSofa);
-
-		JMenuItem mntmAddSpecialFurniture = new JMenuItem("Add Special Furniture");
-		mntmAddFurnitures.add(mntmAddSpecialFurniture);
-
-		JMenuItem mntmAddDoor = new JMenuItem("Add Door");
-		mnRooms.add(mntmAddDoor);
-
-		JMenuItem mntmChooseTileStyle = new JMenuItem("Choose Tile Style");
-		mnRooms.add(mntmChooseTileStyle);
-
-		JMenuItem mntmChangeRoomDimension = new JMenuItem("Change Room Dimension");
-		mnRooms.add(mntmChangeRoomDimension);
 	}
 
 	private void createSaveButton() {
