@@ -18,7 +18,9 @@ public class Program {
 
 		controler.addRoom(1, toysCount);
 		controler.addRoom(2, toysCount);
+		controler.addRoom(3, toysCount);
 
+		controler.setFocusedRoom(2);
 		controler.createDefalutMap();
 
 		controler.changeGameState(GameState.STARTED);
