@@ -12,6 +12,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import sims.basics.Log;
+import sims.basics.LogLevel;
 import sims.module.feelings.Feeling;
 import sims.module.main.World;
 import sims.module.objects.GameObject;
@@ -81,106 +83,109 @@ public class BoardPainter {
 
 	private void drawDebug(Graphics g) {
 
-		/**
-		 * draw surface
-		 */
+		if (Log.getLogLevel() == LogLevel.DEBUG) {
 
-		Rectangle recCell = Cell.getCellSize();
+			/**
+			 * draw surface
+			 */
 
-		// Color[] colors = new Color[] { Color.BLUE, Color.YELLOW,
-		// Color.MAGENTA, Color.ORANGE, Color.CYAN };
-		// int index = 0, colorIndex = 0;
+			Rectangle recCell = Cell.getCellSize();
 
-		for (Cell[] cellsRow : this.gameMap.getFocusedRoom().getCells()) {
-			for (Cell cell : cellsRow) {
+			// Color[] colors = new Color[] { Color.BLUE, Color.YELLOW,
+			// Color.MAGENTA, Color.ORANGE, Color.CYAN };
+			// int index = 0, colorIndex = 0;
 
-				if (cell.containsProperty(CellProperty.Stepable)) {
+			for (Cell[] cellsRow : this.gameMap.getFocusedRoom().getCells()) {
+				for (Cell cell : cellsRow) {
 
-					if (cell.containsProperty(CellProperty.Door)) {
-						g.setColor(Color.green);
+					if (cell.containsProperty(CellProperty.Stepable)) {
+
+						if (cell.containsProperty(CellProperty.Door)) {
+							g.setColor(Color.green);
+						} else {
+							g.setColor(Color.blue);
+						}
+
 					} else {
-						g.setColor(Color.blue);
+						g.setColor(Color.red);
 					}
 
-				} else {
-					g.setColor(Color.red);
+					Point coor = cell.getCoordinate().getLocation();
+
+					g.drawRect(coor.x, coor.y, recCell.width, recCell.height);
+
+					/**
+					 * Draw relationships
+					 */
+					// g.setColor(colors[colorIndex]);
+					// index++;
+					// colorIndex++;
+					// if (colorIndex == colors.length) {
+					// colorIndex = 0;
+					// }
+					// // if ((coor.x == 0) && (coor.y == 0)) {
+					// if ((index % 17) == 0) {
+					//
+					// g.drawString("" + cell.getNeighbors().size(), coor.x +
+					// 10,
+					// coor.y + 10);
+					// for (NeighborRelationship rela : cell.getNeighbors()) {
+					//
+					// Point relaPoint = rela.getNighborCell().getCoordinate();
+					// g.drawLine(coor.x + (recCell.width / 2), coor.y +
+					// (recCell.height / 2),
+					// relaPoint.x + (recCell.width / 2), relaPoint.y +
+					// (recCell.height / 2));
+					//
+					// }
+					// // }
+					// }
+
+					/**
+					 * end Draw relationships
+					 */
 				}
-
-				Point coor = cell.getCoordinate().getLocation();
-
-				g.drawRect(coor.x, coor.y, recCell.width, recCell.height);
-
-				/**
-				 * Draw relationships
-				 */
-				// g.setColor(colors[colorIndex]);
-				// index++;
-				// colorIndex++;
-				// if (colorIndex == colors.length) {
-				// colorIndex = 0;
-				// }
-				// // if ((coor.x == 0) && (coor.y == 0)) {
-				// if ((index % 17) == 0) {
-				//
-				// g.drawString("" + cell.getNeighbors().size(), coor.x + 10,
-				// coor.y + 10);
-				// for (NeighborRelationship rela : cell.getNeighbors()) {
-				//
-				// Point relaPoint = rela.getNighborCell().getCoordinate();
-				// g.drawLine(coor.x + (recCell.width / 2), coor.y +
-				// (recCell.height / 2),
-				// relaPoint.x + (recCell.width / 2), relaPoint.y +
-				// (recCell.height / 2));
-				//
-				// }
-				// // }
-				// }
-
-				/**
-				 * end Draw relationships
-				 */
 			}
+
+			/**
+			 * end draw surface
+			 */
+
+			/**
+			 * draw poly
+			 */
+
+			// String[] sober = new String[]/** room2 */
+			// {
+			// "326#360#360#500#500#655#655#857#857#746#746#855#855#800#884#658#630#300#190#154#154#60#270",
+			// "128#128#565#565#276#276#128#128#280#280#737#737#826#826#931#931#826#826#673#673#128#20#20"
+			// };
+			// for (int i = 0; i < ((sober.length / 2) + 1); i += 2) {
+			//
+			// String[] xs = sober[i].split("#");
+			// String[] ys = sober[i + 1].split("#");
+			//
+			// Polygon area = new Polygon();
+			//
+			// for (int j = 0; j < (xs.length); j++) {
+			//
+			// int x = Integer.parseInt(xs[j]);
+			// int y = Integer.parseInt(ys[j]);
+			//
+			// g.setColor(Color.RED);
+			// g.drawString(x + "X" + y, x, y);
+			// area.addPoint(x, y);
+			// }
+			//
+			// g.setColor(Color.BLACK);
+			// g.drawPolygon(area);
+			//
+			// }
+
+			/**
+			 * end draw poly
+			 */
 		}
-
-		/**
-		 * end draw surface
-		 */
-
-		/**
-		 * draw poly
-		 */
-
-		// String[] sober = new String[]/** room2 */
-		// {
-		// "326#360#360#500#500#655#655#857#857#746#746#855#855#800#884#658#630#300#190#154#154#60#270",
-		// "128#128#565#565#276#276#128#128#280#280#737#737#826#826#931#931#826#826#673#673#128#20#20"
-		// };
-		// for (int i = 0; i < ((sober.length / 2) + 1); i += 2) {
-		//
-		// String[] xs = sober[i].split("#");
-		// String[] ys = sober[i + 1].split("#");
-		//
-		// Polygon area = new Polygon();
-		//
-		// for (int j = 0; j < (xs.length); j++) {
-		//
-		// int x = Integer.parseInt(xs[j]);
-		// int y = Integer.parseInt(ys[j]);
-		//
-		// g.setColor(Color.RED);
-		// g.drawString(x + "X" + y, x, y);
-		// area.addPoint(x, y);
-		// }
-		//
-		// g.setColor(Color.BLACK);
-		// g.drawPolygon(area);
-		//
-		// }
-
-		/**
-		 * end draw poly
-		 */
-
 	}
 
 	/**
