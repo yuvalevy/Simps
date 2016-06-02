@@ -185,6 +185,7 @@ public class Room {
 	 * @param doorsCount
 	 */
 	private void createDoors(int doorsCount) {
+		doorsCount = ConfigurationManager.getRoomDoorsCount(this.roomId);
 
 		this.doors = new Door[doorsCount];
 

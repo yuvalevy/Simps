@@ -11,7 +11,7 @@ public class Program {
 	public static void main(String[] args) {
 
 		Log.WriteLineLog("Starting game!", LogLevel.DEBUG);
-		Log.setLogLevel(LogLevel.DEBUG);
+		Log.setLogLevel(LogLevel.ERROR);
 		GuiControler controler = new GuiControler();
 
 		int toysCount = ConfigurationManager.getToysDefaultNumberPerRoom();

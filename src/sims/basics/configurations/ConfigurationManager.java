@@ -156,6 +156,11 @@ public class ConfigurationManager {
 		return Configuration.getString("simps.players.playerwalkimgpath");
 	}
 
+	public static int getRoomDoorsCount(int roomId) {
+		// $NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+		return Configuration.getInt("simps.rooms.Room" + roomId + ".doorcount");
+	}
+
 	public static Polygon[] getRoomDoorsPolygons(int roomId, int doorCount) {
 
 		Polygon[] $ = new Polygon[doorCount];

@@ -3,6 +3,7 @@ package sims.module.actions;
 import javax.swing.ImageIcon;
 
 import sims.basics.Log;
+import sims.basics.LogLevel;
 import sims.module.feelings.Feeling;
 import sims.module.surface.GameLocation;
 
@@ -114,8 +115,8 @@ public class Action {
 
 		ImageIcon $ = this.images[this.imgIndex];
 		if (isAction(ActionIdentifier.Walk)) {
-			Log.WriteLineLog("Image from Action " + this.imgIndex + "/" + this.images.length);
-			Log.WriteLineLog(this.images[this.imgIndex].toString());
+			Log.WriteLineLog("Image from Action " + this.imgIndex + "/" + this.images.length, LogLevel.DEBUG);
+			Log.WriteLineLog(this.images[this.imgIndex].toString(), LogLevel.DEBUG);
 		}
 
 		this.imgIndex++;

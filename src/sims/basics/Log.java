@@ -30,7 +30,7 @@ public class Log {
 	 */
 	public static void WriteLineLog(String message, LogLevel level) {
 
-		if (level == LogLevel.DEBUG) {
+		if (logLevel == LogLevel.DEBUG) {
 
 			System.out.println(message);
 
@@ -60,7 +60,7 @@ public class Log {
 	 */
 	public static void WriteLog(String message, LogLevel level) {
 
-		if (level == LogLevel.DEBUG) {
+		if (logLevel == LogLevel.DEBUG) {
 
 			System.out.print(message);
 
